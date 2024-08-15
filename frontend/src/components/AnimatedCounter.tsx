@@ -1,24 +1,31 @@
-"use client";
-
 import {
-  KeyframeOptions,
   animate,
+  KeyframeOptions,
   useInView,
   useIsomorphicLayoutEffect,
 } from "framer-motion";
 import { useRef } from "react";
 
 type AnimatedCounterProps = {
-  from: number;
   to: number;
   animationOptions?: KeyframeOptions;
 };
 
-const AnimatedCounter = ({
-  from,
-  to,
-  animationOptions,
-}: AnimatedCounterProps) => {
+// const AnimatedCounter = ({ to, animationOptions }: AnimatedCounterProps) => {
+//   const count = useMotionValue(0);
+//   const rounded = useTransform(count, (latest) => Math.round(latest));
+
+//   useEffect(() => {
+//     const controls = animate(count, to);
+
+//     return () => controls.stop();
+//     // eslint-disable-next-line react-hooks/exhaustive-deps
+//   }, []);
+
+//   return <motion.div>{rounded}</motion.div>;
+// };
+
+const AnimatedCounter = ({ to, animationOptions }: AnimatedCounterProps) => {
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true });
 
@@ -29,7 +36,7 @@ const AnimatedCounter = ({
     if (!inView) return;
 
     // Set initial value
-    element.textContent = String(from);
+    element.textContent = "0";
 
     // If reduced motion is enabled in system's preferences
     if (window.matchMedia("(prefers-reduced-motion)").matches) {
@@ -37,8 +44,8 @@ const AnimatedCounter = ({
       return;
     }
 
-    const controls = animate(from, to, {
-      duration: 10,
+    const controls = animate(0, to, {
+      duration: 0.8,
       ease: "easeOut",
       ...animationOptions,
       onUpdate(value) {
@@ -50,7 +57,7 @@ const AnimatedCounter = ({
     return () => {
       controls.stop();
     };
-  }, [ref, inView, from, to]);
+  }, [ref, inView, 0, to]);
 
   return <span ref={ref} />;
 };

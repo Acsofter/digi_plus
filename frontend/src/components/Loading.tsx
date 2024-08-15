@@ -9,7 +9,7 @@ export const Loading = () => {
     exit={{ opacity: 0 }}
     transition={{ duration: 0.2 }}
     
-    className="inline-flex w-screen h-screen p-5 place-content-center place-items-center bg-gradient-to-tr from-secondary/40 to-light-50 ">
+    className="inline-flex w-screen h-screen p-5 place-content-center place-items-center bg-gradient-to-tr from-slate-100 to-light-50 ">
       <div className="text-center ">
         <div role="status" className="my-3">
           <svg

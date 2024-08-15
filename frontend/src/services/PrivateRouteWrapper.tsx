@@ -25,5 +25,5 @@ export const PrivateRouteWrapper = ({ children }: { children: ReactNode }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return <div>{state.auth.user.token ? children : <Loading />}</div>;
+  return <div>{state.auth.isAuthenticated ? children : <Loading />}</div>;
 };
