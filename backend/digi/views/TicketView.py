@@ -26,6 +26,8 @@ class TicketViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         queryset = Ticket.objects.filter(created_at__range=range_filter)
         if status:
             queryset = queryset.filter(payment__status=status)
+        
+        print("self.request.user.is_superuser", self.request.user.is_superuser)
 
         if not self.request.user.is_superuser:
             queryset = queryset.filter(colaborator=self.request.user)
@@ -36,8 +38,8 @@ class TicketViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     def create(self, request):
 
         payment_data = request.data.pop('payment', {})
-        payment_data['type'] = payment_data.pop('type', 'Efectivo')
-        payment_data['status'] =  payment_data.pop('status', '1')
+        payment_data['type'] = payment_data.get('type', 'Efectivo')
+        payment_data['status'] =  payment_data.get('status', '1')
         payment_data['colaborator'] = request.user
             
         payment = Payment.objects.create(**payment_data)
@@ -66,6 +68,7 @@ class TicketViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         ticket = get_object_or_404(Ticket, pk=pk)
 
         payment_details = request.data.pop('payment', {})
+        payment_details["id"] = ticket.payment.id
         
         self.modify_payment(payment_details)
 

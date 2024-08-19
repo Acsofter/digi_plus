@@ -11,6 +11,7 @@ import { PrivateRouteWrapper } from "./services/PrivateRouteWrapper";
 import { useUserServices } from "./services/user.services";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Modal } from "reactstrap";
 
 const initialState: State = {
   ws: {
@@ -20,6 +21,7 @@ const initialState: State = {
   company: {} as Company,
   popup: {
     isOpen: false,
+    loading: true,
     title: undefined,
     subtitle: undefined,
     content: undefined,
@@ -42,7 +44,7 @@ const reducer = (state = initialState, action: any) => {
     case "SET_POPUP": {
       return {
         ...state,
-        popup: action.payload as Popup,
+        popup: {...state.popup, ...action.payload},
       };
     }
     case "SET_WS": {
@@ -77,7 +79,11 @@ const App: React.FC = () => {
     "user"
   )}`;
 
-  const { sendMessage, lastMessage, readyState } = useWebSocket(socketUrl);
+  const { sendMessage, lastMessage, readyState } = useWebSocket(socketUrl, {
+    reconnectInterval: 3000,
+    shouldReconnect: () => true,
+    
+  });
 
   useEffect(() => {
     const fetchCompany = async () => {
@@ -92,7 +98,8 @@ const App: React.FC = () => {
     if (lastMessage !== null) {
       const messageData = JSON.parse(lastMessage.data);
       if (
-        messageData.type === "user_joined" && state.auth.user.roles &&
+        messageData.type === "user_joined" &&
+        state.auth.user.roles &&
         state.auth.user.roles.includes("staff")
       ) {
         toast.info(`${messageData.user.username} se ha conectado.`);
@@ -117,6 +124,7 @@ const App: React.FC = () => {
       value={{ state, dispatch, sendMessage: handleSendMessage }}
     >
       <div className="flex place-items-center w-screen h-screen relative overflow-hidden">
+        <Modal />
         <ToastContainer />
         <Routes>
           <Route path="/login" element={<Login />} />

@@ -23,17 +23,21 @@ class MetricsViewSet(viewsets.GenericViewSet):
 
     def get_queryset(self):
         range_filter = self.request.query_params.get('range', (first_current_week_date, last_current_week_date))
+        
         queryset = Ticket.objects.filter(created_at__range=range_filter)
+
 
         if not self.request.user.is_superuser:
             queryset = queryset.filter(colaborator=self.request.user)
 
+
         return queryset
 
     def filter_tickets(self):
+        total_today = self.get_queryset().filter(created_at__gte=today)
+        
         first_month_date = today.replace(day=1)
         last_month_date =  today.replace(month=today.month+1, day=1) - timedelta(days=1)
-        total_today = Ticket.objects.filter(created_at__gte=today)
         # total_yesterday = tickets_data.filter(created_at__gte=today - timedelta(days=1)).select_related('payment')        
         # total_past_week = tickets_data.filter(
         #                                     Q(created_at__lt=first_current_week_date - timedelta(days=7)) &

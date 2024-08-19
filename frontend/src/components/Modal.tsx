@@ -14,6 +14,7 @@ export const Modal = () => {
         type: "SET_POPUP",
         payload: {
           isOpen: false,
+          loading: true,
           title: "",
           subtitle: "",
           content: undefined,
@@ -51,6 +52,7 @@ export const Modal = () => {
                 type: "SET_POPUP",
                 payload: {
                   isOpen: false,
+                  loading: true,
                   title: "",
                   subtitle: "",
                   content: undefined,

@@ -4,11 +4,7 @@ import { General } from "../layouts/General";
 // import { BsCurrencyDollar } from "react-icons/fi";
 import { MetricsHome } from "../components/MetricsHome";
 
-
 export const Home = () => {
- 
-
-  
   return (
     <>
       <General>
@@ -36,9 +32,7 @@ export const Home = () => {
           <Modal />
           <div className="content w-full flex flex-col gap-3 rounded-2xl overflow-hidden bg-[#fefefe] p-2 m-3">
             <MetricsHome />
-            <div className="w-full  flex justify-between my-2 h-2/3 ">
-              <Table />
-            </div>
+            <Table />
           </div>
         </div>
       </General>

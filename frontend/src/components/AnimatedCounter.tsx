@@ -8,6 +8,7 @@ import { useRef } from "react";
 
 type AnimatedCounterProps = {
   to: number;
+  format?: boolean;
   animationOptions?: KeyframeOptions;
 };
 
@@ -25,7 +26,11 @@ type AnimatedCounterProps = {
 //   return <motion.div>{rounded}</motion.div>;
 // };
 
-const AnimatedCounter = ({ to, animationOptions }: AnimatedCounterProps) => {
+const AnimatedCounter = ({
+  to,
+  animationOptions,
+  format,
+}: AnimatedCounterProps) => {
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true });
 
@@ -49,7 +54,7 @@ const AnimatedCounter = ({ to, animationOptions }: AnimatedCounterProps) => {
       ease: "easeOut",
       ...animationOptions,
       onUpdate(value) {
-        element.textContent = value.toFixed(0);
+        element.textContent = parseInt(value.toFixed(0)).toLocaleString("en");
       },
     });
 

@@ -12,9 +12,10 @@ interface DataInterface {
   net: number;
 }
 
+
 export const MetricsHome = () => {
   const { get_metrics } = useUserServices();
-  const { state } = React.useContext(Contexts);
+  const { state, dispatch } = React.useContext(Contexts);
   const [data, setData] = React.useState<{
     today: DataInterface;
     week: DataInterface;
@@ -48,19 +49,19 @@ export const MetricsHome = () => {
       name: "Tickets",
       count: data.week.tickets,
       color: "text-amber-400",
-      icon: <IoTicketOutline size={24} />,
+      icon: <IoTicketOutline size={35} className="text-amber-400 inline text-center w-full" />,
     },
     {
       name: "Bruto",
       count: data.week.gross,
       color: "text-secondary",
-      icon: <MdOutlineAttachMoney size={24} />,
+      icon: <MdOutlineAttachMoney size={35}  className="text-secondary inline text-center w-full"  />,
     },
     {
       name: "Porc.",
       count: data.week.net,
       color: "text-violet-500",
-      icon: <VscPercentage size={24} />,
+      icon: <VscPercentage size={35}  className="text-violet-500 inline text-center w-full" />,
     },
   ];
 
@@ -101,57 +102,49 @@ export const MetricsHome = () => {
   }, [state.ws.lastMessage]);
 
   return (
-    <div className="inline-flex gap-3">
-      <div className="w-1/3 bg-light shadow-md shadow-slate-200 border border-slate-100 rounded-lg p-3 text-zinc-500">
-        <h2 className="text-lg font-bold">Tickets del dia</h2>
+    <div className="inline-flex gap-3 lg:h-1/4">
+      <div className="w-full md:w-1/3 bg-light shadow-md shadow-slate-200 border border-slate-100 rounded-lg p-3 text-zinc-500">
+        <h2 className="text-lg font-bold my-2">Tickets del dia</h2>
         <div className="grid grid-cols-2 gap-1">
-          <span>
+          <div className="flex gap-1 items-center">
             <IoTicketOutline className={`inline ${cards[0].color}`} size={20} />{" "}
-            Tickets
+            <span>Tickets</span>
+          </div>
+          <span className="text-end font-bold">
+            <AnimatedCounter to={data.today.tickets} />{" "}
           </span>
-          <span className="text-end">
-            {" "}
-            <AnimatedCounter  to={data.today.tickets} />{" "}
+          <div className="flex gap-1 items-center">
+            <MdOutlineAttachMoney className={`inline ${cards[1].color}`} size={20} />{" "}
+            <span>Bruto</span>
+          </div>
+          <span className="text-end font-bold">
+            $ <AnimatedCounter to={data.today.gross} format/>{" "}
           </span>
-          <span>
-            {" "}
-            <MdOutlineAttachMoney
-              className={`inline ${cards[1].color}`}
-              size={20}
-            />
-            Bruto
-          </span> 
-          <span className="text-end">
-            <AnimatedCounter  to={data.today.gross} />
+          <div className="flex gap-1 items-center">
+            <VscPercentage className={`inline ${cards[2].color}`} size={20} />{" "}
+            <span>Porc.</span>
+          </div>
+          <span className="text-end font-bold">
+           $ <AnimatedCounter to={data.today.net} />{" "}
           </span>
-          <span>
-            {" "}
-            <VscPercentage
-              className={`inline ${cards[2].color}`}
-              size={20}
-            />{" "}
-            Neto
-          </span>
-          <span className="text-end">
-            <AnimatedCounter  to={data.today.net} />
-          </span>
+          
         </div>
       </div>
-      <div className="grid grid-cols-3 w-2/3 gap-1">
+      <div className="grid md:grid-cols-3 w-full md:w-2/3 gap-1 h-full">
         {cards.map((card, index) => (
           <div className={` rounded-lg`} key={index}>
             <div
-              className={`flex items-center justify-between p-3 rounded-lg bg-gradient-to-tr from-base to-slate-800  shadow-lg text-white font-bold`}
+              className={`flex flex-row gap-1 items-center justify-between p-3 rounded-lg bg-gradient-to-tr from-base to-slate-800  shadow-lg text-white font-bold h-full`}
             >
-              <div className="flex items-center gap-4">
-                <span className="text-3xl">{card.icon}</span>
+              <div className="flex flex-col items-center content-center justify-center gap-1 w-1/2">
+                <span className=" w-1/2">{card.icon}</span>
                 <span>
-                  <p className="text-xl">{card.name}</p>
+                  <p className="text-sm lg:text-xl">{card.name}</p>
                 </span>
               </div>
-              <div className="relative size-40">
+              <div className="relative size-full md:size-40">
                 <svg
-                  className="size-full -rotate-90"
+                  className="size-full -rotate-90 hidden lg:block"
                   viewBox="0 0 36 36"
                   xmlns="http://www.w3.org/2000/svg"
                 >
@@ -160,7 +153,7 @@ export const MetricsHome = () => {
                     cy="18"
                     r="16"
                     fill="none"
-                    className="stroke-current text-white "
+                    className="stroke-current text-white hidden md:block"
                     stroke-width="2"
                   ></circle>
                   <circle
@@ -168,7 +161,7 @@ export const MetricsHome = () => {
                     cy="18"
                     r="16"
                     fill="none"
-                    className={`stroke-current ${card.color}`}
+                    className={`stroke-current ${card.color} hidden md:block`}
                     stroke-width="3"
                     stroke-dasharray="100"
                     stroke-dashoffset="16"
@@ -178,9 +171,9 @@ export const MetricsHome = () => {
 
                 <div className="absolute top-1/2 start-1/2 transform -translate-y-1/2 -translate-x-1/2">
                   <span
-                    className={`text-center text-2xl font-bold ${card.color} `}
+                    className={`text-center text-xl md:text-2xl font-bold ${card.color} `}
                   >
-                    <AnimatedCounter  to={card.count} />
+                    <AnimatedCounter to={card.count} />
                   </span>
                 </div>
               </div>

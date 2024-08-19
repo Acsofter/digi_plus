@@ -283,17 +283,12 @@ export const useUserServices = () => {
     }
   };
 
-  const update_ticket = async ({
-    ticket_details,
-  }: {
-    ticket_details: RequestTicket | UpdateTicket;
-  }) => {
+  const update_ticket = async ({ details }: { details: UpdateTicket }) => {
     try {
-      const id = ticket_details.id;
-      id && delete ticket_details.id;
+      const id = details.id;
       const response = await axios.put<Ticket>(
         `${base_url}/tickets/${id}/`,
-        ticket_details,
+        details,
         {
           headers: AuthHeader(),
         }
@@ -301,11 +296,13 @@ export const useUserServices = () => {
       if (response.status !== 200) {
         return false;
       }
+      console.log('response.data.colaborator', response.data.colaborator)
       sendMessage({
         type: "ticket_updated",
         message: "Ticket actualizado",
-        payload: { ticket: response.data },
+        payload: { colaborator: response.data.colaborator },
       });
+
       return response.data;
     } catch (error) {
       console.error(`Error fetching ticket: ${error}`);
@@ -313,19 +310,11 @@ export const useUserServices = () => {
     }
   };
 
-  const create_ticket = async ({
-    ticket_details,
-  }: {
-    ticket_details: RequestTicket;
-  }) => {
+  const create_ticket = async (details: CreateTicket) => {
     try {
-      const response = await axios.post(
-        `${base_url}/tickets/`,
-        ticket_details,
-        {
-          headers: AuthHeader(),
-        }
-      );
+      const response = await axios.post(`${base_url}/tickets/`, details, {
+        headers: AuthHeader(),
+      });
       if (response.status !== 201) {
         return false;
       }

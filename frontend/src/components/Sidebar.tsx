@@ -68,7 +68,7 @@ export const Sidebar = () => {
   };
 
   return (
-    <div className="sidebar w-24 px-5 flex flex-col justify-between bg-base">
+    <div className="sidebar w-24 px-5 md:flex flex-col justify-between bg-base hidden ">
       {/* <button className=" relative text-white text-sm w-full bg-primary-blue py-2 rounded-xl duration-300 mb-3 ">
         <BiPlusCircle
           className="text-center text-white inline-block"

@@ -22,6 +22,7 @@ interface Company {
 
 interface Popup {
   isOpen: boolean;
+  loading: boolean;
   title?: string;
   subtitle?: string;
   content?: string;
@@ -60,6 +61,16 @@ interface Ticket {
   company: number;
 }
 
+interface RequestTicket extends Ticket {
+  id?: number | null;
+  category: number | null;
+  payment: number | null;
+  colaborator?: User | null;
+  company?: number | null;
+  created_at?: string | null;
+  updated_at?: string | null;
+}
+
 interface ResponseTickets {
   count: number;
   current: number;
@@ -92,10 +103,29 @@ interface FormCompanyState {
   email: string;
 }
 
-interface UpdateTicket extends Ticket {
-  id?: number;
+interface UpdateTicket {
+  id: number;
+  category?: number;
+  description?: string;
+  payment?: {
+    status?: string;
+    amount?: number;
+  };
 }
 
+type RequestPayment = {
+  amount: number;
+  status?: string;
+};
+
+interface CreateTicket {
+  payment: {
+    amount?: number;
+    number?: string;
+  };
+  category: number;
+  description: string;
+}
 interface RequestTicket extends Ticket {
   id?: number;
 }

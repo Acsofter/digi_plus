@@ -10,7 +10,7 @@ class CompanyConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         self.user = self.scope['user']
-        
+        print("################scope: ", self.scope)
 
         if self.user.is_anonymous:
             await self.close()
@@ -26,6 +26,7 @@ class CompanyConsumer(AsyncWebsocketConsumer):
             self.room_group_name, { 
                   'type': 'user_joined',
                   'user': self.user,
+
             }
         )
 
@@ -52,8 +53,6 @@ class CompanyConsumer(AsyncWebsocketConsumer):
                 return
         
             text_data_json = json.loads(text_data)
-
-
             message = text_data_json.get('message')
             message_type = text_data_json.get('type')
 
