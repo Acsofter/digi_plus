@@ -66,6 +66,40 @@ export const FormTicket = ({ ticket_id }: { ticket_id?: number }) => {
     //  dispatch({ type: "SET_POPUP", payload: { open: false } });
   };
 
+  const get_badge = (status: string) => {
+    let color = "";
+    let text = "";
+    if (status === "1") {
+      color = "from-amber-500 to-amber-300 border-amber-300 text-white";
+      text = "Pendiente";
+    } else if (status === "2") {
+      color = "from-[#43C6AC] to-[#F8FFAE] border-[#43C6AC] text-white";
+      text = "Aprobado";
+    } else if (status === "3") {
+      color = "from-[#FF7E5F] to-[#FEB47B] border-[#FF7E5F] text-white";
+      text = "Rechazado";
+    }
+    return (
+      <div
+        className={`peer transition-all duration-200 w-1/3 h-6 border rounded-md inline-flex justify-between items-center py-5 px-3 shadow-md bg-gradient-to-tr hover:brightness-95  ${color}`}
+      >
+        <div>
+          {!form.payment ? (
+            <IoAlertCircle
+              className={`peer-focus:cursor-pointer w-4 inline-block mr-2 `}
+            />
+          ) : (
+            <IoCheckmarkCircleSharp
+              className={`peer-focus:cursor-pointer w-4 inline-block mr-2 `}
+            />
+          )}
+          <span className="text-sm">{text}</span>
+        </div>
+        <IoHelpCircleOutline className="w-4 h-4" />
+      </div>
+    );
+  };
+
   useEffect(() => {
     const fetchCategories = async () => {
       const response = await get_categories();
@@ -172,6 +206,8 @@ export const FormTicket = ({ ticket_id }: { ticket_id?: number }) => {
             ))}
           </select>
         </div>
+
+        
       </div>
 
       <div className="grid">
@@ -187,31 +223,7 @@ export const FormTicket = ({ ticket_id }: { ticket_id?: number }) => {
         </div>
       </div>
 
-      {ticket_id && (
-        <div
-          className={`peer transition-all duration-200 w-1/3 h-6 border rounded-md inline-flex justify-between items-center py-5 px-3 shadow-sm  bg-gradient-to-tr text-white hover:brightness-95 ${
-            form.payment?.status === "1"
-              ? "shadow-blue-100 border-blue-600   from-blue-400 to-blue-700"
-              : "shadow-amber-100 border-amber-500   from-amber-300 to-amber-500 "
-          }`}
-        >
-          <div>
-            {!form.payment ? (
-              <IoAlertCircle
-                className={`peer-focus:cursor-pointer w-4 inline-block mr-2 `}
-              />
-            ) : (
-              <IoCheckmarkCircleSharp
-                className={`peer-focus:cursor-pointer w-4 inline-block mr-2 `}
-              />
-            )}
-            <span className="text-sm">
-              {form.payment?.status ? "Recibido" : "Pendiente"}
-            </span>
-          </div>
-          <IoHelpCircleOutline className="w-4 h-4" />
-        </div>
-      )}
+      {ticket_id && get_badge(form.payment.status)}
 
       {ticket_id && (
         <div className="grid grid-cols-2 gap-4">

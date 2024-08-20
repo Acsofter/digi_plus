@@ -12,6 +12,7 @@ import { useUserServices } from "./services/user.services";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Modal } from "reactstrap";
+const audio_notification = require("./assets/sound/pop.mp3");
 
 const initialState: State = {
   ws: {
@@ -44,7 +45,7 @@ const reducer = (state = initialState, action: any) => {
     case "SET_POPUP": {
       return {
         ...state,
-        popup: {...state.popup, ...action.payload},
+        popup: { ...state.popup, ...action.payload },
       };
     }
     case "SET_WS": {
@@ -73,6 +74,8 @@ const reducer = (state = initialState, action: any) => {
 const App: React.FC = () => {
   const [state, dispatch] = React.useReducer(reducer, initialState);
 
+  const [userInteracted, setUserInteracted] = React.useState(false);
+
   const { get_company_details } = useUserServices();
 
   const socketUrl: string = `ws://localhost:8000/ws/company/ashfd1i2e397t3xbe63129x6739/?token=${localStorage.getItem(
@@ -82,8 +85,28 @@ const App: React.FC = () => {
   const { sendMessage, lastMessage, readyState } = useWebSocket(socketUrl, {
     reconnectInterval: 3000,
     shouldReconnect: () => true,
-    
   });
+
+  const notification_sound = () => {
+    if (!userInteracted) return;
+    const audio = new Audio(audio_notification);
+    audio.volume = 0.5;
+    audio.loop = false;
+
+    audio.play();
+  };
+
+  useEffect(() => {
+    const handleInteraction = () => setUserInteracted(true);
+
+    window.addEventListener("click", handleInteraction, { once: true });
+    window.addEventListener("keydown", handleInteraction, { once: true });
+
+    return () => {
+      window.removeEventListener("click", handleInteraction);
+      window.removeEventListener("keydown", handleInteraction);
+    };
+  }, []);
 
   useEffect(() => {
     const fetchCompany = async () => {
@@ -97,13 +120,30 @@ const App: React.FC = () => {
   useEffect(() => {
     if (lastMessage !== null) {
       const messageData = JSON.parse(lastMessage.data);
-      if (
-        messageData.type === "user_joined" &&
-        state.auth.user.roles &&
-        state.auth.user.roles.includes("staff")
-      ) {
-        toast.info(`${messageData.user.username} se ha conectado.`);
+
+      switch (messageData.type) {
+        case "user_joined":
+          state.auth.user.roles &&
+            state.auth.user.roles.includes("staff") &&
+            toast.info(`${messageData.user.username} se ha conectado.`);
+          break;
+
+        case "ticket_added":
+          if (state.auth.user.roles.includes("staff")) {
+            toast.info(`${messageData.user.username} ha añadido un ticket.`);
+          } else if (state.auth.user.id === messageData.user.id) {
+            toast.info(`ticket añadido correctamente.`);
+          }
+          notification_sound();
+          break;
+
+        case "ticket_updated":
+        case "ticket_deleted":
+          break;
+        default:
+          break;
       }
+
       dispatch({
         type: "SET_WS",
         payload: { lastMessage: messageData },
@@ -114,8 +154,16 @@ const App: React.FC = () => {
   }, [lastMessage, readyState]);
 
   const handleSendMessage = useCallback(
-    ({ message, type }: { message: string; type: string }) => {
-      sendMessage(JSON.stringify({ message, type }));
+    ({
+      message,
+      type,
+      payload = {},
+    }: {
+      message: string;
+      type: string;
+      payload?: { [index: string]: any };
+    }) => {
+      sendMessage(JSON.stringify({ message, type, payload }));
     },
     [sendMessage]
   );
@@ -178,6 +226,11 @@ const App: React.FC = () => {
             }
           />
         </Routes>
+        {!userInteracted && (
+          <div className="absolute  opacity-40  bottom-0 right-0 px-3">
+            <h2>Las funcionalidades de este sitio requieren interactuar</h2>
+          </div>
+        )}
       </div>
     </Contexts.Provider>
   );

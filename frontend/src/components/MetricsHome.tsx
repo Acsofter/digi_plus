@@ -2,16 +2,15 @@ import React, { useCallback, useEffect } from "react";
 import { useUserServices } from "../services/user.services";
 import { Contexts } from "../services/Contexts";
 import { IoTicketOutline } from "react-icons/io5";
-import { MdOutlineAttachMoney } from "react-icons/md";
+import { MdOutlineAttachMoney, MdOutlineCancel, MdPendingActions } from "react-icons/md";
 import { VscPercentage } from "react-icons/vsc";
 import AnimatedCounter from "./AnimatedCounter";
 
 interface DataInterface {
-  tickets: number;
-  gross: number;
-  net: number;
+  tickets: { approved: number; total: number };
+  gross: { approved: number; total: number };
+  net: { approved: number; total: number };
 }
-
 
 export const MetricsHome = () => {
   const { get_metrics } = useUserServices();
@@ -23,45 +22,63 @@ export const MetricsHome = () => {
     year: DataInterface;
   }>({
     today: {
-      tickets: 0,
-      gross: 0,
-      net: 0,
+      tickets: { approved: 0, total: 0 },
+      gross: { approved: 0, total: 0 },
+      net: { approved: 0, total: 0 },
     },
     week: {
-      tickets: 0,
-      gross: 0,
-      net: 0,
+      tickets: { approved: 0, total: 0 },
+      gross: { approved: 0, total: 0 },
+      net: { approved: 0, total: 0 },
     },
     month: {
-      tickets: 0,
-      gross: 0,
-      net: 0,
+      tickets: { approved: 0, total: 0 },
+      gross: { approved: 0, total: 0 },
+      net: { approved: 0, total: 0 },
     },
     year: {
-      tickets: 0,
-      gross: 0,
-      net: 0,
+      tickets: { approved: 0, total: 0 },
+      gross: { approved: 0, total: 0 },
+      net: { approved: 0, total: 0 },
     },
   });
 
   const cards = [
     {
       name: "Tickets",
-      count: data.week.tickets,
+      total: data.week.tickets.total,
+      approved: data.week.tickets.approved,
       color: "text-amber-400",
-      icon: <IoTicketOutline size={35} className="text-amber-400 inline text-center w-full" />,
+      icon: (
+        <IoTicketOutline
+          size={35}
+          className="text-amber-400 inline text-center w-full"
+        />
+      ),
     },
     {
       name: "Bruto",
-      count: data.week.gross,
+      total: data.week.gross.total,
+      approved: data.week.gross.approved,
       color: "text-secondary",
-      icon: <MdOutlineAttachMoney size={35}  className="text-secondary inline text-center w-full"  />,
+      icon: (
+        <MdOutlineAttachMoney
+          size={35}
+          className="text-secondary inline text-center w-full"
+        />
+      ),
     },
     {
       name: "Porc.",
-      count: data.week.net,
+      total: data.week.net.total,
+      approved: data.week.net.approved,
       color: "text-violet-500",
-      icon: <VscPercentage size={35}  className="text-violet-500 inline text-center w-full" />,
+      icon: (
+        <VscPercentage
+          size={35}
+          className="text-violet-500 inline text-center w-full"
+        />
+      ),
     },
   ];
 
@@ -86,14 +103,21 @@ export const MetricsHome = () => {
 
     switch (msg.type) {
       case "ticket_added":
-        (msg.user.id === state.auth.user.id ||
-          state.auth.user.roles.includes("staff")) &&
-          fetchMetrics();
-        break;
       case "ticket_deleted":
         (msg.user.id === state.auth.user.id ||
           state.auth.user.roles.includes("staff")) &&
           fetchMetrics();
+        break;
+      case "ticket_updated":
+        if (msg.user.username === state.auth.user.username) {
+          fetchMetrics();
+        } else if (
+          msg.payload.colaborator &&
+          msg.payload.colaborator.username === state.auth.user.username
+        ) {
+          fetchMetrics();
+        }
+
         break;
       default:
         break;
@@ -111,25 +135,51 @@ export const MetricsHome = () => {
             <span>Tickets</span>
           </div>
           <span className="text-end font-bold">
-            <AnimatedCounter to={data.today.tickets} />{" "}
+            <AnimatedCounter to={data.today.tickets.approved} />
           </span>
           <div className="flex gap-1 items-center">
-            <MdOutlineAttachMoney className={`inline ${cards[1].color}`} size={20} />{" "}
+            <MdOutlineAttachMoney
+              className={`inline ${cards[1].color}`}
+              size={20}
+            />{" "}
             <span>Bruto</span>
           </div>
           <span className="text-end font-bold">
-            $ <AnimatedCounter to={data.today.gross} format/>{" "}
+            $ <AnimatedCounter to={data.today.gross.approved} format />
           </span>
+
           <div className="flex gap-1 items-center">
             <VscPercentage className={`inline ${cards[2].color}`} size={20} />{" "}
             <span>Porc.</span>
           </div>
           <span className="text-end font-bold">
-           $ <AnimatedCounter to={data.today.net} />{" "}
+            $ <AnimatedCounter to={data.today.net.approved} />
           </span>
-          
+          {/* ---- */}
+
+          <div className="flex gap-1 items-center">
+            <MdPendingActions
+              className={`inline ${"text-orange-500"}`}
+              size={20}
+            />
+            <span>Pend.</span>
+          </div>
+          <span className="text-end font-bold">
+            $ <AnimatedCounter to={80} />
+          </span>
+          <div className="flex gap-1 items-center">
+            <MdOutlineCancel 
+              className={`inline ${"text-red-400"}`}
+              size={20}
+            />{" "}
+            <span>Cancel.</span>
+          </div>
+          <span className="text-end font-bold">
+            $ <AnimatedCounter to={50} />
+          </span>
         </div>
       </div>
+
       <div className="grid md:grid-cols-3 w-full md:w-2/3 gap-1 h-full">
         {cards.map((card, index) => (
           <div className={` rounded-lg`} key={index}>
@@ -169,11 +219,16 @@ export const MetricsHome = () => {
                   ></circle>
                 </svg>
 
-                <div className="absolute top-1/2 start-1/2 transform -translate-y-1/2 -translate-x-1/2">
+                <div className="absolute top-1/2 start-1/2 transform -translate-y-1/2 -translate-x-1/2 text-center">
                   <span
-                    className={`text-center text-xl md:text-2xl font-bold ${card.color} `}
+                    className={`block text-center text-xl md:text-2xl font-bold ${card.color} `}
                   >
-                    <AnimatedCounter to={card.count} />
+                    <AnimatedCounter to={card.approved} />
+                  </span>
+                  <span
+                    className={`text-center text-xl md:text-lg font-bold text-zinc-300 animate-pulse`}
+                  >
+                    <AnimatedCounter to={card.approved - card.total} />
                   </span>
                 </div>
               </div>

@@ -210,7 +210,11 @@ class MetricsSerializer(serializers.Serializer):
             raise serializers.ValidationError("'today' key is None in input data")
         
         try:
-            return self.calculate_metrics(today_data)
+            aproved = self.calculate_metrics(today_data)
+            total = self.calculate_metrics(today_data.filter(payment__status=2))
+            result = {key: {"approved": aproved[key], "total": total[key]} for key in aproved}
+
+            return result
         except Exception as e:
             raise serializers.ValidationError(str(e))
         
@@ -222,7 +226,11 @@ class MetricsSerializer(serializers.Serializer):
             raise serializers.ValidationError("'week' key is None in input data")
 
         try:
-            return self.calculate_metrics(week_data)
+            aproved = self.calculate_metrics(week_data)
+            total = self.calculate_metrics(week_data.filter(payment__status=2))
+            result = {key: {"approved": aproved[key], "total": total[key]} for key in aproved}
+
+            return result
         except Exception as e:
             raise serializers.ValidationError(str(e))
 
@@ -233,7 +241,11 @@ class MetricsSerializer(serializers.Serializer):
             raise serializers.ValidationError("'month' key is None in input data")
         
         try:
-            return self.calculate_metrics(month_data)
+            aproved = self.calculate_metrics(month_data)
+            total = self.calculate_metrics(month_data.filter(payment__status=2))
+            result = {key: {"approved": aproved[key], "total": total[key]} for key in aproved}
+
+            return result
         except Exception as e:
             raise serializers.ValidationError(str(e))
 

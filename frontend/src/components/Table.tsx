@@ -2,6 +2,8 @@ import { motion } from "framer-motion";
 import React, { useEffect } from "react";
 import { BsCreditCard2Front } from "react-icons/bs";
 import { FaBullseye } from "react-icons/fa";
+import { GrFormNext, GrFormPrevious } from "react-icons/gr";
+import { IoSearchOutline } from "react-icons/io5";
 import {
   FcCancel,
   FcDeleteRow,
@@ -15,6 +17,10 @@ import { MdAttachMoney } from "react-icons/md";
 import { Contexts } from "../services/Contexts";
 import { useUserServices } from "../services/user.services";
 import { FormTicket } from "./Form.ticket";
+import { MdDateRange } from "react-icons/md";
+import axios from "axios";
+import { AuthHeader } from "../services/auth.header";
+
 export const Table = () => {
   const { get_tickets, update_ticket } = useUserServices();
   const { state, dispatch } = React.useContext(Contexts);
@@ -25,6 +31,34 @@ export const Table = () => {
   const [responseTicketsRejected, setResponseTicketsRejected] =
     React.useState<ResponseTickets>();
 
+  const handlerPagination = React.useCallback(
+    async (url: string | null, type: "approved" | "pending" | "rejected") => {
+      if (!url) return;
+      try {
+        const response = await axios.get(url, {
+          headers: AuthHeader(),
+        });
+
+        switch (type) {
+          case "approved":
+            setResponseTicketsApproved(response.data);
+            break;
+          case "pending":
+            setResponseTicketsPending(response.data);
+            break;
+          case "rejected":
+            setResponseTicketsRejected(response.data);
+            break;
+          default:
+            break;
+        }
+      } catch (error) {
+        console.error(`Error fetching tickets: ${error}`);
+      }
+    },
+    []
+  );
+
   const format_tickets = ({
     title,
     response,
@@ -32,11 +66,37 @@ export const Table = () => {
     title: string;
     response: ResponseTickets;
   }) => {
+    const type =
+      title === "Tickets Rechazados"
+        ? "rejected"
+        : title === "Tickets Pendientes"
+        ? "pending"
+        : "approved";
     return (
       <>
         <tr>
           <td className="text-left text-zinc-400 text-xs " colSpan={3}>
-            {title} ({response?.count})
+            {response.current &&
+              `${title}. Mostrando ${
+                response.current && (response.current - 1) * 5 + 1
+              } - ${Math.min(response.current * 5, response.count)} de ${
+                response.count
+              }`}
+            <div className="inline-flex gap-1 ">
+              <button
+                className="text-primary/60 hover:text-primary/80 "
+                onClick={() => handlerPagination(response.previous, type)}
+              >
+                <GrFormPrevious size={16} />
+              </button>
+
+              <button
+                className=" text-primary/60 hover:text-primary/80"
+                onClick={() => handlerPagination(response.next, type)}
+              >
+                <GrFormNext size={16} />
+              </button>
+            </div>
           </td>
         </tr>
         {response?.results.map((ticket, index) => (
@@ -45,7 +105,7 @@ export const Table = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 * index }}
-            className={"h-20"}
+            className={"h-16"}
             key={ticket.id}
           >
             <td className="w-4  p-2 md:p-4 bg-white rounded-l-lg">
@@ -53,7 +113,7 @@ export const Table = () => {
                 <input
                   id="checkbox-table-search-1"
                   type="checkbox"
-                  className="w-4 h-4 text-primary-blue  rounded focus:ring-primary-blue dark:focus:ring-primary-blue dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2  "
+                  className="w-4 h-4 text-primary-blue  rounded focus:ring-primary-blue focus:ring-primary-blue ring-offset-gray-800 focus:ring-offset-gray-800 focus:ring-2  "
                 />
                 <label htmlFor="checkbox-table-search-1" className="sr-only">
                   checkbox
@@ -63,7 +123,7 @@ export const Table = () => {
 
             {/*  */}
             <td className=" py-3 w-20  bg-white">
-              {index + 1} <br />
+              {(response.current - 1) * 5 + index+1} <br />
               <span></span>
             </td>
             <td className=" py-3  bg-white">
@@ -186,8 +246,34 @@ export const Table = () => {
                       });
                     }}
                   />
-                  <FcCancel className="inline mx-0.5" size={20} />
-                  <FcMediumPriority className="inline mx-0.5" size={20} />
+                  <FcCancel
+                    className="inline mx-0.5"
+                    size={20}
+                    onClick={() => {
+                      update_ticket({
+                        details: {
+                          id: ticket.id,
+                          payment: {
+                            status: "3",
+                          },
+                        },
+                      });
+                    }}
+                  />
+                  <FcMediumPriority
+                    className="inline mx-0.5"
+                    size={20}
+                    onClick={() => {
+                      update_ticket({
+                        details: {
+                          id: ticket.id,
+                          payment: {
+                            status: "1",
+                          },
+                        },
+                      });
+                    }}
+                  />
                 </>
               )}
             </td>
@@ -220,9 +306,14 @@ export const Table = () => {
 
     switch (msg.type) {
       case "ticket_added":
-      case "ticket_updated":
       case "ticket_deleted":
-        (msg.user.id === state.auth.user.id ||
+        (msg.user.username === state.auth.user.username ||
+          state.auth.user.roles.includes("staff")) &&
+          fetchTickets();
+        break;
+      case "ticket_updated":
+        ((msg.payload.colaborator &&
+          msg.payload.colaborator.id === state.auth.user.id) ||
           state.auth.user.roles.includes("staff")) &&
           fetchTickets();
         break;
@@ -233,9 +324,31 @@ export const Table = () => {
   }, [state.ws.lastMessage]);
   return (
     <div className="w-full flex flex-col justify-between my-2 h-2/3 ">
-      <div className="flex justify-end items-center w-full py-2">
+      <div className="flex flex-wrap justify-end items-center w-full py-2 gap-3">
+        <div className="relative max-w-sm">
+          <div className="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
+            <MdDateRange className="text-gray-400" />
+          </div>
+          <input
+            id="default-datepicker"
+            type="text"
+            className=" text-gray-600 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 bg-zinc-100 border border-zinc-200 placeholder-gray-400 "
+            placeholder="desde"
+          />
+        </div>
+        <div className="relative max-w-sm">
+          <div className="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
+            <MdDateRange className="text-gray-400" />
+          </div>
+          <input
+            id="default-datepicker"
+            type="text"
+            className=" text-gray-600 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 bg-zinc-100 border border-zinc-200 placeholder-gray-400 "
+            placeholder="hasta"
+          />
+        </div>
         <button
-          className="px-5 py-2 rounded-lg bg-primary text-white"
+          className="px-5 py-2 rounded-lg bg-primary text-white s"
           onClick={() =>
             dispatch({
               type: "SET_POPUP",
@@ -252,6 +365,7 @@ export const Table = () => {
           Agregar
         </button>
       </div>
+
       <div className="w-full h-full overflow-scroll bg-zinc-100 p-3 rounded-xl no-scrollbar ">
         <table className="table w-full border-separate border-spacing-y-1 text-xs lg:text-sm text-center  space-y-2 h-1/2 ">
           <thead className=" text-xs text-gray-700 uppercase sticky top-0">
@@ -261,7 +375,7 @@ export const Table = () => {
                   <input
                     id="checkbox-all-search"
                     type="checkbox"
-                    className="w-4 h-4 rounded-xl text-primary-blue bg-gray-100 border-gray-300 focus:ring-primary-blue dark:focus:ring-primary-blue dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2  "
+                    className="w-4 h-4 rounded-xl text-primary-blue bg-gray-100 border-gray-300 focus:ring-primary-blue focus:ring-primary-blue ring-offset-gray-800 focus:ring-offset-gray-800 focus:ring-2  "
                   />
                   <label htmlFor="checkbox-all-search" className="sr-only">
                     checkbox
