@@ -21,6 +21,10 @@ class TicketViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     def get_queryset(self):
 
         range_filter = self.request.query_params.get('range', (first_current_week_date, last_current_week_date))
+        print("#################range_filter: ", range_filter)
+        if not range_filter:
+            range_filter = (today, today)
+            
         status = self.request.query_params.get('status', None)
 
         queryset = Ticket.objects.filter(created_at__range=range_filter)

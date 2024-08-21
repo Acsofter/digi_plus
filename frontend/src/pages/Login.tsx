@@ -42,8 +42,7 @@ export const Login = () => {
         transition={{ duration: 0.4 }}
         className="flex w-full rounded-3xl bg-base text-white max-w-[1300px] place-items-start shadow-xl shadow-black/30 place-content-center relative"
       >
-        <div 
-        className=" lg:w-1/2 w-full h-full">
+        <div className=" lg:w-1/2 w-full h-full">
           <div className="inline-flex justify-center">
             <SiContentstack
               size={75}
@@ -52,7 +51,9 @@ export const Login = () => {
           </div>
           <form
             onSubmit={formSubmited}
-            className={`flex flex-col w-full place-items-center place-content-center h-3/5 px-16 gap-3 opacity-1 duration-500 ${ position && "opacity-0 scale-50"} `}
+            className={`flex flex-col w-full place-items-center place-content-center h-3/5 px-16 gap-3 opacity-1 duration-500 ${
+              position && "opacity-0 scale-50"
+            } `}
           >
             <div className="w-full">
               <label className="font-semibold" htmlFor="user">
@@ -92,11 +93,12 @@ export const Login = () => {
             </button>
           </form>
         </div>
-        <div 
-        // initial={{ opacity: 0, scale: 0.5 }}
-        // animate={{ opacity: 1, scale: 1 }}
-        // transition={{ duration: 0.4 }} 
-        className=" lg:w-1/2 w-full h-full">
+        <div
+          // initial={{ opacity: 0, scale: 0.5 }}
+          // animate={{ opacity: 1, scale: 1 }}
+          // transition={{ duration: 0.4 }}
+          className=" lg:w-1/2 w-full h-full"
+        >
           <div className="inline-flex justify-center">
             <SiContentstack
               size={75}
@@ -105,7 +107,9 @@ export const Login = () => {
           </div>
           <form
             onSubmit={formSubmited}
-            className={`flex flex-col w-full place-items-center place-content-center h-3/5 px-16 gap-3 opacity-1  duration-500 ${ !position && "opacity-0 scale-50"} `}
+            className={`flex flex-col w-full place-items-center place-content-center h-3/5 px-16 gap-3 opacity-1  duration-500 ${
+              !position && "opacity-0 scale-50"
+            } `}
           >
             <div className="w-full">
               <label className="font-semibold" htmlFor="user">
@@ -117,7 +121,6 @@ export const Login = () => {
                 placeholder="ej; mandujar"
                 className=" w-full bg-transparent border rounded-lg h-12 p-2 mt-2"
                 value={form.username}
-               
               />
             </div>
             <div className="w-full">
@@ -146,13 +149,13 @@ export const Login = () => {
           </form>
         </div>
         <motion.div
-          initial={!position ? { left: 0 } : {right: 0}}
+          initial={!position ? { left: 0 } : { right: 0 }}
           animate={{ left: position ? 0 : "", right: !position ? 0 : "" }}
           transition={{ duration: 0.4 }}
-          className={`lg:flex bg-gradient-to-tr from-primary to-secondary  w-1/2 h-full rounded-3xl p-10 hidden flex-col overflow-hidden absolute`}
+          className={`lg:flex bg-[#03328a]   w-1/2 h-full rounded-3xl p-10 hidden flex-col overflow-hidden absolute`}
           onClick={() => setPosition(!position)}
         >
-          <div className="animate-bounce border-white/10 border rounded-lg rounded-tl-none bg-secondary backdrop-blur-sm w-auto max-w-[50%] text-sm p-5 my-3">
+          {/* <div className="animate-bounce border-white/10 border rounded-lg rounded-tl-none bg-secondary backdrop-blur-sm w-auto max-w-[50%] text-sm p-5 my-3">
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis
             quos illum quod porro? Mollitia saepe consectetur laborum cumque
             voluptatem aut!
@@ -173,7 +176,10 @@ export const Login = () => {
           </div>
           <div className="animate-bounce  border-white/10 border rounded-lg rounded-tr-none bg-secondary backdrop-blur-sm w-auto max-w-[50%] text-sm p-5 my-3 place-self-end">
             Lorem ipsum dolor sit amet.
-          </div>
+          </div> */}
+          <div className="size-72 rounded-full bg-amber-500 absolute top-1/2 left-1/2 -translate-x-2/2 -translate-y-2/2 filter blur-3xl opacity-60 "></div>
+          <div className="size-80 rounded-full bg-violet-500 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 filter blur-3xl opacity-60"></div>
+          <div className="size-60 rounded-full bg-green-500 absolute top-1/2 right-1/2 -translate-y-2/2 -translate-x-2/2 filter blur-3xl opacity-60 animate-pulse duration-1000"></div>
         </motion.div>
       </motion.div>
     </div>

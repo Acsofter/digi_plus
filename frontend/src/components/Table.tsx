@@ -1,9 +1,10 @@
+import axios from "axios";
+import { format } from "date-fns";
+
 import { motion } from "framer-motion";
 import React, { useEffect } from "react";
 import { BsCreditCard2Front } from "react-icons/bs";
 import { FaBullseye } from "react-icons/fa";
-import { GrFormNext, GrFormPrevious } from "react-icons/gr";
-import { IoSearchOutline } from "react-icons/io5";
 import {
   FcCancel,
   FcDeleteRow,
@@ -13,13 +14,12 @@ import {
   FcViewDetails,
 } from "react-icons/fc";
 import { FiUser } from "react-icons/fi";
-import { MdAttachMoney } from "react-icons/md";
+import { GrFormNext, GrFormPrevious } from "react-icons/gr";
+import { MdAttachMoney, MdDateRange } from "react-icons/md";
+import { AuthHeader } from "../services/auth.header";
 import { Contexts } from "../services/Contexts";
 import { useUserServices } from "../services/user.services";
 import { FormTicket } from "./Form.ticket";
-import { MdDateRange } from "react-icons/md";
-import axios from "axios";
-import { AuthHeader } from "../services/auth.header";
 
 export const Table = () => {
   const { get_tickets, update_ticket } = useUserServices();
@@ -30,6 +30,12 @@ export const Table = () => {
     React.useState<ResponseTickets>();
   const [responseTicketsRejected, setResponseTicketsRejected] =
     React.useState<ResponseTickets>();
+
+  // const [search, setSearch] = React.useState("");
+  const [rangeDate, setRangeDate] = React.useState({
+    start: "",
+    end: "",
+  });
 
   const handlerPagination = React.useCallback(
     async (url: string | null, type: "approved" | "pending" | "rejected") => {
@@ -123,7 +129,7 @@ export const Table = () => {
 
             {/*  */}
             <td className=" py-3 w-20  bg-white">
-              {(response.current - 1) * 5 + index+1} <br />
+              {response.current && (response.current - 1) * 5 + index + 1} <br />
               <span></span>
             </td>
             <td className=" py-3  bg-white">
@@ -284,9 +290,29 @@ export const Table = () => {
   };
 
   const fetchTickets = async () => {
-    const ticketsApprovedResponse = await get_tickets({ status: "2" });
-    const ticketsPendingResponse = await get_tickets({ status: "1" });
-    const ticketsRejectedResponse = await get_tickets({ status: "3" });
+    const rangeDateFormatted = [
+      format(
+        rangeDate.end ? rangeDate.start : new Date(),
+        "yyyy-MM-dd"
+      ),
+      format(
+        rangeDate.start ? rangeDate.end : new Date(),
+        "yyyy-MM-dd"
+      ),
+    ];
+
+    const ticketsApprovedResponse = await get_tickets({
+      status: "2",
+      range: rangeDateFormatted,
+    });
+    const ticketsPendingResponse = await get_tickets({
+      status: "1",
+      range: rangeDateFormatted,
+    });
+    const ticketsRejectedResponse = await get_tickets({
+      status: "3",
+      range: rangeDateFormatted,
+    });
 
     ticketsApprovedResponse &&
       setResponseTicketsApproved(ticketsApprovedResponse);
@@ -331,20 +357,28 @@ export const Table = () => {
           </div>
           <input
             id="default-datepicker"
-            type="text"
+            type="date"
             className=" text-gray-600 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 bg-zinc-100 border border-zinc-200 placeholder-gray-400 "
             placeholder="desde"
+            value={rangeDate.start}
+            onChange={(e) => {
+              setRangeDate({ ...rangeDate, start: e.target.value });
+            }}
           />
         </div>
         <div className="relative max-w-sm">
           <div className="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
-            <MdDateRange className="text-gray-400" />
+            <MdDateRange className="text-gray-400 " />
           </div>
           <input
             id="default-datepicker"
-            type="text"
+            type="date"
             className=" text-gray-600 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 bg-zinc-100 border border-zinc-200 placeholder-gray-400 "
             placeholder="hasta"
+            value={rangeDate.end}
+            onChange={(e) => {
+              setRangeDate({ ...rangeDate, end: e.target.value });
+            }}
           />
         </div>
         <button
@@ -363,6 +397,18 @@ export const Table = () => {
           }
         >
           Agregar
+        </button>
+        <button
+          className="px-5 py-2 rounded-lg bg-primary text-white s"
+          onClick={fetchTickets}
+        >
+          Buscar
+        </button>
+        <button
+          className="px-5 py-2 rounded-lg bg-primary text-white s"
+          onClick={() => {}}
+        >
+          Imprimir
         </button>
       </div>
 

@@ -35,11 +35,12 @@ interface AuthState {
 }
 
 interface User {
-  id: number;
+  id: number | null;
   email: string;
   first_name: string;
   last_name: string;
   is_staff: boolean;
+  password?: string;
   is_superuser: boolean;
   is_active: boolean;
   created_at: string;
@@ -73,10 +74,19 @@ interface RequestTicket extends Ticket {
 
 interface ResponseTickets {
   count: number;
-  current: number;
+  current: number | null;
   next: string | null;
   previous: string | null;
   results: Ticket[];
+}
+
+interface ResponsePayments {
+  count: number;
+  pages: number;
+  current: number | null;
+  next: string | null;
+  previous: string | null;
+  results: Payment[];
 }
 
 interface Category {
@@ -92,6 +102,7 @@ interface Payment {
   type: string;
   amount: string;
   period: string;
+  ticket: Ticket;
   created_at: string;
   colaborator: number;
 }
