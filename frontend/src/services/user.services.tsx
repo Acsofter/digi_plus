@@ -260,11 +260,7 @@ export const useUserServices = () => {
     }
   };
 
-  const update_company = async ({
-    company_details,
-  }: {
-    company_details: FormCompanyState;
-  }) => {
+  const update_company = async (company_details: Company) => {
     try {
       const response = await axios.put<Company>(
         `${base_url}/company/`,
@@ -296,7 +292,7 @@ export const useUserServices = () => {
       if (response.status !== 200) {
         return false;
       }
-      console.log('response.data.colaborator', response.data.colaborator)
+      console.log("response.data.colaborator", response.data.colaborator);
       sendMessage({
         type: "ticket_updated",
         message: "Ticket actualizado",

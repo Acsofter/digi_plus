@@ -12,7 +12,8 @@ interface WsState {
 interface Company {
   id: number;
   name: string;
-  logo?: string | null;
+  email: string;
+  logo?: string;
   address: string;
   phone: string;
   colaborator_percentage: string;
@@ -107,12 +108,7 @@ interface Payment {
   colaborator: number;
 }
 
-interface FormCompanyState {
-  name: string;
-  address: string;
-  phone: string;
-  email: string;
-}
+
 
 interface UpdateTicket {
   id: number;

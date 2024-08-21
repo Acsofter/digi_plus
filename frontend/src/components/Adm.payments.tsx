@@ -1,16 +1,13 @@
+import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
-import { BiBlock, BiEdit, BiPlus, BiTrash } from "react-icons/bi";
+import { BiPlus } from "react-icons/bi";
+import { FcApproval, FcCancel, FcGenericSortingDesc } from "react-icons/fc";
+import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 import { IoSearchOutline } from "react-icons/io5";
+import { AuthHeader } from "../services/auth.header";
 import { Contexts } from "../services/Contexts";
-import { FormUser } from "./Form.user";
 import { useUserServices } from "../services/user.services";
 import { FormPayment } from "./Form.payment";
-import { FcApproval } from "react-icons/fc";
-import { FcCancel } from "react-icons/fc";
-import { FcGenericSortingDesc } from "react-icons/fc";
-import { GrFormNext, GrFormPrevious } from "react-icons/gr";
-import { AuthHeader } from "../services/auth.header";
-import axios from "axios";
 
 export const AdmPayments = () => {
   const { get_payments } = useUserServices();

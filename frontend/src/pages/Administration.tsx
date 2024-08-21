@@ -1,8 +1,7 @@
-import React from 'react'
-import { General } from '../layouts/General';
-import { Modal } from 'reactstrap';
-import { AdmUsers } from '../components/Adm.users';
+import React from 'react';
 import { AdmPayments } from '../components/Adm.payments';
+import { AdmUsers } from '../components/Adm.users';
+import { General } from '../layouts/General';
 export const Administration = () => {
   const [activeTab, setActiveTab] = React.useState(0);
   const tabs = [

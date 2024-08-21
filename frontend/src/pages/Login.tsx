@@ -1,10 +1,9 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { login } from "../services/auth.services";
-import { toast } from "react-toastify";
-import { SiContentstack } from "react-icons/si";
 import { motion } from "framer-motion";
-import { FORMERR } from "dns";
+import React, { useState } from "react";
+import { SiContentstack } from "react-icons/si";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { login } from "../services/auth.services";
 
 export const Login = () => {
   const navigate = useNavigate();
