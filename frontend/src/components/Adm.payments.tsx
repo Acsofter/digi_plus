@@ -166,8 +166,8 @@ export const AdmPayments = () => {
                   </th>
                   <td className="px-6 py-4">{payment.amount}</td>
                   <td className="px-6 py-4">
-                    {payment.ticket?.colaborator &&
-                      payment.ticket.colaborator.username}
+                    {payment.ticket?.collaborator &&
+                      payment.ticket.collaborator.username}
                   </td>
                   <td className="px-6 py-4">{get_badge(payment.status)}</td>
                   <td className="px-6 py-4">{payment.ticket?.description}</td>

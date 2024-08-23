@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { RxCross2 } from "react-icons/rx";
 import { Contexts } from "../services/Contexts";
 import { motion } from "framer-motion";
+import { GoPlusCircle } from "react-icons/go";
 
 export const Modal = () => {
   const { state, dispatch } = useContext(Contexts);
@@ -26,27 +27,30 @@ export const Modal = () => {
   window.addEventListener("click", handleClickOutside);
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.2 }}
+    <div
       id="modal-wrapper"
-      className={`modal-wrapper absolute z-10 bg-gray-500/10 rounded-xl backdrop-blur-sm w-full h-full flex place-items-center justify-center ${
+      className={`modal-wrapper absolute z-10 bg-gray-600/40 rounded-xl backdrop-blur-sm w-full h-full flex place-items-center justify-center ${
         state.popup.isOpen ? "visible" : "invisible"
       }`}
     >
-      <div className="modal bg-white p-8 h-auto w-1/2 rounded-xl">
-        <div className="flex justify-between">
-          <h2 className="font-semibold text-2xl">
-            {state.popup.title} /{" "}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.2 }}
+        className="modal bg-white p-8 h-auto w-auto rounded-xl"
+      >
+        <div className="flex justify-between gap-3 items-center">
+          <GoPlusCircle className="text-3xl" />
+          <span className="  w-full">
+            <p className="text-lg font-bold space-y-0 capitalize">{state.popup.title}</p>
             {state.popup.subtitle && (
-              <span className="text-xl font-semibold text-zinc-400">
+              <span className="text-sm  text-zinc-400">
                 {state.popup.subtitle}
               </span>
             )}
-          </h2>
+          </span>
           <button
-            className="text-slate-500 text-lg py-1 px-3 rounded-md  hover:bg-slate-100"
+            className="text-slate-500 text-lg py-1 px-3 rounded-md  hover:text-red-500"
             onClick={() =>
               dispatch({
                 type: "SET_POPUP",
@@ -63,10 +67,10 @@ export const Modal = () => {
             <RxCross2 />
           </button>
         </div>
-        <hr className="my-4" />
+        <hr className="my-2 border-slate-100" />
 
         {state.popup.content}
-      </div>
-    </motion.div>
+      </motion.div>
+    </div>
   );
 };

@@ -15,14 +15,19 @@ class CompanyViewSet(viewsets.GenericViewSet, CustomAPIView):
 
     def put(self, request):
         company =  self.get_queryset()
+       
         if company:
             for key, value in request.data.items():
                 setattr(company, key, value)
             company.save()
             return Response(CompanySerializer(company).data, status=status.HTTP_200_OK)
         else:
-            company = Company.objects.create(**request.data) 
-        return Response(CompanySerializer(company).data, status=status.HTTP_200_OK)
+            serializer = self.serializer_class(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+    
     
 
     def list(self, request):

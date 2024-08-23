@@ -81,7 +81,7 @@ export const Table = () => {
     return (
       <>
         <tr>
-          <td className="text-left text-zinc-400 text-xs " colSpan={3}>
+          <td className="text-left text-zinc-400 text-xs " colSpan={7}>
             {response.current &&
               `${title}. Mostrando ${
                 response.current && (response.current - 1) * 5 + 1
@@ -129,7 +129,8 @@ export const Table = () => {
 
             {/*  */}
             <td className=" py-3 w-20  bg-white">
-              {response.current && (response.current - 1) * 5 + index + 1} <br />
+              {response.current && (response.current - 1) * 5 + index + 1}{" "}
+              <br />
               <span></span>
             </td>
             <td className=" py-3  bg-white">
@@ -168,12 +169,12 @@ export const Table = () => {
               <div className="grid sm:grid-cols-2 items-center justify-center gap-3">
                 <div
                   className={`p-2 max-w-10 rounded-full hidden sm:block justify-self-end`}
-                  style={{ backgroundColor: ticket.colaborator.color }}
+                  style={{ backgroundColor: ticket.collaborator.color }}
                 >
                   <FiUser className="text-white" size={20} />
                 </div>
                 <p className="text-left font-bold">
-                  {ticket.colaborator.username}
+                  {ticket.collaborator.username}
 
                   <span className=" block text-xs text-gray-400 font-normal">
                     usuario
@@ -291,14 +292,8 @@ export const Table = () => {
 
   const fetchTickets = async () => {
     const rangeDateFormatted = [
-      format(
-        rangeDate.end ? rangeDate.start : new Date(),
-        "yyyy-MM-dd"
-      ),
-      format(
-        rangeDate.start ? rangeDate.end : new Date(),
-        "yyyy-MM-dd"
-      ),
+      format(rangeDate.end ? rangeDate.start : new Date(), "yyyy-MM-dd"),
+      format(rangeDate.start ? rangeDate.end : new Date(), "yyyy-MM-dd"),
     ];
 
     const ticketsApprovedResponse = await get_tickets({
@@ -338,8 +333,8 @@ export const Table = () => {
           fetchTickets();
         break;
       case "ticket_updated":
-        ((msg.payload.colaborator &&
-          msg.payload.colaborator.id === state.auth.user.id) ||
+        ((msg.payload.collaborator &&
+          msg.payload.collaborator.id === state.auth.user.id) ||
           state.auth.user.roles.includes("staff")) &&
           fetchTickets();
         break;
@@ -350,7 +345,7 @@ export const Table = () => {
   }, [state.ws.lastMessage]);
   return (
     <div className="w-full flex flex-col justify-between my-2 h-2/3 ">
-      <div className="flex flex-wrap justify-end items-center w-full py-2 gap-3">
+      <div className="flex flex-wrap justify-end items-center w-full py-2 gap-1">
         <div className="relative max-w-sm">
           <div className="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
             <MdDateRange className="text-gray-400" />
@@ -381,8 +376,21 @@ export const Table = () => {
             }}
           />
         </div>
+
         <button
-          className="px-5 py-2 rounded-lg bg-primary text-white s"
+          className="px-5 py-2 rounded-lg text-sm border border-green-500 text-green-500"
+          onClick={fetchTickets}
+        >
+          Buscar
+        </button>
+        <button
+          className="px-5 py-2 rounded-lg text-sm border border-violet-500 text-violet-500"
+          onClick={() => {}}
+        >
+          Imprimir
+        </button>
+        <button
+          className="px-5 py-2 rounded-lg text-sm bg-gradient-to-tr border border-blue-500 from-blue-600 to-blue-400 text-white s"
           onClick={() =>
             dispatch({
               type: "SET_POPUP",
@@ -397,18 +405,6 @@ export const Table = () => {
           }
         >
           Agregar
-        </button>
-        <button
-          className="px-5 py-2 rounded-lg bg-primary text-white s"
-          onClick={fetchTickets}
-        >
-          Buscar
-        </button>
-        <button
-          className="px-5 py-2 rounded-lg bg-primary text-white s"
-          onClick={() => {}}
-        >
-          Imprimir
         </button>
       </div>
 

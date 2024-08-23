@@ -17,7 +17,7 @@ export const FormTicket = ({ ticket_id }: { ticket_id?: number }) => {
     id: 0,
     category: {} as Category,
     description: "",
-    colaborator: {} as User,
+    collaborator: {} as User,
     payment: {} as Payment,
     created_at: "",
     updated_at: "",
@@ -56,7 +56,7 @@ export const FormTicket = ({ ticket_id }: { ticket_id?: number }) => {
           id: 0,
           category: {} as Category,
           description: "",
-          colaborator: {} as User,
+          collaborator: {} as User,
           payment: {} as Payment,
           created_at: "",
           updated_at: "",
@@ -81,7 +81,7 @@ export const FormTicket = ({ ticket_id }: { ticket_id?: number }) => {
     }
     return (
       <div
-        className={`peer transition-all duration-200 w-1/3 h-6 border rounded-md inline-flex justify-between items-center py-5 px-3 shadow-md bg-gradient-to-tr hover:brightness-95  ${color}`}
+        className={`peer transition-all duration-200 w-1/3 h-6 border rounded-3xl inline-flex justify-between items-center py-5 px-3 shadow-md bg-gradient-to-tr hover:brightness-95  ${color}`}
       >
         <div>
           {!form.payment ? (
@@ -147,104 +147,94 @@ export const FormTicket = ({ ticket_id }: { ticket_id?: number }) => {
     </div>
   ) : (
     <motion.form
-      className="w-full flex flex-col gap-5"
+      className="w-[700px] flex flex-col gap-5"
       onSubmit={handleSubmit}
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.9 }}
       transition={{ duration: 0.1 }}
     >
-      <div className="grid grid-cols-2 gap-4">
-        <div className="flex flex-col">
-          <label className="text-sm text-base pb-1">Total $</label>
-          <input
-            autoFocus={true}
-            value={form.payment.amount ? form.payment.amount : NaN}
-            onChange={(e) =>
-              e.target.value &&
-              setForm({
-                ...form,
-                payment: {
-                  ...form.payment,
-                  amount: e.target.value,
-                },
-              })
-            }
-            className="w-full px-2 text-sm py-6 h-5 border rounded-md focus:outline-none focus:ring-1 focus:ring-slate-200 peer transition-all duration-200"
-            type="number"
-            name="quantity"
-            id="quantity"
-          />
-        </div>
+      <div className="grid grid-cols-4 gap-3">
+        <label className="text-sm text-base pb-1">Total $</label>
+        <input
+          autoFocus={true}
+          value={form.payment.amount ? form.payment.amount : NaN}
+          onChange={(e) =>
+            e.target.value &&
+            setForm({
+              ...form,
+              payment: {
+                ...form.payment,
+                amount: e.target.value,
+              },
+            })
+          }
+          className="w-full px-2 text-sm py-5 h-5 border rounded-3xl focus:outline-none focus:ring-1 focus:ring-slate-200 peer transition-all duration-200 col-span-3"
+          type="number"
+          name="quantity"
+          id="quantity"
+        />
 
-        <div className="flex flex-col">
-          <label className="text-sm text-base pb-1">Categoria</label>
-          <select
-            defaultValue={"default"}
-            value={form.category.id ? form.category.id : "default"}
-            onChange={(e) =>
-              e.target.value !== "default" &&
-              setForm({
-                ...form,
-                category:
-                  categories[
-                    categories.findIndex(
-                      (item) => item.id === parseInt(e.target.value)
-                    )
-                  ],
-              })
-            }
-            className="w-full px-2 text-sm text-primary h-full  border rounded-md focus:outline-none focus:ring-1 focus:ring-slate-200 peer transition-all duration-200"
-            name="category"
-            id=""
-          >
-            <option value="default">Otros</option>
-            {categories.map((item, index) => (
-              <option value={item.id} key={item.id}>
-                {item.name}
-              </option>
-            ))}
-          </select>
-        </div>
+        <label className="text-sm text-base pb-1">Categoria</label>
+        <select
+          defaultValue={"default"}
+          value={form.category.id ? form.category.id : "default"}
+          onChange={(e) =>
+            e.target.value !== "default" &&
+            setForm({
+              ...form,
+              category:
+                categories[
+                  categories.findIndex(
+                    (item) => item.id === parseInt(e.target.value)
+                  )
+                ],
+            })
+          }
+          className="w-1/4 p-2  text-sm text-base h-full rounded-3xl outline-none ring-1 ring-slate-200 peer transition-all duration-200 col-span-3"
+          name="category"
+          id=""
+        >
+          <option value="default">Otros</option>
+          {categories.map((item, index) => (
+            <option value={item.id} key={item.id}>
+              {item.name}
+            </option>
+          ))}
+        </select>
 
-        
-      </div>
+        <label className="text-sm text-base pb-1">Comentario</label>
+        <textarea
+          value={form.description}
+          onChange={(e) => setForm({ ...form, description: e.target.value })}
+          className="no-scrollbar w-full px-2 text-sm py-3 min-h-20 border rounded-3xl focus:outline-none focus:ring-1 focus:ring-slate-200 peer  duration-50 max-h-72 col-span-3"
+          name="comment"
+          id="comment"
+        />
 
-      <div className="grid">
-        <div className="flex flex-col">
-          <label className="text-sm text-base pb-1">Comentario</label>
-          <textarea
-            value={form.description}
-            onChange={(e) => setForm({ ...form, description: e.target.value })}
-            className="no-scrollbar w-full px-2 text-sm py-3 min-h-20 border rounded-md focus:outline-none focus:ring-1 focus:ring-slate-200 peer  duration-50 max-h-72"
-            name="comment"
-            id="comment"
-          />
-        </div>
-      </div>
+        {ticket_id && get_badge(form.payment.status)}
 
-      {ticket_id && get_badge(form.payment.status)}
-
-      {ticket_id && (
-        <div className="grid grid-cols-2 gap-4">
-          <div className="flex flex-col text-sm">
-            <label className="text-sm text-base ">Creador por</label>
-            <div className="w-full m ">
-              <span>{form.colaborator.username}</span> ({" "}
-              <span className="text-base">{form.colaborator.email}</span> )
+        {ticket_id && (
+          <div className="grid grid-cols-2 gap-4">
+            <div className="flex flex-col text-sm">
+              <label className="text-sm text-base ">Creador por</label>
+              <div className="w-full m ">
+                <span>{form.collaborator.username}</span> ({" "}
+                <span className="text-base">{form.collaborator.email}</span> )
+              </div>
+            </div>
+            <div className="flex flex-col  text-sm place-items-end">
+              <label className=" text-base pb-1">Fecha</label>
+              <span>
+                {new Date(form.updated_at).toLocaleDateString()},{" "}
+                {new Date(form.updated_at).toLocaleTimeString()}
+              </span>
             </div>
           </div>
-          <div className="flex flex-col  text-sm place-items-end">
-            <label className=" text-base pb-1">Fecha</label>
-            <span>
-              {new Date(form.updated_at).toLocaleDateString()},{" "}
-              {new Date(form.updated_at).toLocaleTimeString()}
-            </span>
-          </div>
-        </div>
-      )}
+        )}
+      </div>
 
-      <button className="bg-primary hover:bg-primary/80 text-white px-5 p-2 rounded-md ">
+      <button className="bg-primary hover:bg-primary/80 text-white px-5 p-2 rounded-3xl ">
         {ticket_id ? "Actualizar" : "Añadir"}
       </button>
     </motion.form>

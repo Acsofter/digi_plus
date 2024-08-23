@@ -104,6 +104,11 @@ class CompanySerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     
+    def retrieve(self, pk, request):
+        print("###########################################request, pk: ", pk, request)
+        return {}
+        
+    
     
 
 
@@ -136,7 +141,7 @@ class PaymentSerializerWithTicketDetails(serializers.ModelSerializer):
         return {
             'id': ticket_found.id,
             'description': ticket_found.description,
-            'colaborator': UserSerializer(ticket_found.colaborator).data,
+            'collaborator': UserSerializer(ticket_found.collaborator).data,
             'category': CategorySerializer(ticket_found.category).data,
             'created_at': ticket_found.created_at
 
@@ -148,7 +153,7 @@ class TicketSerializer(serializers.ModelSerializer):
     
     payment = serializers.PrimaryKeyRelatedField(queryset=Payment.objects.all())
     category = serializers.PrimaryKeyRelatedField(queryset=Category.objects.all())
-    colaborator = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+    collaborator = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
     
     class Meta:
         model = Ticket
@@ -159,13 +164,13 @@ class TicketSerializer(serializers.ModelSerializer):
         representation = super().to_representation(instance)
         representation['payment'] = PaymentSerializer(instance.payment).data
         representation['category'] = CategorySerializer(instance.category).data
-        representation['colaborator'] = UserSerializer(instance.colaborator).data
+        representation['collaborator'] = UserSerializer(instance.collaborator).data
         return representation
 
 
     def create(self, validated_data):
-        print(validated_data)
         validated_data['company'] = Company.objects.first()
+        print(validated_data)
         ticket_created = Ticket.objects.create(**validated_data)
         return ticket_created
     
@@ -184,18 +189,23 @@ class MetricsSerializer(serializers.Serializer):
                 return {
                     'tickets': 0,
                     'gross': 0,
-                    'net': 0
+                    'net': 0,
+                    'cancelled': 0,
+                    'pending': 0
                 }
             gross = sum([ticket.payment.amount for ticket in data])
 
-            net = (company.colaborator_percentage * gross) // 100
-            
+            net = (company.collaborator_percentage * gross) // 100
             company = Company.objects.first()
+            cancelled = data.filter(payment__status=3).count()
+            pending = data.filter(payment__status=1).count()
 
             return {
                 'tickets': data.count(),
                 'gross': gross,
-                'net': net
+                'net': net,
+                'cancelled': cancelled,
+                'pending': pending
             }
 
         except Exception as e:
@@ -210,9 +220,9 @@ class MetricsSerializer(serializers.Serializer):
             raise serializers.ValidationError("'today' key is None in input data")
         
         try:
-            aproved = self.calculate_metrics(today_data)
-            total = self.calculate_metrics(today_data.filter(payment__status=2))
-            result = {key: {"approved": aproved[key], "total": total[key]} for key in aproved}
+            total = self.calculate_metrics(today_data)
+            approved = self.calculate_metrics(today_data.filter(payment__status=2))
+            result = {key: {"approved": approved[key], "total": total[key]} for key in approved}
 
             return result
         except Exception as e:
@@ -226,9 +236,9 @@ class MetricsSerializer(serializers.Serializer):
             raise serializers.ValidationError("'week' key is None in input data")
 
         try:
-            aproved = self.calculate_metrics(week_data)
-            total = self.calculate_metrics(week_data.filter(payment__status=2))
-            result = {key: {"approved": aproved[key], "total": total[key]} for key in aproved}
+            total = self.calculate_metrics(week_data)
+            approved = self.calculate_metrics(week_data.filter(payment__status=2))
+            result = {key: {"approved": approved[key], "total": total[key]} for key in approved}
 
             return result
         except Exception as e:
@@ -241,9 +251,9 @@ class MetricsSerializer(serializers.Serializer):
             raise serializers.ValidationError("'month' key is None in input data")
         
         try:
-            aproved = self.calculate_metrics(month_data)
+            approved = self.calculate_metrics(month_data)
             total = self.calculate_metrics(month_data.filter(payment__status=2))
-            result = {key: {"approved": aproved[key], "total": total[key]} for key in aproved}
+            result = {key: {"approved": approved[key], "total": total[key]} for key in approved}
 
             return result
         except Exception as e:

@@ -28,7 +28,7 @@ class MetricsViewSet(viewsets.GenericViewSet):
 
 
         if not self.request.user.is_superuser:
-            queryset = queryset.filter(colaborator=self.request.user)
+            queryset = queryset.filter(collaborator=self.request.user)
 
 
         return queryset
@@ -68,7 +68,7 @@ class MetricsViewSet(viewsets.GenericViewSet):
                 date_to_filter = first_current_week_date + timedelta(days=i)
                 for user in users:
 
-                    tickets = Ticket.objects.filter(created_at__date=date_to_filter.strftime("%Y-%m-%d"), colaborator=user)
+                    tickets = Ticket.objects.filter(created_at__date=date_to_filter.strftime("%Y-%m-%d"), collaborator=user)
                     if user.username in data:
                         data[user.username]["data"].append(sum([tickets.payment.amount for tickets in tickets]))
                     else:
@@ -84,7 +84,7 @@ class MetricsViewSet(viewsets.GenericViewSet):
         current_week_number = today.isocalendar()[1]
       
 
-        payments_by_week = Payment.objects.filter(colaborator=self.request.user).annotate(
+        payments_by_week = Payment.objects.filter(collaborator=self.request.user).annotate(
             week=ExtractWeek('created_at'),
             year=ExtractYear('created_at')
         )
@@ -108,7 +108,7 @@ class MetricsViewSet(viewsets.GenericViewSet):
     def get_total_tickets_by_week(self):
         today = timezone.now().date()
         current_week_number = today.isocalendar()[1]
-        total_by_week = Ticket.objects.filter(colaborator=self.request.user).annotate(
+        total_by_week = Ticket.objects.filter(collaborator=self.request.user).annotate(
             week=ExtractWeek('created_at'),
             year=ExtractYear('created_at')
         ).values('week', 'year').annotate(total=Count('id'))
@@ -138,14 +138,14 @@ class MetricsViewSet(viewsets.GenericViewSet):
 
     @action(detail=False, methods=['get'], permission_classes=[permissions.IsAuthenticated])
     def me(self, request):
-        tickets_data = Ticket.objects.filter(colaborator=request.user.id)
+        tickets_data = Ticket.objects.filter(collaborator=request.user.id)
         return Response(self.serializer_class(self.filter_tickets(tickets_data)).data, status=status.HTTP_200_OK)
     
 
     def retrieve(self, request, pk=None):
         if not pk: return Response({"message": "Especifique un colaborador"}, status=status.HTTP_404_NOT_FOUND)
-        colaborator = get_object_or_404(User, pk=pk)
-        tickes_data = Ticket.objects.filter(colaborator=pk)
+        collaborator = get_object_or_404(User, pk=pk)
+        tickes_data = Ticket.objects.filter(collaborator=pk)
         serializer = self.serializer_class(self.filter_tickets(tickes_data))
         return Response(serializer.data, status=status.HTTP_200_OK)
 

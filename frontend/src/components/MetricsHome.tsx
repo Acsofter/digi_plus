@@ -2,7 +2,11 @@ import React, { useCallback, useEffect } from "react";
 import { useUserServices } from "../services/user.services";
 import { Contexts } from "../services/Contexts";
 import { IoTicketOutline } from "react-icons/io5";
-import { MdOutlineAttachMoney, MdOutlineCancel, MdPendingActions } from "react-icons/md";
+import {
+  MdOutlineAttachMoney,
+  MdOutlineCancel,
+  MdPendingActions,
+} from "react-icons/md";
 import { VscPercentage } from "react-icons/vsc";
 import AnimatedCounter from "./AnimatedCounter";
 
@@ -10,6 +14,8 @@ interface DataInterface {
   tickets: { approved: number; total: number };
   gross: { approved: number; total: number };
   net: { approved: number; total: number };
+  cancelled: { approved: number; total: number };
+  pending: { approved: number; total: number };
 }
 
 export const MetricsHome = () => {
@@ -25,21 +31,29 @@ export const MetricsHome = () => {
       tickets: { approved: 0, total: 0 },
       gross: { approved: 0, total: 0 },
       net: { approved: 0, total: 0 },
+      cancelled: { approved: 0, total: 0 },
+      pending: { approved: 0, total: 0 },
     },
     week: {
       tickets: { approved: 0, total: 0 },
       gross: { approved: 0, total: 0 },
       net: { approved: 0, total: 0 },
+      cancelled: { approved: 0, total: 0 },
+      pending: { approved: 0, total: 0 },
     },
     month: {
       tickets: { approved: 0, total: 0 },
       gross: { approved: 0, total: 0 },
       net: { approved: 0, total: 0 },
+      cancelled: { approved: 0, total: 0 },
+      pending: { approved: 0, total: 0 },
     },
     year: {
       tickets: { approved: 0, total: 0 },
       gross: { approved: 0, total: 0 },
       net: { approved: 0, total: 0 },
+      cancelled: { approved: 0, total: 0 },
+      pending: { approved: 0, total: 0 },
     },
   });
 
@@ -60,6 +74,8 @@ export const MetricsHome = () => {
       name: "Bruto",
       total: data.week.gross.total,
       approved: data.week.gross.approved,
+      pending: data.week.pending,
+      cancelled: data.week.cancelled,
       color: "text-secondary",
       icon: (
         <MdOutlineAttachMoney
@@ -112,8 +128,8 @@ export const MetricsHome = () => {
         if (msg.user.username === state.auth.user.username) {
           fetchMetrics();
         } else if (
-          msg.payload.colaborator &&
-          msg.payload.colaborator.username === state.auth.user.username
+          msg.payload.collaborator &&
+          msg.payload.collaborator.username === state.auth.user.username
         ) {
           fetchMetrics();
         }
@@ -165,17 +181,14 @@ export const MetricsHome = () => {
             <span>Pend.</span>
           </div>
           <span className="text-end font-bold">
-            $ <AnimatedCounter to={80} />
+            <AnimatedCounter to={data.today.pending.total} />
           </span>
           <div className="flex gap-1 items-center">
-            <MdOutlineCancel 
-              className={`inline ${"text-red-400"}`}
-              size={20}
-            />{" "}
+            <MdOutlineCancel className={`inline ${"text-red-400"}`} size={20} />{" "}
             <span>Cancel.</span>
           </div>
           <span className="text-end font-bold">
-            $ <AnimatedCounter to={50} />
+            <AnimatedCounter to={data.today.cancelled.total} />
           </span>
         </div>
       </div>
@@ -228,8 +241,9 @@ export const MetricsHome = () => {
                   <span
                     className={`text-center text-xl md:text-lg font-bold text-zinc-300 animate-pulse`}
                   >
-                    <AnimatedCounter to={card.approved - card.total} />
-                  </span>
+                    <AnimatedCounter to={ card.total - card.approved } />
+                  </span>{" "}
+                 
                 </div>
               </div>
             </div>

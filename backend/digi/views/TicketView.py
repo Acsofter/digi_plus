@@ -21,7 +21,6 @@ class TicketViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     def get_queryset(self):
 
         range_filter = self.request.query_params.get('range', (first_current_week_date, last_current_week_date))
-        print("#################range_filter: ", range_filter)
         if not range_filter:
             range_filter = (today, today)
             
@@ -34,7 +33,7 @@ class TicketViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         print("self.request.user.is_superuser", self.request.user.is_superuser)
 
         if not self.request.user.is_superuser:
-            queryset = queryset.filter(colaborator=self.request.user)
+            queryset = queryset.filter(collaborator=self.request.user)
 
         return queryset.order_by('-created_at')
         
@@ -44,12 +43,12 @@ class TicketViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         payment_data = request.data.pop('payment', {})
         payment_data['type'] = payment_data.get('type', 'Efectivo')
         payment_data['status'] =  payment_data.get('status', '1')
-        payment_data['colaborator'] = request.user
+        payment_data['collaborator'] = request.user
             
         payment = Payment.objects.create(**payment_data)
 
         request.data['payment']     = payment.id
-        request.data['colaborator'] = request.user.id
+        request.data['collaborator'] = request.user.id
 
         serializer = self.serializer_class(data=request.data)
 

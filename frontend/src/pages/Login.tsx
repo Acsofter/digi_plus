@@ -41,7 +41,7 @@ export const Login = () => {
         transition={{ duration: 0.4 }}
         className="flex w-full rounded-3xl bg-base text-white max-w-[1300px] place-items-start shadow-xl shadow-black/30 place-content-center relative"
       >
-        <div className=" lg:w-1/2 w-full h-full">
+        <div className="lg:w-1/2 w-full h-full">
           <div className="inline-flex justify-center">
             <SiContentstack
               size={75}
@@ -151,7 +151,7 @@ export const Login = () => {
           initial={!position ? { left: 0 } : { right: 0 }}
           animate={{ left: position ? 0 : "", right: !position ? 0 : "" }}
           transition={{ duration: 0.4 }}
-          className={`lg:flex bg-[#03328a]   w-1/2 h-full rounded-3xl p-10 hidden flex-col overflow-hidden absolute`}
+          className={`lg:flex bg-[#03328a]   w-1/2 h-full rounded-3xl p-10 hidden flex-col overflow-hidden absolute  justify-center`}
           onClick={() => setPosition(!position)}
         >
           {/* <div className="animate-bounce border-white/10 border rounded-lg rounded-tl-none bg-secondary backdrop-blur-sm w-auto max-w-[50%] text-sm p-5 my-3">
@@ -176,6 +176,11 @@ export const Login = () => {
           <div className="animate-bounce  border-white/10 border rounded-lg rounded-tr-none bg-secondary backdrop-blur-sm w-auto max-w-[50%] text-sm p-5 my-3 place-self-end">
             Lorem ipsum dolor sit amet.
           </div> */}
+          <h2 className="text-6xl text-white my-2 animate">Bienvenido!</h2>
+          <p className="text-xl">
+            Por favor, ingrese sus credenciales para acceder a su cuenta.
+          </p>
+          <p className="text-xl">y sigue avanzando hacia tus objetivos.</p>
           <div className="size-72 rounded-full bg-amber-500 absolute top-1/2 left-1/2 -translate-x-2/2 -translate-y-2/2 filter blur-3xl opacity-60 "></div>
           <div className="size-80 rounded-full bg-violet-500 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 filter blur-3xl opacity-60"></div>
           <div className="size-60 rounded-full bg-green-500 absolute top-1/2 right-1/2 -translate-y-2/2 -translate-x-2/2 filter blur-3xl opacity-60 animate-pulse duration-1000"></div>

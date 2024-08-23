@@ -15,7 +15,7 @@ export const FormPayment = ({ payment_id }: { payment_id?: number }) => {
     id: 0,
     category: {} as Category,
     description: "",
-    colaborator: {} as User,
+    collaborator: {} as User,
     payment: {} as Payment,
     created_at: "",
     updated_at: "",
@@ -51,7 +51,7 @@ export const FormPayment = ({ payment_id }: { payment_id?: number }) => {
           id: 0,
           category: {} as Category,
           description: "",
-          colaborator: {} as User,
+          collaborator: {} as User,
           payment: {} as Payment,
           created_at: "",
           updated_at: "",
@@ -78,7 +78,7 @@ export const FormPayment = ({ payment_id }: { payment_id?: number }) => {
   }, [payment_id]);
 
   return (
-    <form className="w-full flex flex-col gap-5" onSubmit={handleSubmit}>
+    <form className="w-[700px] flex flex-col gap-5" onSubmit={handleSubmit}>
       <div className="grid grid-cols-2 gap-4">
         <div className="flex flex-col">
           <label className="text-sm text-primary/60 pb-1">Total $</label>
@@ -177,8 +177,8 @@ export const FormPayment = ({ payment_id }: { payment_id?: number }) => {
           <div className="flex flex-col text-sm">
             <label className="text-sm text-primary/60 ">Creador por</label>
             <div className="w-full m ">
-              <span>{form.colaborator.username}</span> ({" "}
-              <span className="text-primary/60">{form.colaborator.email}</span>{" "}
+              <span>{form.collaborator.username}</span> ({" "}
+              <span className="text-primary/60">{form.collaborator.email}</span>{" "}
               )
             </div>
           </div>

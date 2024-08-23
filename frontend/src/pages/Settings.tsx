@@ -11,41 +11,46 @@ const dark_theme = require("../assets/image/dark-theme.png");
 const light_theme = require("../assets/image/light-theme.png");
 const default_theme = require("../assets/image/default-theme.png");
 
-
-
 export const Settings = () => {
   const { get_company_details, update_company } = useUserServices();
   const { state, dispatch } = useContext(Contexts);
 
-  const [form, setForm] = React.useState({
+  const [form, setForm] = React.useState<UpdateCompany>({
     name: "",
     logo: "",
-    theme: "default",
+    theme: localStorage.getItem("theme") || "default",
     address: "",
     phone: "",
     email: "",
     created_at: "",
     updated_at: "",
-    color: "#006dfa",
-    transparent: false,
-    colaborator_percentage: "",
-    company_percentage: "",
+    color: localStorage.getItem("color") || "#006dfa",
+    transparent: localStorage.getItem("transparent") === "true" || false,
+    collaborator_percentage: "",
   });
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
-    // const response = await update_company(form);
-    // if (response) setForm(response);
-  }
+
+    localStorage.setItem("theme", form.theme);
+    localStorage.setItem("color", form.color);
+    localStorage.setItem("transparent", form.transparent.toString());
+
+    const response = await update_company(form);
+    if (response) {
+      dispatch({ type: "SET_COMPANY", payload: response });
+    }
+  };
 
   useEffect(() => {
     const fetchCompany = async () => {
       const response = await get_company_details();
       if (response) setForm({ ...form, ...response });
+      dispatch({ type: "SET_COMPANY", payload: response });
     };
     fetchCompany();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.company]);
+  }, []);
 
   return (
     <General>
@@ -113,7 +118,7 @@ export const Settings = () => {
                     name="name"
                     value={form.name}
                     onChange={(e) => setForm({ ...form, name: e.target.value })}
-                    className="w-full  py-0.5 rounded-sm focus:outline-none focus:ring-2 focus:ring-none"
+                    className="w-full  py-0.5 rounded-sm outline-none ring-none border-b border-slate-100 focus:border-b-2 focus:border-slate-300 duration-300"
                   />
                 </div>
 
@@ -128,7 +133,7 @@ export const Settings = () => {
                     onChange={(e) =>
                       setForm({ ...form, address: e.target.value })
                     }
-                    className="w-full  py-0.5 rounded-sm focus:outline-none focus:ring-2 focus:ring-none"
+                    className="w-full  py-0.5 rounded-sm outline-none ring-none border-b border-slate-100 focus:border-b-2 focus:border-slate-300 duration-300"
                   />
                 </div>
 
@@ -143,7 +148,7 @@ export const Settings = () => {
                     onChange={(e) =>
                       setForm({ ...form, phone: e.target.value })
                     }
-                    className="w-full  py-0.5 rounded-sm focus:outline-none focus:ring-2 focus:ring-none"
+                    className="w-full  py-0.5 rounded-sm outline-none ring-none border-b border-slate-100 focus:border-b-2 focus:border-slate-300 duration-300"
                   />
                 </div>
 
@@ -153,30 +158,15 @@ export const Settings = () => {
                   </label>
                   <input
                     type="text"
-                    name="colaborator_percentage"
-                    value={form.colaborator_percentage}
+                    name="collaborator_percentage"
+                    value={form.collaborator_percentage}
                     onChange={(e) =>
                       setForm({
                         ...form,
-                        colaborator_percentage: e.target.value,
+                        collaborator_percentage: e.target.value,
                       })
                     }
-                    className="w-full  py-0.5 rounded-sm focus:outline-none focus:ring-2 focus:ring-none"
-                  />
-                </div>
-
-                <div>
-                  <label className="font-semibold block mb-0.5">
-                    Porcentaje Empresa:
-                  </label>
-                  <input
-                    type="text"
-                    name="company_percentage"
-                    value={form.company_percentage}
-                    onChange={(e) =>
-                      setForm({ ...form, company_percentage: e.target.value })
-                    }
-                    className="w-full  py-0.5 rounded-sm focus:outline-none focus:ring-2 focus:ring-none"
+                    className="w-full  py-0.5 rounded-sm outline-none ring-none border-b border-slate-100 focus:border-b-2 focus:border-slate-300 duration-300"
                   />
                 </div>
               </motion.div>
@@ -317,7 +307,10 @@ export const Settings = () => {
               </div>
             </div>
             <div className="w-full py-5 inline-flex justify-end gap-2">
-              <button className="bg-secondary hover:bg-secondary/80 text-white px-5 p-2 rounded-md " onClick={handleSubmit}>
+              <button
+                className="bg-secondary hover:bg-secondary/80 text-white px-5 p-2 rounded-md "
+                onClick={handleSubmit}
+              >
                 Guardar
               </button>
               <button className=" border border-slate-500 text-slate-500 px-5 p-2 rounded-md ">

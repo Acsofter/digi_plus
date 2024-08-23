@@ -113,9 +113,9 @@ const App: React.FC = () => {
       const response = await get_company_details();
       if (response) dispatch({ type: "SET_COMPANY", payload: response });
     };
-    fetchCompany();
+    !state.company.id && fetchCompany();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [state.company]);
 
   useEffect(() => {
     if (lastMessage !== null) {
@@ -123,8 +123,10 @@ const App: React.FC = () => {
 
       switch (messageData.type) {
         case "user_joined":
-          state.auth.user.roles &&
-            state.auth.user.roles.includes("staff") &&
+          const user = state.auth.user;
+          user.roles &&
+            user.roles.includes("staff") &&
+            !user.username === messageData.user.username &&
             toast.info(`${messageData.user.username} se ha conectado.`);
           break;
 
@@ -229,6 +231,21 @@ const App: React.FC = () => {
         {!userInteracted && (
           <div className="absolute  opacity-40  bottom-0 right-0 px-3">
             <h2>Las funcionalidades de este sitio requieren interactuar</h2>
+          </div>
+        )}
+        {!state.company.id && (
+          <div className="absolute top-0 right-0 bg-red-700 text-white py-2 px-3 rounded-bl-2xl duration-1000">
+            {state.auth.user.roles &&
+            state.auth.user.roles.includes("staff") ? (
+              <p>
+                Debes ir a los <b>Ajustes</b> y especificar los detalles de la
+                compañia para poder utilizar las funciones.
+              </p>
+            ) : (
+              <p>
+                Contacta con el administrador para poder utilizar las funciones.
+              </p>
+            )}
           </div>
         )}
       </div>

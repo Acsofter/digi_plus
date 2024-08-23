@@ -14,7 +14,7 @@ class PaymentViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         if self.request.user.is_staff:
             queryset = Payment.objects.all()
         else:
-            queryset = Payment.objects.filter(colaborator=self.request.user)
+            queryset = Payment.objects.filter(collaborator=self.request.user)
         return queryset.order_by('-created_at')
     
 

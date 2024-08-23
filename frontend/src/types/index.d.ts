@@ -16,9 +16,23 @@ interface Company {
   logo?: string;
   address: string;
   phone: string;
-  colaborator_percentage: string;
+  collaborator_percentage: string;
   company_percentage: string;
   created_at: string;
+}
+
+interface UpdateCompany {
+  name: string;
+  logo: string;
+  theme: string;
+  address: string;
+  phone: string;
+  email: string;
+  created_at: string;
+  updated_at: string;
+  color: string;
+  transparent: boolean;
+  collaborator_percentage: string;
 }
 
 interface Popup {
@@ -56,7 +70,7 @@ interface Ticket {
   id: number;
   payment: Payment;
   category: Category;
-  colaborator: User;
+  collaborator: User;
   description: string;
   created_at: string;
   updated_at: string;
@@ -67,7 +81,7 @@ interface RequestTicket extends Ticket {
   id?: number | null;
   category: number | null;
   payment: number | null;
-  colaborator?: User | null;
+  collaborator?: User | null;
   company?: number | null;
   created_at?: string | null;
   updated_at?: string | null;
@@ -105,7 +119,7 @@ interface Payment {
   period: string;
   ticket: Ticket;
   created_at: string;
-  colaborator: number;
+  collaborator: number;
 }
 
 

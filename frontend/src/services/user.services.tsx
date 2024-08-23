@@ -260,11 +260,11 @@ export const useUserServices = () => {
     }
   };
 
-  const update_company = async (company_details: Company) => {
+  const update_company = async (details: UpdateCompany | Company) => {
     try {
       const response = await axios.put<Company>(
         `${base_url}/company/`,
-        company_details,
+        details,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("user")}` },
         }
@@ -292,11 +292,11 @@ export const useUserServices = () => {
       if (response.status !== 200) {
         return false;
       }
-      console.log("response.data.colaborator", response.data.colaborator);
+      console.log("response.data.collaborator", response.data.collaborator);
       sendMessage({
         type: "ticket_updated",
         message: "Ticket actualizado",
-        payload: { colaborator: response.data.colaborator },
+        payload: { collaborator: response.data.collaborator },
       });
 
       return response.data;

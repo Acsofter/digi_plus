@@ -85,14 +85,15 @@ class Company(models.Model):
     name                   = models.CharField(max_length=100)
     logo                   = models.ImageField(upload_to='companies/', blank=True, null=True)
     address                = models.CharField(max_length=255, blank=True, null=True)
+    email                  = models.EmailField(blank=True, null=True)
     phone                  = models.CharField(max_length=20, blank=True, null=True)
-    colaborator_percentage = models.DecimalField(max_digits=5, decimal_places=2)
-    company_percentage     = models.DecimalField(max_digits=5, decimal_places=2)
+    collaborator_percentage = models.DecimalField(max_digits=5, decimal_places=2)
     created_at             = models.DateTimeField(auto_now_add=True)
+    updated_at             = models.DateTimeField(auto_now=True)
 
 class Ticket(models.Model):
     id          = models.AutoField(primary_key=True)
-    colaborator = models.ForeignKey('User', on_delete=models.CASCADE)
+    collaborator = models.ForeignKey('User', on_delete=models.CASCADE)
     category    = models.ForeignKey('Category', on_delete=models.CASCADE)
     company     = models.ForeignKey('Company', on_delete=models.CASCADE)
     payment     = models.ForeignKey('Payment', on_delete=models.CASCADE, blank=True, null=True)
@@ -119,7 +120,7 @@ class Payment(models.Model):
     type        = models.CharField(max_length=50)
     amount      = models.DecimalField(max_digits=10, decimal_places=2)
     period      = models.CharField(max_length=50)
-    colaborator = models.ForeignKey('User', on_delete=models.CASCADE)
+    collaborator = models.ForeignKey('User', on_delete=models.CASCADE)
     created_at  = models.DateTimeField(auto_now_add=True) # change to created_at
 
 class History(models.Model):
