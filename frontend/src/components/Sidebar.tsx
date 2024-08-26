@@ -1,4 +1,4 @@
-import { cloneElement, useContext, useMemo } from "react";
+import { cloneElement, useContext, useEffect, useMemo, useState } from "react";
 import { IoMdHelpCircle } from "react-icons/io";
 import { MdAdminPanelSettings, MdOutlineSpaceDashboard } from "react-icons/md";
 import { RiHome5Line, RiListSettingsLine } from "react-icons/ri";
@@ -11,6 +11,7 @@ const noprofile = require("../assets/image/noprofile.jpg");
 export const Sidebar = () => {
   const { state } = useContext(Contexts);
   const navigate = useNavigate();
+  const [transparent, setTransparent] = useState(false);
 
   const menu = useMemo(
     () => [
@@ -64,8 +65,16 @@ export const Sidebar = () => {
     );
   };
 
+  useEffect(() => {
+    setTransparent(localStorage.getItem("transparent") === "true");
+  }, []);
+
   return (
-    <div className="sidebar w-24 px-5 md:flex flex-col justify-between bg-base hidden ">
+    <div
+      className={`sidebar w-24 px-5 md:flex flex-col justify-between bg-base hidden ${
+        transparent ? "bg-transparent" : "bg-base"
+      }`}
+    >
       {/* <button className=" relative text-white text-sm w-full bg-primary-blue py-2 rounded-xl duration-300 mb-3 ">
         <BiPlusCircle
           className="text-center text-white inline-block"

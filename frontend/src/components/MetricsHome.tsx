@@ -147,13 +147,6 @@ export const MetricsHome = () => {
         <h2 className="text-lg font-bold my-2">Tickets del dia</h2>
         <div className="grid grid-cols-2 gap-1">
           <div className="flex gap-1 items-center">
-            <IoTicketOutline className={`inline ${cards[0].color}`} size={20} />{" "}
-            <span>Tickets</span>
-          </div>
-          <span className="text-end font-bold">
-            <AnimatedCounter to={data.today.tickets.approved} />
-          </span>
-          <div className="flex gap-1 items-center">
             <MdOutlineAttachMoney
               className={`inline ${cards[1].color}`}
               size={20}
@@ -172,6 +165,13 @@ export const MetricsHome = () => {
             $ <AnimatedCounter to={data.today.net.approved} />
           </span>
           {/* ---- */}
+          <div className="flex gap-1 items-center">
+            <IoTicketOutline className={`inline ${cards[0].color}`} size={20} />{" "}
+            <span>Tickets</span>
+          </div>
+          <span className="text-end font-bold">
+            <AnimatedCounter to={data.today.tickets.approved} />
+          </span>
 
           <div className="flex gap-1 items-center">
             <MdPendingActions
@@ -241,9 +241,8 @@ export const MetricsHome = () => {
                   <span
                     className={`text-center text-xl md:text-lg font-bold text-zinc-300 animate-pulse`}
                   >
-                    <AnimatedCounter to={ card.total - card.approved } />
+                    <AnimatedCounter to={card.total - card.approved} />
                   </span>{" "}
-                 
                 </div>
               </div>
             </div>

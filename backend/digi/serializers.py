@@ -105,7 +105,6 @@ class CompanySerializer(serializers.ModelSerializer):
 
     
     def retrieve(self, pk, request):
-        print("###########################################request, pk: ", pk, request)
         return {}
         
     

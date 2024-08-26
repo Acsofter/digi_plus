@@ -1,12 +1,12 @@
-import { Chart as ChartJS, registerables } from "chart.js";
-import { useEffect, useState } from "react";
+import { Chart, registerables } from "chart.js";
 import "chartjs-adapter-date-fns";
+import { useEffect, useState } from "react";
 import { ReactChart } from "chartjs-react";
 import { useUserServices } from "../services/user.services";
 import { Contexts } from "../services/Contexts";
 import React from "react";
 
-ChartJS.register(...registerables);
+Chart.register(...registerables);
 
 const chartOption = {
   responsive: true,

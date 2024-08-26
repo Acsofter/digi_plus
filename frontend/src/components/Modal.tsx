@@ -34,10 +34,10 @@ export const Modal = () => {
       }`}
     >
       <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.2 }}
-        className="modal bg-white p-8 h-auto w-auto rounded-xl"
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.1 }}
+        className="modal bg-white p-7 h-auto w-auto rounded-3xl shadow-md"
       >
         <div className="flex justify-between gap-3 items-center">
           <GoPlusCircle className="text-3xl" />

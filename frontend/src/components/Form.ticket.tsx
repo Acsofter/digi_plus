@@ -1,12 +1,11 @@
 import React, { useEffect } from "react";
 import {
   IoAlertCircle,
-  IoCheckmarkCircleSharp,
-  IoHelpCircleOutline,
+  IoCheckmarkCircleSharp
 } from "react-icons/io5";
-import { useUserServices } from "../services/user.services";
+import { MdOutlineHelpOutline } from "react-icons/md";
 import { Contexts } from "../services/Contexts";
-import { motion } from "framer-motion";
+import { useUserServices } from "../services/user.services";
 
 export const FormTicket = ({ ticket_id }: { ticket_id?: number }) => {
   const { create_ticket, get_ticket, update_ticket, get_categories } =
@@ -73,15 +72,15 @@ export const FormTicket = ({ ticket_id }: { ticket_id?: number }) => {
       color = "from-amber-500 to-amber-300 border-amber-300 text-white";
       text = "Pendiente";
     } else if (status === "2") {
-      color = "from-[#43C6AC] to-[#F8FFAE] border-[#43C6AC] text-white";
+      color = "from-[#43C6AC] to-green-400 border-[#43C6AC] text-white";
       text = "Aprobado";
     } else if (status === "3") {
-      color = "from-[#FF7E5F] to-[#FEB47B] border-[#FF7E5F] text-white";
+      color = "from-[#FF7E5F] to-red-400 border-[#FF7E5F] text-white";
       text = "Rechazado";
     }
     return (
       <div
-        className={`peer transition-all duration-200 w-1/3 h-6 border rounded-3xl inline-flex justify-between items-center py-5 px-3 shadow-md bg-gradient-to-tr hover:brightness-95  ${color}`}
+        className={`peer transition-all col-span-3 duration-200 w-64 h-6 border rounded-3xl inline-flex justify-between items-center py-5 px-3 shadow-md bg-gradient-to-tr hover:brightness-95 ${color}`}
       >
         <div>
           {!form.payment ? (
@@ -95,7 +94,7 @@ export const FormTicket = ({ ticket_id }: { ticket_id?: number }) => {
           )}
           <span className="text-sm">{text}</span>
         </div>
-        <IoHelpCircleOutline className="w-4 h-4" />
+        <MdOutlineHelpOutline className="w-4 h-4" />
       </div>
     );
   };
@@ -146,14 +145,7 @@ export const FormTicket = ({ ticket_id }: { ticket_id?: number }) => {
       </div>
     </div>
   ) : (
-    <motion.form
-      className="w-[700px] flex flex-col gap-5"
-      onSubmit={handleSubmit}
-      initial={{ opacity: 0, scale: 0.9 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.9 }}
-      transition={{ duration: 0.1 }}
-    >
+    <form className="w-[700px] flex flex-col gap-5" onSubmit={handleSubmit}>
       <div className="grid grid-cols-4 gap-3">
         <label className="text-sm text-base pb-1">Total $</label>
         <input
@@ -212,31 +204,33 @@ export const FormTicket = ({ ticket_id }: { ticket_id?: number }) => {
           id="comment"
         />
 
+        {ticket_id && <label className="text-sm text-base pb-1">Estado</label>}
         {ticket_id && get_badge(form.payment.status)}
 
         {ticket_id && (
-          <div className="grid grid-cols-2 gap-4">
-            <div className="flex flex-col text-sm">
+          <>
+            <div className="flex flex-col text-sm col-span-2 ">
               <label className="text-sm text-base ">Creador por</label>
-              <div className="w-full m ">
+              <div className="w-full text-gray-500">
                 <span>{form.collaborator.username}</span> ({" "}
-                <span className="text-base">{form.collaborator.email}</span> )
+                <span className="font-bold">{form.collaborator.email}</span> )
               </div>
             </div>
-            <div className="flex flex-col  text-sm place-items-end">
-              <label className=" text-base pb-1">Fecha</label>
-              <span>
-                {new Date(form.updated_at).toLocaleDateString()},{" "}
-                {new Date(form.updated_at).toLocaleTimeString()}
+            <div className="flex flex-col text-sm place-items-end col-span-2">
+              <label className=" text-base pb-1 ">Fecha</label>
+              <span className="text-gray-500">
+                {`${new Date(form.updated_at).toLocaleDateString()}, ${new Date(
+                  form.updated_at
+                ).toLocaleTimeString()}`}
               </span>
             </div>
-          </div>
+          </>
         )}
       </div>
 
       <button className="bg-primary hover:bg-primary/80 text-white px-5 p-2 rounded-3xl ">
         {ticket_id ? "Actualizar" : "Añadir"}
       </button>
-    </motion.form>
+    </form>
   );
 };

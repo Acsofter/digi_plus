@@ -48,7 +48,10 @@ export const FormUser = ({ user_id }: { user_id?: number }) => {
   }, []);
 
   return (
-    <form className="w-[700px] h-full flex flex-col gap-5 py-3" onSubmit={handleSubmit}>
+    <form
+      className="w-[700px] h-full flex flex-col gap-5 py-3"
+      onSubmit={handleSubmit}
+    >
       <div className="grid grid-cols-4 gap-2 ">
         <label className="text-sm text-base font-bold col-span-1">
           Nombres
@@ -110,31 +113,44 @@ export const FormUser = ({ user_id }: { user_id?: number }) => {
         <label className="text-sm text-base font-bold col-span-1">Correo</label>
         <input
           value={form.email}
+          onChange={(e) => setForm({ ...form, email: e.target.value })}
+          type="email"
           className="w-full px-2 text-sm py-5 h-5 border rounded-3xl focus:outline-none focus:ring-1 focus:ring-slate-200 peer transition-all duration-200 col-span-3 "
         ></input>
 
-        <label className="text-sm text-base font-bold col-span-1">
-          Contraseña
-        </label>
-        <input
-          value={form.password}
-          className="w-full px-2 text-sm py-5 h-5 border rounded-3xl focus:outline-none focus:ring-1 focus:ring-slate-200 peer transition-all duration-200 col-span-3 "
-          onChange={(e) => setForm({ ...form, password: e.target.value })}
-          type="password"
-          name="password"
-          id="password"
-        />
+        {!user_id && (
+          <>
+            <label className="text-sm text-base font-bold col-span-1">
+              Contraseña
+            </label>
+            <input
+              value={form.password}
+              className="w-full px-2 text-sm py-5 h-5 border rounded-3xl focus:outline-none focus:ring-1 focus:ring-slate-200 peer transition-all duration-200 col-span-3 "
+              onChange={(e) => setForm({ ...form, password: e.target.value })}
+              type="password"
+              name="password"
+              id="password"
+            />
+          </>
+        )}
 
-        <label className="text-sm text-base font-bold col-span-1">Rol</label>
-        <select
-          className="w-full px-2 text-sm py-5 h-5 border rounded-3xl focus:outline-none focus:ring-1 focus:ring-slate-200 peer transition-all duration-200 col-span-3 "
-          onChange={(e) => setForm({ ...form, roles: [e.target.value] })}
-          name="roles"
-          id="roles"
-        >
-          <option value="admin">Admin</option>
-          <option value="staff">Staff</option>
-        </select>
+        {user_id && (
+          <>
+            <label className="text-sm text-base font-bold col-span-1">
+              {`Rol${form.roles.length > 1 ? "es" : ""}`}
+            </label>
+            <div>
+              {form.roles.map((role, index) => (
+                <span
+                  key={index}
+                  className="text-sm text-slate-500 font-bold col-span-1 bg-slate-200 rounded-3xl px-3 mx-0.5 "
+                >
+                  {role}
+                </span>
+              ))}
+            </div>
+          </>
+        )}
       </div>
       <div className="grid grid-cols-2 gap-2">
         <button className="w-full rounded-3xl py-2 border border-slate-300 text-slate-400">

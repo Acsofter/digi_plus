@@ -384,12 +384,12 @@ export const Table = () => {
           Buscar
         </button>
         <button
-          className="px-5 py-2 rounded-lg text-sm border border-violet-500 text-violet-500"
+          className="px-5 py-2 rounded-lg text-sm border border-blue-500 text-blue-500"
           onClick={() => {}}
         >
           Imprimir
         </button>
-        <button
+        { state.auth.user.roles.includes("user") && <button
           className="px-5 py-2 rounded-lg text-sm bg-gradient-to-tr border border-blue-500 from-blue-600 to-blue-400 text-white s"
           onClick={() =>
             dispatch({
@@ -405,7 +405,7 @@ export const Table = () => {
           }
         >
           Agregar
-        </button>
+        </button>}
       </div>
 
       <div className="w-full h-full overflow-scroll bg-zinc-100 p-3 rounded-xl no-scrollbar ">
