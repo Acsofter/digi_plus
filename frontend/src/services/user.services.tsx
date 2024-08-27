@@ -370,7 +370,7 @@ export const useUserServices = () => {
   }: {
     graphname: string;
     allusers?: boolean;
-  }) => {
+  }): Promise<UserData[] | false> => {
     try {
       const response = await axios.get(`${base_url}/metrics/${graphname}/`, {
         headers: AuthHeader(),
@@ -390,6 +390,7 @@ export const useUserServices = () => {
       const response = await axios.get(`${base_url}/payments/`, {
         headers: AuthHeader(),
       });
+      
       if (response.status !== 200) {
         return false;
       }

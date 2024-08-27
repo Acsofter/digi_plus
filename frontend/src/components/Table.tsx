@@ -3,8 +3,6 @@ import { format } from "date-fns";
 
 import { motion } from "framer-motion";
 import React, { useEffect } from "react";
-import { BsCreditCard2Front } from "react-icons/bs";
-import { FaBullseye } from "react-icons/fa";
 import {
   FcCancel,
   FcDeleteRow,
@@ -14,12 +12,19 @@ import {
   FcViewDetails,
 } from "react-icons/fc";
 import { FiUser } from "react-icons/fi";
-import { GrFormNext, GrFormPrevious } from "react-icons/gr";
-import { MdAttachMoney, MdDateRange } from "react-icons/md";
 import { AuthHeader } from "../services/auth.header";
 import { Contexts } from "../services/Contexts";
 import { useUserServices } from "../services/user.services";
 import { FormTicket } from "./Form.ticket";
+import {
+  Calendar,
+  ChevronLeft,
+  ChevronRight,
+  CircleDashed,
+  CreditCard,
+  DollarSign,
+  UserRound,
+} from "lucide-react";
 
 export const Table = () => {
   const { get_tickets, update_ticket } = useUserServices();
@@ -93,14 +98,14 @@ export const Table = () => {
                 className="text-primary/60 hover:text-primary/80 "
                 onClick={() => handlerPagination(response.previous, type)}
               >
-                <GrFormPrevious size={16} />
+                <ChevronLeft size={16} />
               </button>
 
               <button
                 className=" text-primary/60 hover:text-primary/80"
                 onClick={() => handlerPagination(response.next, type)}
               >
-                <GrFormNext size={16} />
+                <ChevronRight size={16} />
               </button>
             </div>
           </td>
@@ -138,7 +143,7 @@ export const Table = () => {
                 <div
                   className={`p-2 max-w-10 rounded-full bg-amber-300 hidden sm:table-cell justify-self-end`}
                 >
-                  <MdAttachMoney className="text-white" size={20} />
+                  <DollarSign className="text-white" size={20} />
                 </div>
                 <p className="text-left font-bold">
                   {ticket.payment.amount} <br />
@@ -157,7 +162,7 @@ export const Table = () => {
               {ticket.payment.type === "Efectivo" ? (
                 <FcMoneyTransfer className="inline-block mx-1" size={16} />
               ) : (
-                <BsCreditCard2Front
+                <CreditCard
                   className="inline-block mx-1 text-primary"
                   size={16}
                 />
@@ -171,7 +176,7 @@ export const Table = () => {
                   className={`p-2 max-w-10 rounded-full hidden sm:block justify-self-end`}
                   style={{ backgroundColor: ticket.collaborator.color }}
                 >
-                  <FiUser className="text-white" size={20} />
+                  <UserRound className="text-white" size={20} />
                 </div>
                 <p className="text-left font-bold">
                   {ticket.collaborator.username}
@@ -197,7 +202,7 @@ export const Table = () => {
                       : "bg-red-400"
                   }`}
                 >
-                  <FaBullseye className="text-white" size={20} />
+                  <CircleDashed className="text-white" size={20} />
                 </div>
                 <p className="text-left font-bold">
                   {ticket.payment.status === "1"
@@ -348,7 +353,7 @@ export const Table = () => {
       <div className="flex flex-wrap justify-end items-center w-full py-2 gap-1">
         <div className="relative max-w-sm">
           <div className="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
-            <MdDateRange className="text-gray-400" />
+            <Calendar className="text-gray-400" />
           </div>
           <input
             id="default-datepicker"
@@ -363,7 +368,7 @@ export const Table = () => {
         </div>
         <div className="relative max-w-sm">
           <div className="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
-            <MdDateRange className="text-gray-400 " />
+            <Calendar className="text-gray-400 " />
           </div>
           <input
             id="default-datepicker"
@@ -389,23 +394,25 @@ export const Table = () => {
         >
           Imprimir
         </button>
-        { state.auth.user.roles.includes("user") && <button
-          className="px-5 py-2 rounded-lg text-sm bg-gradient-to-tr border border-blue-500 from-blue-600 to-blue-400 text-white s"
-          onClick={() =>
-            dispatch({
-              type: "SET_POPUP",
-              payload: {
-                isOpen: true,
-                loading: false,
-                title: "Ticket",
-                subtitle: "Agregar",
-                content: <FormTicket />,
-              },
-            })
-          }
-        >
-          Agregar
-        </button>}
+        {state.auth.user.roles.includes("user") && (
+          <button
+            className="px-5 py-2 rounded-lg text-sm bg-gradient-to-tr border border-blue-500 from-blue-600 to-blue-400 text-white s"
+            onClick={() =>
+              dispatch({
+                type: "SET_POPUP",
+                payload: {
+                  isOpen: true,
+                  loading: false,
+                  title: "Ticket",
+                  subtitle: "Agregar",
+                  content: <FormTicket />,
+                },
+              })
+            }
+          >
+            Agregar
+          </button>
+        )}
       </div>
 
       <div className="w-full h-full overflow-scroll bg-zinc-100 p-3 rounded-xl no-scrollbar ">

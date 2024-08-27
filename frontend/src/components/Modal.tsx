@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { RxCross2 } from "react-icons/rx";
 import { Contexts } from "../services/Contexts";
 import { motion } from "framer-motion";
-import { GoPlusCircle } from "react-icons/go";
+import { CirclePlus } from "lucide-react";
 
 export const Modal = () => {
   const { state, dispatch } = useContext(Contexts);
@@ -40,7 +40,7 @@ export const Modal = () => {
         className="modal bg-white p-7 h-auto w-auto rounded-3xl shadow-md"
       >
         <div className="flex justify-between gap-3 items-center">
-          <GoPlusCircle className="text-3xl" />
+          <CirclePlus  className="text-3xl" />
           <span className="  w-full">
             <p className="text-lg font-bold space-y-0 capitalize">{state.popup.title}</p>
             {state.popup.subtitle && (

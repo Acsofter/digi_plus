@@ -1,10 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
 import { BiBlock, BiEdit, BiPlus, BiTrash } from "react-icons/bi";
-import { IoSearchOutline } from "react-icons/io5";
 import { Contexts } from "../services/Contexts";
 import { FormUser } from "./Form.user";
 import { useUserServices } from "../services/user.services";
-import { MdLocalPolice } from "react-icons/md";
+import { Search, Shield } from "lucide-react";
 
 export const AdmUsers = () => {
   const { get_users } = useUserServices();
@@ -41,7 +40,7 @@ export const AdmUsers = () => {
       <div className="flex justify-between items-center mb-5 ">
         <div className="relative ">
           <div className="absolute inset-y-0 left-0 rtl:inset-r-0 rtl:right-0 flex items-center ps-3 pointer-events-none">
-            <IoSearchOutline className="inline-block text-md text-zinc-500" />
+            <Search  className="inline-block text-md text-zinc-500" />
           </div>
           <input
             type="text"
@@ -125,7 +124,7 @@ export const AdmUsers = () => {
                 </th>
                 <td className="px-6 py-4">
                   {user.roles?.includes("staff") ? (
-                    <MdLocalPolice className="text-md inline-block text-amber-500" />
+                    <Shield  className="text-md inline-block text-amber-500" />
                   ) : (
                     ""
                   )}

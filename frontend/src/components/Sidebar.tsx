@@ -1,7 +1,5 @@
+import { BadgeHelp, Gauge, House, MonitorCog, Shield } from "lucide-react";
 import { cloneElement, useContext, useEffect, useMemo, useState } from "react";
-import { IoMdHelpCircle } from "react-icons/io";
-import { MdAdminPanelSettings, MdOutlineSpaceDashboard } from "react-icons/md";
-import { RiHome5Line, RiListSettingsLine } from "react-icons/ri";
 import { useNavigate } from "react-router-dom";
 import { ReadyState } from "react-use-websocket";
 import { Contexts } from "../services/Contexts";
@@ -17,35 +15,35 @@ export const Sidebar = () => {
     () => [
       {
         name: "Inicio",
-        icon: <RiHome5Line size={24} />,
+        icon: <House  size={24} />,
         notificaciones: 0,
         path: "/home",
       },
       {
         name: "Estadisticas",
-        icon: <MdOutlineSpaceDashboard size={24} />,
+        icon: <Gauge  size={24} />,
         notificaciones: 0,
         path: "/dashboard",
       },
       state.auth.user.roles && state.auth.user.roles.includes("staff")
         ? {
             name: "Administración",
-            icon: <MdAdminPanelSettings size={24} />,
+            icon: <Shield  size={24} />,
             notificaciones: 0,
             path: "/admin",
           }
         : null,
       {
         name: "Ajustes",
-        icon: <RiListSettingsLine size={24} />,
+        icon: <MonitorCog size={24} />,
         notificaciones: 2,
         path: "/settings",
       },
       {
         name: "Ayuda",
-        icon: <IoMdHelpCircle size={24} />,
+        icon: <BadgeHelp  size={24} />,
         notificaciones: 0,
-        path: "/home",
+        path: "/help",
       },
     ],
     [state.auth.user]
@@ -91,7 +89,7 @@ export const Sidebar = () => {
             <button
               key={index}
               onClick={() => navigate(menuitem.path)}
-              className="group relative duration-300 transition-all bg-transparent text-sm w-full hover:bg-gradient-to-br hover:from-secondary hover:to-primary shadow-sm shadow-slate-950/10 p-4 rounded-xl my-3"
+              className={`group relative duration-300 ${window.location.pathname === menuitem.path ? "bg-secondary" : "bg-transparent"} transition-all  text-sm w-full hover:bg-gradient-to-br hover:from-secondary hover:to-primary shadow-sm shadow-slate-950/10 p-4 rounded-xl my-3`}
             >
               {cloneElement(menuitem.icon, {
                 className:
@@ -110,11 +108,15 @@ export const Sidebar = () => {
         )}
       </div>
 
-      <div className="group relative text-sm w-full  h-13  duration-300 border-1 place-items-center py-2">
+      <div className="group relative text-sm w-full  h-13  duration-100 border-1 place-items-center py-2">
+        {/* <button className="bg-red-600 text-white w-10 h-10 hover:bg-red-800 duration-300 rounded-full text-center absolute ">
+          <LogOut className="inline size-5" />
+        </button> */}
         <img
           src={noprofile}
           alt="profile"
-          className="text-center text-zinc-300 inline group-hover:text-slate-100 duration-300 rounded-full "
+          onClick={() => navigate("/profile")}
+          className="text-center text-zinc-300 inline group-hover:text-slate-100 duration-300 rounded-full cursor-pointer "
         />
 
         <span

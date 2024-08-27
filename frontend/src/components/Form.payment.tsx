@@ -1,11 +1,6 @@
 import React, { useEffect } from "react";
-import {
-  IoAlertCircle,
-  IoCheckmarkCircleSharp,
-  IoHelpCircleOutline,
-} from "react-icons/io5";
 import { useUserServices } from "../services/user.services";
-import { Contexts } from "../services/Contexts";
+import { CircleAlert, CircleCheckBig, CircleHelp } from "lucide-react";
 
 export const FormPayment = ({ payment_id }: { payment_id?: number }) => {
   const { create_ticket, get_ticket, update_ticket, get_categories } =
@@ -156,11 +151,11 @@ export const FormPayment = ({ payment_id }: { payment_id?: number }) => {
         >
           <div>
             {!form.payment ? (
-              <IoAlertCircle
+              <CircleAlert 
                 className={`peer-focus:cursor-pointer w-4 inline-block mr-2 `}
               />
             ) : (
-              <IoCheckmarkCircleSharp
+              <CircleCheckBig 
                 className={`peer-focus:cursor-pointer w-4 inline-block mr-2 `}
               />
             )}
@@ -168,7 +163,7 @@ export const FormPayment = ({ payment_id }: { payment_id?: number }) => {
               {form.payment?.status ? "Recibido" : "Pendiente"}
             </span>
           </div>
-          <IoHelpCircleOutline className="w-4 h-4" />
+          <CircleHelp  className="w-4 h-4" />
         </div>
       )}
 

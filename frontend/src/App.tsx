@@ -12,6 +12,7 @@ import { useUserServices } from "./services/user.services";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Modal } from "reactstrap";
+import { Profile } from "./pages/Profile";
 const audio_notification = require("./assets/sound/pop.mp3");
 
 const initialState: State = {
@@ -194,14 +195,14 @@ const App: React.FC = () => {
               </PrivateRouteWrapper>
             }
           />
-          {/* <Route
-            path="/upload"
+          <Route
+            path="/profile"
             element={
               <PrivateRouteWrapper>
-                <FileUpload />
+                <Profile />
               </PrivateRouteWrapper>
             }
-          /> */}
+          />
 
           <Route
             path="/admin"

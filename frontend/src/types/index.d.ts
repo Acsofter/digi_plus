@@ -160,3 +160,12 @@ interface LoginForm {
   username: string;
   password: string;
 }
+
+type UserData = {
+  label: string;
+  data: number[];
+  borderColor: string;
+  backgroundColor: string;
+  fill: boolean;
+  tension: number;
+};

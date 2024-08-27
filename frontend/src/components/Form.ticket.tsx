@@ -1,11 +1,7 @@
 import React, { useEffect } from "react";
-import {
-  IoAlertCircle,
-  IoCheckmarkCircleSharp
-} from "react-icons/io5";
-import { MdOutlineHelpOutline } from "react-icons/md";
 import { Contexts } from "../services/Contexts";
 import { useUserServices } from "../services/user.services";
+import { CircleAlert, CircleCheckBig, CircleDot, CircleHelp } from "lucide-react";
 
 export const FormTicket = ({ ticket_id }: { ticket_id?: number }) => {
   const { create_ticket, get_ticket, update_ticket, get_categories } =
@@ -83,18 +79,22 @@ export const FormTicket = ({ ticket_id }: { ticket_id?: number }) => {
         className={`peer transition-all col-span-3 duration-200 w-64 h-6 border rounded-3xl inline-flex justify-between items-center py-5 px-3 shadow-md bg-gradient-to-tr hover:brightness-95 ${color}`}
       >
         <div>
-          {!form.payment ? (
-            <IoAlertCircle
+          {form.payment.status && form.payment.status === "1" ? (
+            <CircleDot 
+              className={`peer-focus:cursor-pointer w-4 inline-block mr-2 `}
+            />
+          ) : form.payment.status === "2" ? (
+            <CircleCheckBig
               className={`peer-focus:cursor-pointer w-4 inline-block mr-2 `}
             />
           ) : (
-            <IoCheckmarkCircleSharp
+            <CircleAlert
               className={`peer-focus:cursor-pointer w-4 inline-block mr-2 `}
             />
           )}
           <span className="text-sm">{text}</span>
         </div>
-        <MdOutlineHelpOutline className="w-4 h-4" />
+        <CircleHelp className="w-4 h-4" />
       </div>
     );
   };

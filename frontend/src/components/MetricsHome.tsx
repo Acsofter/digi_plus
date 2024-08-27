@@ -1,13 +1,7 @@
+import { ClockArrowDown, DollarSign, Percent, Ticket, TicketX } from "lucide-react";
 import React, { useCallback, useEffect } from "react";
-import { useUserServices } from "../services/user.services";
 import { Contexts } from "../services/Contexts";
-import { IoTicketOutline } from "react-icons/io5";
-import {
-  MdOutlineAttachMoney,
-  MdOutlineCancel,
-  MdPendingActions,
-} from "react-icons/md";
-import { VscPercentage } from "react-icons/vsc";
+import { useUserServices } from "../services/user.services";
 import AnimatedCounter from "./AnimatedCounter";
 
 interface DataInterface {
@@ -20,7 +14,7 @@ interface DataInterface {
 
 export const MetricsHome = () => {
   const { get_metrics } = useUserServices();
-  const { state, dispatch } = React.useContext(Contexts);
+  const { state } = React.useContext(Contexts);
   const [data, setData] = React.useState<{
     today: DataInterface;
     week: DataInterface;
@@ -64,8 +58,8 @@ export const MetricsHome = () => {
       approved: data.week.tickets.approved,
       color: "text-amber-400",
       icon: (
-        <IoTicketOutline
-          size={35}
+        <Ticket
+          size={30}
           className="text-amber-400 inline text-center w-full"
         />
       ),
@@ -78,8 +72,8 @@ export const MetricsHome = () => {
       cancelled: data.week.cancelled,
       color: "text-secondary",
       icon: (
-        <MdOutlineAttachMoney
-          size={35}
+        <DollarSign
+          size={30}
           className="text-secondary inline text-center w-full"
         />
       ),
@@ -90,8 +84,8 @@ export const MetricsHome = () => {
       approved: data.week.net.approved,
       color: "text-violet-500",
       icon: (
-        <VscPercentage
-          size={35}
+        <Percent
+          size={30}
           className="text-violet-500 inline text-center w-full"
         />
       ),
@@ -147,7 +141,7 @@ export const MetricsHome = () => {
         <h2 className="text-lg font-bold my-2">Tickets del dia</h2>
         <div className="grid grid-cols-2 gap-1">
           <div className="flex gap-1 items-center">
-            <MdOutlineAttachMoney
+          <DollarSign 
               className={`inline ${cards[1].color}`}
               size={20}
             />{" "}
@@ -158,7 +152,7 @@ export const MetricsHome = () => {
           </span>
 
           <div className="flex gap-1 items-center">
-            <VscPercentage className={`inline ${cards[2].color}`} size={20} />{" "}
+          <Percent className={`inline ${cards[2].color}`} size={20} />{" "}
             <span>Porc.</span>
           </div>
           <span className="text-end font-bold">
@@ -166,7 +160,7 @@ export const MetricsHome = () => {
           </span>
           {/* ---- */}
           <div className="flex gap-1 items-center">
-            <IoTicketOutline className={`inline ${cards[0].color}`} size={20} />{" "}
+            <Ticket  className={`inline ${cards[0].color}`} size={20} />{" "}
             <span>Tickets</span>
           </div>
           <span className="text-end font-bold">
@@ -174,7 +168,7 @@ export const MetricsHome = () => {
           </span>
 
           <div className="flex gap-1 items-center">
-            <MdPendingActions
+            <ClockArrowDown 
               className={`inline ${"text-orange-500"}`}
               size={20}
             />
@@ -184,7 +178,7 @@ export const MetricsHome = () => {
             <AnimatedCounter to={data.today.pending.total} />
           </span>
           <div className="flex gap-1 items-center">
-            <MdOutlineCancel className={`inline ${"text-red-400"}`} size={20} />{" "}
+            <TicketX  className={`inline ${"text-red-400"}`} size={20} />{" "}
             <span>Cancel.</span>
           </div>
           <span className="text-end font-bold">
