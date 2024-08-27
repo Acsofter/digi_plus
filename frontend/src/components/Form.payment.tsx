@@ -35,11 +35,11 @@ export const FormPayment = ({ payment_id }: { payment_id?: number }) => {
       if (response) setForm(response);
     } else {
       response = await create_ticket({
-          category: form.category.id,
-          payment: {
-            amount: parseInt(form.payment.amount),
-          },
-          description: form.description,
+        category: form.category.id,
+        payment: {
+          amount: parseInt(form.payment.amount),
+        },
+        description: form.description,
       });
       if (response)
         setForm({
@@ -151,11 +151,11 @@ export const FormPayment = ({ payment_id }: { payment_id?: number }) => {
         >
           <div>
             {!form.payment ? (
-              <CircleAlert 
+              <CircleAlert
                 className={`peer-focus:cursor-pointer w-4 inline-block mr-2 `}
               />
             ) : (
-              <CircleCheckBig 
+              <CircleCheckBig
                 className={`peer-focus:cursor-pointer w-4 inline-block mr-2 `}
               />
             )}
@@ -163,7 +163,7 @@ export const FormPayment = ({ payment_id }: { payment_id?: number }) => {
               {form.payment?.status ? "Recibido" : "Pendiente"}
             </span>
           </div>
-          <CircleHelp  className="w-4 h-4" />
+          <CircleHelp className="w-4 h-4" />
         </div>
       )}
 

@@ -11,7 +11,6 @@ import {
   FcOk,
   FcViewDetails,
 } from "react-icons/fc";
-import { FiUser } from "react-icons/fi";
 import { AuthHeader } from "../services/auth.header";
 import { Contexts } from "../services/Contexts";
 import { useUserServices } from "../services/user.services";
