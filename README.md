@@ -1,19 +1,22 @@
 # DIGI
 
-Este incluye un frontend desarrollado con React y un backend desarrollado con Django. Las carpetas principales del repositorio son:
+DIGI es un sistema diseñado para optimizar y agilizar la gestión de tickets entre clientes, digitadores y cajeros en una papelería. Proporciona un control eficiente y una visualización clara de los procesos, permitiendo a los usuarios generar reportes de pagos y monitorear en tiempo real las métricas de todos los tickets. Esto garantiza un seguimiento detallado y actualizado de todas las transacciones.
+
+Este proyecto se divide en dos directorios principales:
 
 - **frontend**: Contiene el código del frontend (React).
 - **backend**: Contiene el código del backend (Django).
 
 ## Requisitos previos
 
-Antes de comenzar, asegúrate de tener instalado lo siguiente:
+Antes de comenzar, asegúrate de tener instalados los siguientes componentes:
 
 - **Node.js** (versión 14.x o superior)
-- **npm** o **yarn** (para manejar dependencias del frontend)
+- **npm** o **yarn** (para la gestión de dependencias del frontend)
 - **Python** (versión 3.8 o superior)
-- **pip** (para manejar dependencias del backend)
-- **virtualenv** (opcional pero recomendado para entornos virtuales de Python)
+- **pip** (para la gestión de dependencias del backend)
+- **virtualenv** (opcional, pero recomendado para crear entornos virtuales de Python)
+
 
 ## Estructura del Proyecto
 
@@ -36,7 +39,7 @@ Antes de comenzar, asegúrate de tener instalado lo siguiente:
 
 1.  Navega a la carpeta `backend`:
 ```bash
-	cd backend
+    cd backend
 ```
 
 2.  Crea y activa un entorno virtual (opcional pero recomendado):
@@ -73,7 +76,7 @@ Antes de comenzar, asegúrate de tener instalado lo siguiente:
 ```bash
     npm install
     # o si usas yarn:
-    yarn 
+    yarn install
 ``` 
 3.  Ejecuta la aplicación de React:
     
