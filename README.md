@@ -39,7 +39,7 @@ Antes de comenzar, asegúrate de tener instalados los siguientes componentes:
 
 1.  Navega a la carpeta `backend`:
 ```bash
-	cd backend
+    cd backend
 ```
 
 2.  Crea y activa un entorno virtual (opcional pero recomendado):
