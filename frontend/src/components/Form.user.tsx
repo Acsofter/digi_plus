@@ -133,6 +133,29 @@ export const FormUser = ({ user_id }: { user_id?: number }) => {
             />
           </>
         )}
+        <span className=" text-sm text-base font-bold text-slate-600 col-span-1">
+          Color personalizado
+        </span>
+        <div className="inline-flex  gap-2 place-items-center w-full col-span-3 ">
+          <input
+            type="text"
+            className=" shadow-sm border border-slate-50 rounded-md px-2 text-sm"
+            value={form.color}
+          />
+          <label htmlFor="color" className="font-semibold rounded-md">
+            <div
+              className="w-7 h-7 rounded-full cursor-pointer outline outline-slate-200  "
+              style={{ backgroundColor: form.color }}
+            ></div>
+          </label>
+          <input
+            type="color"
+            name=""
+            id="color"
+            className="invisible"
+            onChange={(e) => setForm({ ...form, color: e.target.value })}
+          />
+        </div>
 
         {user_id && (
           <>
@@ -143,7 +166,7 @@ export const FormUser = ({ user_id }: { user_id?: number }) => {
               {form.roles.map((role, index) => (
                 <span
                   key={index}
-                  className="text-sm text-slate-500 font-bold col-span-1 bg-slate-200 rounded-3xl px-3 mx-0.5 "
+                  className="text-sm text-slate-500 font-bold col-span-3 bg-slate-200 rounded-3xl px-3 mx-0.5 "
                 >
                   {role}
                 </span>

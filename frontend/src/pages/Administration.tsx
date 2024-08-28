@@ -17,7 +17,7 @@ export const Administration = () => {
   ];
 
   return (
-    <General>
+    <>
       <Modal />
       <div className="relative h-full  bg-[#f9f9f9] flex flex-col">
         <div className="flex flex-col w-full h-full p-5">
@@ -49,6 +49,6 @@ export const Administration = () => {
           </div>
         </div>
       </div>
-    </General>
+    </>
   );
 };

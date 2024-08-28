@@ -110,7 +110,7 @@
 //   };
 
 //   return (
-//     <General>
+//     <>
 //       <div className="bg-zinc-100">
 //         <main className="w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
 //           <div className="mb-4">
@@ -234,7 +234,7 @@
 //           </div>
 //         </main>
 //       </div>
-//     </General>
+//     </>
 //   );
 // };
 
@@ -257,6 +257,7 @@ import AnimatedCounter from "../components/AnimatedCounter";
 import { General } from "../layouts/General";
 import { Loading } from "../components/Loading";
 import { useUserServices } from "../services/user.services";
+import { Contexts } from "../services/Contexts";
 
 ChartJS.register(
   CategoryScale,
@@ -275,16 +276,12 @@ type DashboardProps = {
 };
 
 export function Dashboard() {
+  const { state } = React.useContext(Contexts);
   const labels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
   const [data, setData] = useState({
     lineChartData: {} as any,
     barChartData: {} as any,
     doughnutChartData: {} as any,
-    doughnutChartOptions: {},
-    barChartOptions: {},
-    lineChartOptions: {},
-    doughnutChartLegend: {},
-    barChartLegend: {},
     mostProductiveUser: { total: 0, name: "" },
     averageTicketsPerDay: 0,
     totalTickets: 0,
@@ -344,14 +341,7 @@ export function Dashboard() {
   );
 
   const fetchData = async () => {
-    const response = await get_graph({ graphname: "line" });
-    if (response) {
-      return response;
-    }
-  };
-
-  useEffect(() => {
-    fetchData().then((metrics) => {
+    await get_graph({ graphname: "line" }).then((metrics) => {
       if (metrics) {
         setUsers(metrics);
         const lineChartData = {
@@ -410,18 +400,37 @@ export function Dashboard() {
         });
       }
     });
+  };
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    fetchData();
   }, []);
 
+  useEffect(() => {
+    const msg = state.ws.lastMessage;
+    switch (msg?.type) {
+      case "ticket_added":
+      case "ticket_deleted":
+      case "ticket_updated":
+      case "user_added":
+      case "user_deleted":
+      case "user_updated":
+        fetchData();
+        break;
+      default:
+        break;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.ws.lastMessage]);
+
   return (
-    <General>
+    <>
       {users ? (
         <div className=" px-4 py-4 no-scrollbar overflow-scroll h-screen flex flex-col gap-3 bg-zinc-50">
           <h1 className="text-xl font-bold">Dashboard</h1>
 
           <div className="w-full  grid-cols-1 lg:grid-cols-3 gap-2 sm:gap-4 grid">
-          <div className="bg-blue-600 p-4 rounded-lg text-white">
+            <div className="bg-blue-600 p-4 rounded-lg text-white">
               <p className="font-medium mb-2">Actualizacion</p>
               <h3 className="text-xl font-bold mb-2">
                 Esta semana ha aumentado un 40% el rendimiento en los tickets
@@ -429,14 +438,17 @@ export function Dashboard() {
               <p className="text-sm">Estadisticas →</p>
             </div>
             <DashboardCard
-              title="Total Neto"
+              title="Total Bruto"
               value={data.totalTickets}
               change={33}
               isPositive={true}
             />
             <DashboardCard
-              title="Total Bruto"
-              value={32000}
+              title="Total Neto"
+              value={
+                data.totalTickets *
+                (parseInt(state.company.collaborator_percentage) * 0.01)
+              }
               change={24}
               isPositive={false}
             />
@@ -499,12 +511,12 @@ export function Dashboard() {
             </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-8 justify-between ">
+          <div className="flex flex-col lg:flex-row gap-8 justify-between ">
             <div className="bg-white p-3 rounded-lg shadow-md flex flex-col items-center w-full">
               <h2 className="text-xl font-semibold mb-4 ">
                 Distribucion de usuarios
               </h2>
-              <div className="h-full w-full">
+              <div className="h-full w-full max-w-lg">
                 {Object.keys(data.doughnutChartData).length && (
                   <Doughnut
                     data={data.doughnutChartData}
@@ -583,12 +595,11 @@ export function Dashboard() {
                 })}
               </div>
             </div>
-
           </div>
         </div>
       ) : (
         <Loading />
       )}
-    </General>
+    </>
   );
 }

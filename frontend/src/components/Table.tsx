@@ -84,30 +84,45 @@ export const Table = () => {
         : "approved";
     return (
       <>
-        <tr>
-          <td className="text-left text-zinc-400 text-xs " colSpan={7}>
-            {response.current &&
-              `${title}. Mostrando ${
-                response.current && (response.current - 1) * 5 + 1
-              } - ${Math.min(response.current * 5, response.count)} de ${
-                response.count
-              }`}
-            <div className="inline-flex gap-1 ">
-              <button
-                className="text-primary/60 hover:text-primary/80 "
-                onClick={() => handlerPagination(response.previous, type)}
-              >
-                <ChevronLeft size={16} />
-              </button>
+        <tr className="text-left text-zinc-400 text-xs">
+          {response.current && (
+            <>
+              <td className="font-bold">
+                {`${title.replace("Tickets ", "")}`}
+              </td>
 
-              <button
-                className=" text-primary/60 hover:text-primary/80"
-                onClick={() => handlerPagination(response.next, type)}
-              >
-                <ChevronRight size={16} />
-              </button>
-            </div>
-          </td>
+              <td className="text-center">{"Mostrando "}</td>
+
+              <td className="w-20">
+                {`${Math.min(
+                  (response.current - 1) * 5 + 1,
+                  response.count
+                )} - ${Math.min(response.current * 5, response.count)} de ${
+                  response.count
+                }`}
+              </td>
+
+              <td className="text-zinc-400 text-xs">
+                <div className="inline-flex gap-1">
+                  <button
+                    className="text-primary/60 hover:text-primary/80"
+                    onClick={() => handlerPagination(response.previous, type)}
+                    disabled={!response.previous}
+                  >
+                    <ChevronLeft size={16} />
+                  </button>
+
+                  <button
+                    className=" text-primary/60 hover:text-primary/80"
+                    onClick={() => handlerPagination(response.next, type)}
+                    disabled={!response.next}
+                  >
+                    <ChevronRight size={16} />
+                  </button>
+                </div>
+              </td>
+            </>
+          )}
         </tr>
         {response?.results.map((ticket, index) => (
           <motion.tr

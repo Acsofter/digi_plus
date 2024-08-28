@@ -10,7 +10,6 @@ class CompanyConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         self.user = self.scope['user']
-        print("################scope: ", self.scope)
 
         if self.user.is_anonymous:
             await self.close()
@@ -58,6 +57,7 @@ class CompanyConsumer(AsyncWebsocketConsumer):
 
             if not message_type or not self.user:
                 return
+            
 
             await self.channel_layer.group_send(
                 self.room_group_name,
@@ -77,7 +77,6 @@ class CompanyConsumer(AsyncWebsocketConsumer):
        
         except Exception as e:
             tb_traceback = traceback.format_tb(e.__traceback__)
-            print(tb_traceback)
             print("ERROR: ", e, tb_traceback)
             pass
             
@@ -108,7 +107,6 @@ class CompanyConsumer(AsyncWebsocketConsumer):
         }))
 
     async def user_disabled(self, event):
-        print("evento: ",  event)
         user_inhibited = (event.get('payload') or {}).get('user')
         
         await self.send(text_data=json.dumps({
@@ -116,6 +114,17 @@ class CompanyConsumer(AsyncWebsocketConsumer):
             "user":  user_inhibited,
             "message": f"Ha sido deshabilitado por un administrador",
         }))
+
+    async def user_updated(self, event):
+        user_updated = (event.get('payload') or {}).get('user')
+        
+        await self.send(text_data=json.dumps({
+            "type": "user_updated",
+            "user":  user_updated,
+            "message": f"Ha sido actualizado por un administrador",
+        }))
+
+   
         
        
 

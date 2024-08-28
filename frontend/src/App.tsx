@@ -13,6 +13,8 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Modal } from "reactstrap";
 import { Profile } from "./pages/Profile";
+import { Help } from "./pages/Help";
+import { General } from "./layouts/General";
 const audio_notification = require("./assets/sound/pop.mp3");
 
 const initialState: State = {
@@ -146,7 +148,7 @@ const App: React.FC = () => {
         default:
           break;
       }
-
+      console.log(messageData);
       dispatch({
         type: "SET_WS",
         payload: { lastMessage: messageData },
@@ -175,80 +177,93 @@ const App: React.FC = () => {
       value={{ state, dispatch, sendMessage: handleSendMessage }}
     >
       <div className="flex place-items-center w-screen h-screen relative overflow-hidden">
-        <Modal />
-        <ToastContainer />
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route
-            path="*"
-            element={
-              <PrivateRouteWrapper>
-                <Home />
-              </PrivateRouteWrapper>
-            }
-          />
-          <Route
-            path="/"
-            element={
-              <PrivateRouteWrapper>
-                <Home />
-              </PrivateRouteWrapper>
-            }
-          />
-          <Route
-            path="/profile"
-            element={
-              <PrivateRouteWrapper>
-                <Profile />
-              </PrivateRouteWrapper>
-            }
-          />
+        <General>
+          <Modal />
+          <ToastContainer />
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route
+              path="*"
+              element={
+                <PrivateRouteWrapper>
+                  <Home />
+                </PrivateRouteWrapper>
+              }
+            />
+            <Route
+              path="/"
+              element={
+                <PrivateRouteWrapper>
+                  <Home />
+                </PrivateRouteWrapper>
+              }
+            />
 
-          <Route
-            path="/admin"
-            element={
-              <PrivateRouteWrapper>
-                <Administration />
-              </PrivateRouteWrapper>
-            }
-          />
-          <Route
-            path="/settings"
-            element={
-              <PrivateRouteWrapper>
-                <Settings />
-              </PrivateRouteWrapper>
-            }
-          />
-          <Route
-            path="/dashboard"
-            element={
-              <PrivateRouteWrapper>
-                <Dashboard />
-              </PrivateRouteWrapper>
-            }
-          />
-        </Routes>
-        {!userInteracted && (
-          <div className="absolute  opacity-40  bottom-0 right-0 px-3">
-            <h2>Las funcionalidades de este sitio requieren interactuar</h2>
-          </div>
-        )}
-        {!state.company.id && (
-          <div className="absolute top-0 right-0 bg-red-700 text-white py-2 px-3 rounded-bl-2xl duration-1000">
-            {state.auth.user.roles &&
-            state.auth.user.roles.includes("staff") ? (
-              <p>
-                Debes ir a los <b>Ajustes</b> y especificar los detalles de la
-                compañia para poder utilizar las funciones.
-              </p>
-            ) : (
-              <p>
-                Contacta con el administrador para poder utilizar las funciones.
-              </p>
-            )}
-          </div>
-        )}
+            <Route
+              path="/profile"
+              element={
+                <PrivateRouteWrapper>
+                  <Profile />
+                </PrivateRouteWrapper>
+              }
+            />
+
+            <Route
+              path="/help"
+              element={
+                <PrivateRouteWrapper>
+                  <Help />
+                </PrivateRouteWrapper>
+              }
+            />
+
+            <Route
+              path="/admin"
+              element={
+                <PrivateRouteWrapper>
+                  <Administration />
+                </PrivateRouteWrapper>
+              }
+            />
+            <Route
+              path="/settings"
+              element={
+                <PrivateRouteWrapper>
+                  <Settings />
+                </PrivateRouteWrapper>
+              }
+            />
+            <Route
+              path="/dashboard"
+              element={
+                <PrivateRouteWrapper>
+                  <Dashboard />
+                </PrivateRouteWrapper>
+              }
+            />
+          </Routes>
+          {!userInteracted && (
+            <div className="absolute  opacity-40  bottom-0 right-0 px-3">
+              <h2>Las funcionalidades de este sitio requieren interactuar</h2>
+            </div>
+          )}
+          {!state.company.id && (
+            <div className="absolute top-0 right-0 bg-red-700 text-white py-2 px-3 rounded-bl-2xl duration-1000">
+              {state.auth.user.roles &&
+              state.auth.user.roles.includes("staff") ? (
+                <p>
+                  Debes ir a los <b>Ajustes</b> y especificar los detalles de la
+                  compañia para poder utilizar las funciones.
+                </p>
+              ) : (
+                <p>
+                  Contacta con el administrador para poder utilizar las
+                  funciones.
+                </p>
+              )}
+            </div>
+          )}
+        </General>
       </div>
     </Contexts.Provider>
   );

@@ -6,7 +6,7 @@ import { MetricsHome } from "../components/MetricsHome";
 export const Home = () => {
   return (
     <>
-      <General>
+      <>
         <div className="relative flex h-full w-full  ">
           <Modal />
           <div className="content w-full flex flex-col gap-3 rounded-2xl overflow-hidden bg-[#fefefe] p-2 m-3">
@@ -14,7 +14,7 @@ export const Home = () => {
             <Table />
           </div>
         </div>
-      </General>
+      </>
     </>
   );
 };

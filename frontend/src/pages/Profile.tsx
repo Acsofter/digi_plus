@@ -15,10 +15,10 @@ export const Profile = () => {
   const { state, dispatch } = useContext(Contexts);
 
   return (
-    <General>
-      <div className="flex h-screen bg-gray-100">
+    <>
+      <div className="flex flex-col md:flex-row h-screen bg-gray-100 overflow-scroll">
         {/* sidebar */}
-        <div className="w-1/6 bg-white p-4 flex flex-col">
+        <div className="w-full bg-white p-4 flex flex-col md:w-1/6">
           <div className="mb-8">
             <img
               src={noprofile}
@@ -46,7 +46,7 @@ export const Profile = () => {
               <ArrowDownToLine size={18} />
             </button>
           </div>
-          <div className="space-y-4">
+          <div className="space-y-4 text-center md:text-left duration-300 ">
             <h3 className="font-semibold">Informacion</h3>
             <div>
               <p className="text-sm text-gray-500">Nombre de usuario</p>
@@ -73,7 +73,7 @@ export const Profile = () => {
         </div>
 
         {/* content */}
-        <div className="flex-1 p-8 w-full">
+        <div className="flex-1 p-8 w-full h-screen">
           <div className="flex justify-between items-center mb-8">
             <div className="flex items-center space-x-4">
               <Info size={30} />
@@ -86,10 +86,10 @@ export const Profile = () => {
             </div>
           </div>
 
-          <div className="bg-white rounded-lg shadow p-6 h-full">
-            <div className="flex justify-between items-center mb-6">
-              <div className="space-x-4">
-                <button className="text-blue-600 font-semibold border-b-2 border-blue-600 pb-2">
+          <div className="bg-white rounded-lg shadow p-6 ">
+            <div className="flex justify-between items-center mb-6 ">
+              <div className="space-x-4 w-full">
+                <button className="text-blue-600 font-semibold border-b-2 border-blue-600 pb-1">
                   Detalles
                 </button>
                 <button className="text-gray-500">Documentos</button>
@@ -100,11 +100,11 @@ export const Profile = () => {
               </button>
             </div>
 
-            <div className="grid grid-cols-2 gap-8">
+            <div className="grid grid-cols-2 gap-5">
               <div>
                 <h3 className="font-semibold mb-4">Logros</h3>
                 <div className="space-y-4">
-                  <div className="flex items-center">
+                  <div className="grid grid-cols-2">
                     <div className="w-8 h-8 bg-amber-100 rounded-full flex items-center justify-center mr-3">
                       <Award size={18} className="text-amber-600" />
                     </div>
@@ -113,7 +113,7 @@ export const Profile = () => {
                       <p className="text-sm text-gray-500">5 meses antes</p>
                     </div>
                   </div>
-                  <div className="flex items-center">
+                  <div className="grid grid-cols-2">
                     <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mr-3">
                       <Award size={18} className="text-green-600" />
                     </div>
@@ -122,9 +122,9 @@ export const Profile = () => {
                       <p className="text-sm text-gray-500">1 mes antes</p>
                     </div>
                   </div>
-                  <div className="flex items-center">
+                  <div className="grid grid-cols-2">
                     <div className="w-8 h-8 bg-violet-100 rounded-full flex items-center justify-center mr-3">
-                    <Award size={18} className="text-violet-600"/>
+                      <Award size={18} className="text-violet-600" />
                     </div>
                     <div>
                       <p className="font-semibold">Monto</p>
@@ -136,7 +136,6 @@ export const Profile = () => {
               <div>
                 <h3 className="font-semibold mb-4"> Actividad</h3>
                 <div className="relative bg-zinc-100 rounded-md h-full">
-                 
                   <div className="absolute top-1/4 left-1/4 w-3 h-3 bg-blue-600 rounded-full"></div>
                   <div className="absolute top-1/2 left-1/2 w-3 h-3 bg-blue-600 rounded-full"></div>
                   <div className="absolute bottom-1/4 right-1/4 w-3 h-3 bg-blue-600 rounded-full"></div>
@@ -181,6 +180,6 @@ export const Profile = () => {
           </div>
         </div>
       </div>
-    </General>
+    </>
   );
 };

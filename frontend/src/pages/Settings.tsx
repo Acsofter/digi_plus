@@ -6,7 +6,6 @@ import { Modal } from "../components/Modal";
 import { General } from "../layouts/General";
 import { Contexts } from "../services/Contexts";
 import { useUserServices } from "../services/user.services";
-const no_profile = require("../assets/image/default.png");
 const dark_theme = require("../assets/image/dark-theme.png");
 const light_theme = require("../assets/image/light-theme.png");
 const default_theme = require("../assets/image/default-theme.png");
@@ -53,24 +52,24 @@ export const Settings = () => {
   }, []);
 
   return (
-    <General>
+    <>
       <div className="relative w-full h-full ">
         <Modal />
         <div className="p-5">
           <h2 className="font-semibold text-xl">Ajustes</h2>
           <hr className="my-4" />
           <div className="bg-[#fefefe] text-sm p-4 rounded-md h-full">
-            <div className="w-full h-20 max-h-20 ">
-              <div className="w-1/3 inline-block">
+            <div className="w-full grid grid-cols-3 ">
+              <div className=" inline-block">
                 <span className="font-semibold w-full block">Company Logo</span>
                 <span> Actualiza el logo de la compañia</span>
               </div>
 
-              <div className="w-1/3 inline-block">
+              <div className=" col-span-2">
                 {form.logo ? (
                   <img src={form.logo} alt="logo de la empresa.jpg" />
                 ) : (
-                  <CiImageOff size={90} className="inline text-slate-500" />
+                  <div className="w-32 h-32 bg-[url('./assets/image/placeholder.svg')] bg-no-repeat bg-center  inline-block" />
                 )}
                 {form.logo ? (
                   <FcRemoveImage
@@ -98,15 +97,15 @@ export const Settings = () => {
               <div className="w-1/3 inline-block"></div>
             </div>
 
-            <hr className="my-4 border-slate-200/40" />
-            <div className="w-full inline-flex ">
-              <div className="w-1/3 inline-block">
+            <hr className="my-2 border-slate-200/40" />
+            <div className="w-full grid grid-cols-3 ">
+              <div>
                 <span className="font-semibold w-full block">Detalles</span>
                 <span>Actualiza las informaciones de la empresa</span>
               </div>
 
               <motion.div
-                className="bg-white p-5 rounded-lg grid grid-cols-3 gap-2 w-full mx-auto"
+                className="bg-white  grid grid-cols-1 md:grid-cols-2 gap-2 lg:grid-cols-3 w-full mx-auto col-span-2"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 // onSubmit={handleSubmit}
@@ -171,16 +170,16 @@ export const Settings = () => {
                 </div>
               </motion.div>
             </div>
-            <hr className="my-4 border-slate-200/40" />
-            <div className="w-full  h-auto inline-flex  ">
-              <div className="w-1/3 inline-block">
-                <span className="font-semibold w-full block">
+            <hr className="my-2 border-slate-200/40" />
+            <div className="w-full  grid grid-cols-3 col-span-2">
+              <div>
+                <span className="font-semibold  block">
                   Seleccione un color
                 </span>
                 <span>Ajusta un color principal para tu aplicación</span>
               </div>
 
-              <div className=" flex-col w-1/3">
+              <div className=" col-span-2">
                 <div className=" inline-flex justify-between h-auto max-h-20 place-items-center gap-2">
                   <span className="h-7 w-7 bg-secondary rounded-full"></span>
                   <span className="h-7 w-7 bg-primary rounded-full"></span>
@@ -217,21 +216,21 @@ export const Settings = () => {
               </div>
             </div>
 
-            <hr className="my-4 border-slate-200/40" />
-            <div className="w-full h-auto inline-flex ">
-              <div className="w-1/3 inline-block">
+            <hr className="my-2 border-slate-200/40" />
+            <div className="w-full grid grid-cols-3 ">
+              <div className="inline-block">
                 <span className="font-semibold w-full block">
                   Seleccione un tema
                 </span>
                 <span>Puedes elegir una tema para tu aplicacion</span>
               </div>
-              <div className="w-2/3 inline-flex gap-2">
+              <div className=" flex flex-wrap col-span-2 gap-2">
                 <div
                   className={`py-4 px-7 border ${
                     form.theme === "default"
                       ? "border-secondary"
                       : "border-slate-200"
-                  } rounded-md max-w-60 cursor-pointer hover:border-secondary duration-300 text-slate-400`}
+                  } rounded-md max-w-60 cursor-pointer hover:border-secondary duration-300 text-slate-400 `}
                   onClick={() => setForm({ ...form, theme: "default" })}
                 >
                   <img src={default_theme} alt="" className="h-32" />
@@ -273,9 +272,9 @@ export const Settings = () => {
               </div>
             </div>
 
-            <hr className="my-4 border-slate-200/40" />
-            <div className="w-full h-16 inline-flex ">
-              <div className="w-1/3 inline-block">
+            <hr className="my-2 border-slate-200/40" />
+            <div className="w-full grid grid-cols-3   ">
+              <div>
                 <span className="font-semibold w-full block">
                   Barra de navegacion transparente
                 </span>
@@ -320,6 +319,6 @@ export const Settings = () => {
           </div>
         </div>
       </div>
-    </General>
+    </>
   );
 };

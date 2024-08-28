@@ -357,11 +357,16 @@ export const useUserServices = () => {
   };
 
   const get_random_color = () => {
-    const hue = Math.floor(Math.random() * 360);
-    const saturation = Math.floor(Math.random() * 50) + 50;
-    const lightness = Math.floor(Math.random() * 40) + 30;
+    // Genera valores RGB aleatorios
+    const r = Math.floor(Math.random() * 256);
+    const g = Math.floor(Math.random() * 256);
+    const b = Math.floor(Math.random() * 256);
 
-    return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+    // Convierte los valores RGB a hexadecimal y asegúrate de que tengan dos dígitos
+    const toHex = (value: number) => value.toString(16).padStart(2, "0");
+
+    // Retorna el color en formato hexadecimal
+    return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
   };
 
   const get_graph = async ({
@@ -390,7 +395,7 @@ export const useUserServices = () => {
       const response = await axios.get(`${base_url}/payments/`, {
         headers: AuthHeader(),
       });
-      
+
       if (response.status !== 200) {
         return false;
       }

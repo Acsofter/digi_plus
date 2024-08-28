@@ -1,27 +1,30 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { BiBlock, BiEdit, BiPlus, BiTrash } from "react-icons/bi";
 import { Contexts } from "../services/Contexts";
 import { FormUser } from "./Form.user";
 import { useUserServices } from "../services/user.services";
-import { Search, Shield } from "lucide-react";
+import { Pencil, Search, Shield, Trash2, UserRoundX } from "lucide-react";
 
 export const AdmUsers = () => {
   const { get_users } = useUserServices();
   const { state, dispatch } = useContext(Contexts);
   const [users, setUsers] = useState<User[]>([]);
 
-  const fetchUsers = async () => {
+  const fetchUsers = useCallback(async () => {
     const response = await get_users({ includeAdmins: false });
     if (response) setUsers(response);
-  };
+  }, [get_users, setUsers]);
 
   useEffect(() => {
-    fetchUsers();
+    fetchUsers()
+    
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     const msg = state.ws.lastMessage;
     if (msg == null) return;
+    console.log(msg);
 
     switch (msg.type) {
       case "user_created":
@@ -33,14 +36,16 @@ export const AdmUsers = () => {
       default:
         break;
     }
-  }, [state.ws.lastMessage]);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ state.ws.lastMessage]);
 
   return (
     <div className="w-full">
       <div className="flex justify-between items-center mb-5 ">
         <div className="relative ">
           <div className="absolute inset-y-0 left-0 rtl:inset-r-0 rtl:right-0 flex items-center ps-3 pointer-events-none">
-            <Search  className="inline-block text-md text-zinc-500" />
+            <Search className="inline-block text-md text-zinc-500" />
           </div>
           <input
             type="text"
@@ -122,9 +127,9 @@ export const AdmUsers = () => {
                 >
                   {index + 1}
                 </th>
-                <td className="px-6 py-4">
+                <td className="px-6 py-4 relative">
                   {user.roles?.includes("staff") ? (
-                    <Shield  className="text-md inline-block text-amber-500" />
+                    <Shield className="text-md inline-block text-amber-500 w-4 absolute left-0" />
                   ) : (
                     ""
                   )}
@@ -148,8 +153,8 @@ export const AdmUsers = () => {
                 {/* <td className="px-6 py-4">{user.digitizer_percentage} / {user.user_percentage}</td> */}
 
                 <td className="px-6 py-4">
-                  <BiEdit
-                    className="text-xl inline-block text-secondary cursor-pointer "
+                  <Pencil
+                    className="text-xl inline-block text-secondary cursor-pointer w-4"
                     onClick={() =>
                       dispatch({
                         type: "SET_POPUP",
@@ -162,8 +167,8 @@ export const AdmUsers = () => {
                       })
                     }
                   />
-                  <BiBlock className="text-xl inline-block text-slate-500 cursor-pointer ml-2" />
-                  <BiTrash className="text-xl inline-block text-red-500 cursor-pointer ml-2" />
+                  <UserRoundX className="text-xl inline-block text-slate-500 cursor-pointer ml-2 w-4" />
+                  <Trash2 className="text-xl inline-block text-red-500 cursor-pointer ml-2 w-4" />
                 </td>
               </tr>
             ))}
