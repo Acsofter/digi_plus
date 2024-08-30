@@ -5,6 +5,7 @@ import { FormUser } from "./Form.user";
 import { useUserServices } from "../services/user.services";
 import { Pencil, Search, Shield, Trash2, UserRoundX } from "lucide-react";
 
+
 export const AdmUsers = () => {
   const { get_users } = useUserServices();
   const { state, dispatch } = useContext(Contexts);
@@ -16,8 +17,8 @@ export const AdmUsers = () => {
   }, [get_users, setUsers]);
 
   useEffect(() => {
-    fetchUsers()
-    
+    fetchUsers();
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -38,19 +39,19 @@ export const AdmUsers = () => {
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ state.ws.lastMessage]);
+  }, [state.ws.lastMessage]);
 
   return (
     <div className="w-full">
       <div className="flex justify-between items-center mb-5 ">
         <div className="relative ">
           <div className="absolute inset-y-0 left-0 rtl:inset-r-0 rtl:right-0 flex items-center ps-3 pointer-events-none">
-            <Search className="inline-block text-md text-zinc-500" />
+            <Search className="inline-block text-md text-zinc-500 dark:text-white" />
           </div>
           <input
             type="text"
             id="table-search"
-            className="block p-2 ps-10 text-sm  text-gray-900 shadow-sm border rounded-lg w-80 bg-white focus:ring-secondary focus:border-primary-blring-secondary   dark:placeholder-gray-400  dark:focus:ring-secondary dark:focus:border-primary-blring-secondary"
+            className="block p-2 ps-10 text-sm  text-gray-900 shadow-sm border rounded-lg w-80 bg-white focus:ring-secondary focus:border-primary-blring-secondary   dark:placeholder-gray-400  dark:focus:ring-secondary dark:focus:border-primary-blring-secondary dark:text-white dark:bg-slate-800/60 dark:border-slate-600 dark:focus:outline-slate-500"
             placeholder="Buscar..."
           />
         </div>
@@ -71,9 +72,9 @@ export const AdmUsers = () => {
           <BiPlus className="text-xl inline-block" /> Añadir
         </button>
       </div>
-      <div className="border rounded-xl shadow-sm">
-        <table className="w-full text-sm text-left rtl:text-right text-gray-600 ">
-          <thead className="text-xs text-gray-700 uppercase bg-zinc-50 sticky top-0 w-full">
+      <div className="border rounded-xl shadow-sm bg-white/5 dark:border-none">
+        <table className="w-full text-sm text-left rtl:text-right text-gray-600 border-collapse">
+          <thead className="text-xs text-gray-700 uppercase bg-zinc-50 dark:bg-transparent sticky top-0 w-full dark:text-white">
             <tr>
               <th scope="col" className="p-4 "></th>
               <th scope="col" className="px-6 py-3">
@@ -107,10 +108,10 @@ export const AdmUsers = () => {
           </thead>
           <tbody className="">
             {users.map((user, index) => (
-              <tr className="bg-[#FEFEFE] border-b hover:bg-blue-50">
+              <tr className="bg-[#FEFEFE] dark:bg-slate-800/5 border-b dark:border-white/5 hover:bg-blue-50 hover:dark:bg-slate-800/20 dark:text-white/70 ">
                 <td className="w-4 p-4">
                   <div
-                    className="flex items-center w-7 h-7 shadow-md border border-zinc-100 rounded-full"
+                    className="flex items-center w-7 h-7 shadow-md border border-zinc-100  rounded-full"
                     style={{
                       backgroundColor: user.color ? user.color : "white",
                     }}
@@ -123,7 +124,7 @@ export const AdmUsers = () => {
 
                 <th
                   scope="row"
-                  className="px-6 py-4 font-semibold text-gray-700  whitespace-nowrap "
+                  className="px-6 py-4 font-semibold text-gray-700 dark:text-white  whitespace-nowrap "
                 >
                   {index + 1}
                 </th>
@@ -142,8 +143,8 @@ export const AdmUsers = () => {
                   <span
                     className={`${
                       user.is_active
-                        ? "bg-blue-100 text-blue-500  "
-                        : "bg-slate-100 text-slate-500 "
+                        ? "bg-blue-100 text-blue-500 dark:bg-blue-600/20  "
+                        : "bg-slate-100 text-slate-500  dark:bg-slate-600/20"
                     } px-2 py-1 text-xs rounded-md font-semibold`}
                   >
                     {user.is_active ? "Activo" : "Inactivo"}
@@ -174,7 +175,8 @@ export const AdmUsers = () => {
             ))}
           </tbody>
         </table>
-        <div className=" p-4 text-primary/60 text-sm ">
+        <div className=" p-4 text-primary/60 dark:text-white/50 text-sm ">
+        
           Mostrando 1 - 10 de 100
         </div>
       </div>

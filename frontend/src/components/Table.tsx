@@ -20,8 +20,11 @@ import {
   ChevronLeft,
   ChevronRight,
   CircleDashed,
+  CircleFadingPlus,
+  CircleX,
   CreditCard,
   DollarSign,
+  ListCollapse,
   UserRound,
 } from "lucide-react";
 
@@ -84,7 +87,7 @@ export const Table = () => {
         : "approved";
     return (
       <>
-        <tr className="text-left text-zinc-400 text-xs">
+        <tr className="text-left text-zinc-400 text-xs ">
           {response.current && (
             <>
               <td className="font-bold">
@@ -130,15 +133,15 @@ export const Table = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 * index }}
-            className={"h-16"}
+            className={" "}
             key={ticket.id}
           >
-            <td className="w-4  p-2 md:p-4 bg-white rounded-l-lg">
+            <td className="w-4  p-2 md:p-4 bg-white dark:bg-slate-800/20  dark:text-white rounded-l-lg">
               <div className="flex items-center">
                 <input
                   id="checkbox-table-search-1"
                   type="checkbox"
-                  className="w-4 h-4 text-primary-blue  rounded focus:ring-primary-blue focus:ring-primary-blue ring-offset-gray-800 focus:ring-offset-gray-800 focus:ring-2  "
+                  className="w-4 h-4 ring-none dark:bg-slate-500"
                 />
                 <label htmlFor="checkbox-table-search-1" className="sr-only">
                   checkbox
@@ -147,12 +150,12 @@ export const Table = () => {
             </td>
 
             {/*  */}
-            <td className=" py-3 w-20  bg-white">
+            <td className=" py-3 w-20  bg-white dark:bg-slate-800/20  dark:text-white ">
               {response.current && (response.current - 1) * 5 + index + 1}{" "}
               <br />
               <span></span>
             </td>
-            <td className=" py-3  bg-white">
+            <td className=" py-3  bg-white dark:bg-slate-800/20 dark:text-white ">
               <div className="grid sm:grid-cols-2 items-center justify-center max-full gap-3">
                 <div
                   className={`p-2 max-w-10 rounded-full bg-amber-300 hidden sm:table-cell justify-self-end`}
@@ -172,7 +175,7 @@ export const Table = () => {
               </div>
             </td>
 
-            <td className=" py-5 bg-white hidden md:table-cell">
+            <td className=" py-5 bg-white dark:bg-slate-800/20 dark:text-white  hidden md:table-cell">
               {ticket.payment.type === "Efectivo" ? (
                 <FcMoneyTransfer className="inline-block mx-1" size={16} />
               ) : (
@@ -184,7 +187,7 @@ export const Table = () => {
               {ticket.payment.type}
             </td>
 
-            <td className=" py-3 gap-2 bg-white w-34">
+            <td className=" py-3 gap-2 bg-white dark:bg-slate-800/20 dark:text-white  w-34">
               <div className="grid sm:grid-cols-2 items-center justify-center gap-3">
                 <div
                   className={`p-2 max-w-10 rounded-full hidden sm:block justify-self-end`}
@@ -202,10 +205,10 @@ export const Table = () => {
               </div>
             </td>
 
-            <td className=" py-5 bg-white">
+            <td className=" py-5 bg-white dark:bg-slate-800/20 dark:text-white ">
               {new Date(ticket.created_at).toLocaleString()}
             </td>
-            <td className=" py-3 gap-2  bg-white w-34">
+            <td className=" py-3 gap-2  bg-white dark:bg-slate-800/20 dark:text-white  w-34">
               <div className="grid sm:grid-cols-2 items-center justify-center gap-3">
                 <div
                   className={`p-2 max-w-10 rounded-full hidden sm:block justify-self-end ${
@@ -231,10 +234,10 @@ export const Table = () => {
                 </p>
               </div>
             </td>
-            <td className=" bg-white  rounded-r-lg">
+            <td className=" bg-white dark:bg-slate-800/20 dark:text-white   rounded-r-lg">
               {state.auth.user?.roles.includes("user") ? (
                 <>
-                  <FcViewDetails
+                  <ListCollapse
                     size={20}
                     className="inline-block mx-1 text-primary cursor-pointer"
                     onClick={() =>
@@ -250,7 +253,7 @@ export const Table = () => {
                       })
                     }
                   />
-                  <FcDeleteRow
+                  <CircleX
                     size={20}
                     className="inline mx-0.5 cursor-pointer"
                     onClick={() => {}}
@@ -258,9 +261,8 @@ export const Table = () => {
                 </>
               ) : (
                 <>
-                  <FcOk
-                    className="inline mx-0.5"
-                    size={20}
+                  <button
+                    className="inline mx-0.5 text-lg"
                     onClick={() => {
                       update_ticket({
                         details: {
@@ -271,10 +273,11 @@ export const Table = () => {
                         },
                       });
                     }}
-                  />
-                  <FcCancel
-                    className="inline mx-0.5"
-                    size={20}
+                  >
+                    👍
+                  </button>
+                  <button
+                    className="inline mx-0.5 text-lg"
                     onClick={() => {
                       update_ticket({
                         details: {
@@ -285,10 +288,11 @@ export const Table = () => {
                         },
                       });
                     }}
-                  />
-                  <FcMediumPriority
-                    className="inline mx-0.5"
-                    size={20}
+                  >
+                    👎
+                  </button>
+                  <button
+                    className="inline mx-0.5 text-lg"
                     onClick={() => {
                       update_ticket({
                         details: {
@@ -299,7 +303,9 @@ export const Table = () => {
                         },
                       });
                     }}
-                  />
+                  >
+                    ⚠️
+                  </button>
                 </>
               )}
             </td>
@@ -366,13 +372,10 @@ export const Table = () => {
     <div className="w-full flex flex-col justify-between my-2 h-2/3 ">
       <div className="flex flex-wrap justify-end items-center w-full py-2 gap-1">
         <div className="relative max-w-sm">
-          <div className="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
-            <Calendar className="text-gray-400" />
-          </div>
           <input
             id="default-datepicker"
             type="date"
-            className=" text-gray-600 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 bg-zinc-100 border border-zinc-200 placeholder-gray-400 "
+            className=" text-gray-600 dark:text-gray-300 text-sm rounded-lg focus:ring-blue-500  focus:bordern-white/500 block w-full ps-10 p-2.5 bg-zinc-100 dark:bg-white/5 dark:border-white/5 border border-zinc-200   "
             placeholder="desde"
             value={rangeDate.start}
             onChange={(e) => {
@@ -381,13 +384,10 @@ export const Table = () => {
           />
         </div>
         <div className="relative max-w-sm">
-          <div className="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
-            <Calendar className="text-gray-400 " />
-          </div>
           <input
             id="default-datepicker"
             type="date"
-            className=" text-gray-600 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 bg-zinc-100 border border-zinc-200 placeholder-gray-400 "
+            className=" text-gray-600 dark:text-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 bg-zinc-100 dark:bg-white/5 dark:border-white/5 border border-zinc-200 placeholder-gray-400 "
             placeholder="hasta"
             value={rangeDate.end}
             onChange={(e) => {
@@ -397,20 +397,20 @@ export const Table = () => {
         </div>
 
         <button
-          className="px-5 py-2 rounded-lg text-sm border border-green-500 text-green-500"
+          className="px-5 py-2 rounded-lg text-sm border border-green-500 text-green-500 dark:border-white/10 shadow-sm dark:bg-white/15 dark:text-white "
           onClick={fetchTickets}
         >
           Buscar
         </button>
         <button
-          className="px-5 py-2 rounded-lg text-sm border border-blue-500 text-blue-500"
+          className="px-5 py-2 rounded-lg text-sm border border-blue-500 text-blue-500 dark:border-white/10 shadow-sm dark:bg-white/15 dark:text-white"
           onClick={() => {}}
         >
           Imprimir
         </button>
         {state.auth.user.roles.includes("user") && (
           <button
-            className="px-5 py-2 rounded-lg text-sm bg-gradient-to-tr border border-blue-500 from-blue-600 to-blue-400 text-white s"
+            className="px-5 py-2 rounded-lg text-sm bg-gradient-to-tr border border-blue-500 from-blue-600 to-blue-400 text-white dark:border-slate-800/15 shadow-sm dark:to-slate-800/20 dark:from-slate-800 dark:text-white"
             onClick={() =>
               dispatch({
                 type: "SET_POPUP",
@@ -429,11 +429,11 @@ export const Table = () => {
         )}
       </div>
 
-      <div className="w-full h-full overflow-scroll bg-zinc-100 p-3 rounded-xl no-scrollbar ">
+      <div className="w-full h-full overflow-scroll bg-zinc-100 dark:bg-slate-800/15 dark:border dark:border-slate-300/5 text-slate-700 p-3 rounded-xl no-scrollbar ">
         <table className="table w-full border-separate border-spacing-y-1 text-xs lg:text-sm text-center  space-y-2 h-1/2 ">
-          <thead className=" text-xs text-gray-700 uppercase sticky top-0">
+          <thead className=" text-xs text-gray-700 uppercase sticky top-0 bg-white dark:bg-slate-800/20 dark:text-white dark:border dark:border-slate-100 backdrop-blur-2xl">
             <tr>
-              <th className="p-2 md:p-4 bg-white rounded-l-lg">
+              <th className="p-2 md:p-4 dark:text-white rounded-l-lg ">
                 <div className="flex items-center">
                   <input
                     id="checkbox-all-search"
@@ -445,13 +445,17 @@ export const Table = () => {
                   </label>
                 </div>
               </th>
-              <th className=" max-w-5 py-5 bg-white ">ID</th>
-              <th className=" py-5 bg-white">Monto</th>
-              <th className=" py-5 bg-white hidden md:block">Tipo</th>
-              <th className=" py-5 bg-white">Usuario</th>
-              <th className=" py-5 bg-white">Fecha</th>
-              <th className=" py-5 bg-white">Estado</th>
-              <th className=" py-5 bg-white rounded-r-lg">Acciones</th>
+              <th className=" max-w-5 py-5 dark:text-white">ID</th>
+              <th className=" py-5 bg-transparent dark:text-white ">Monto</th>
+              <th className=" py-5 bg-transparent dark:text-white  hidden md:block">
+                Tipo
+              </th>
+              <th className=" py-5 bg-transparent dark:text-white ">Usuario</th>
+              <th className=" py-5 bg-transparent dark:text-white ">Fecha</th>
+              <th className=" py-5 bg-transparent dark:text-white ">Estado</th>
+              <th className=" py-5 bg-transparent dark:text-white  rounded-r-lg">
+                Acciones
+              </th>
             </tr>
           </thead>
 

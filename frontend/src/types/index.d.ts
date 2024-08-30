@@ -24,7 +24,7 @@ interface Company {
 interface UpdateCompany {
   name: string;
   logo: string;
-  theme: string;
+  darkMode: string;
   address: string;
   phone: string;
   email: string;

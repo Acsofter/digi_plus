@@ -53,8 +53,8 @@ export const Help = () => {
 
   return (
     <>
-      <div className="bg-white min-h-screen">
-        <header className="flex justify-between items-center px-6 py-4 border-b">
+      <div className=" min-h-screen">
+        <header className="flex justify-between items-center px-6 py-4 border-b dark:text-white">
           <h1 className="text-2xl font-bold">Centro de Ayuda</h1>
         </header>
 
@@ -64,7 +64,7 @@ export const Help = () => {
               <input
                 type="text"
                 placeholder="Encuentra lo que sea"
-                className="w-full pl-10 pr-4 py-2 border rounded-md"
+                className="w-full pl-10 pr-4 py-2 border rounded-md dark:bg-white/10 dark:border-white/10 dark:placeholder-white focus:outline-none dark:text-white"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -73,13 +73,13 @@ export const Help = () => {
                 size={20}
               />
             </div>
-            <button className="border rounded-md px-3 py-2 flex items-center space-x-2">
+            <button className="border rounded-md px-3 py-2 flex items-center space-x-2 dark:text-white dark:bg-white/20">
               <span>英</span>
               <ChevronDownIcon size={16} />
             </button>
           </div>
 
-          <div className="bg-primary rounded-lg p-6 mb-8 text-white">
+          <div className="bg-primary dark:bg-slate-900/70 rounded-lg p-6 mb-8 text-white">
             <motion.h2
               initial={{ translateX: 100, opacity: 0 }}
               animate={{ translateX: 0, opacity: 1 }}
@@ -106,7 +106,9 @@ export const Help = () => {
                 transition={{ duration: 0.04 * index }}
                 key={index}
                 className={`p-4 rounded-lg ${
-                  index === 3 ? "bg-gradient-to-tr from-blue-400 to-blue-500 text-white" : "bg-gray-100 text-zinc-500"
+                  index === 3
+                    ? "bg-gradient-to-tr from-blue-400 to-blue-500 text-white dark:from-primary dark:to-primary"
+                    : "bg-gray-100 text-zinc-500 dark:bg-slate-900/30 dark:text-white"
                 } `}
               >
                 <h3 className="font-semibold mb-2">{item.title}</h3>

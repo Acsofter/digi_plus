@@ -34,25 +34,25 @@ export const AdmPayments = () => {
     switch (status) {
       case "0":
         return (
-          <span className=" bg-red-100 text-red-500  px-2 py-1 text-xs rounded-md font-semibold ">
+          <span className=" bg-red-100 text-red-500  px-2 py-1 text-xs rounded-md font-semibold dark:bg-red-600/20">
             Rechazado
           </span>
         );
       case "1":
         return (
-          <span className=" bg-green-100 text-green-500  px-2 py-1 text-xs rounded-md font-semibold">
+          <span className=" bg-green-100 text-green-500  px-2 py-1 text-xs rounded-md font-semibold dark:bg-green-600/20">
             Aceptado
           </span>
         );
       case "2":
         return (
-          <span className=" bg-blue-100 text-blue-500  px-2 py-1 text-xs rounded-md font-semibold">
+          <span className=" bg-blue-100 text-blue-500  px-2 py-1 text-xs rounded-md font-semibold dark:bg-blue-600/20">
             En proceso
           </span>
         );
       default:
         return (
-          <span className=" bg-amber-100 text-amber-500  px-2 py-1 text-xs rounded-md font-semibold">
+          <span className=" bg-amber-100 text-amber-500  px-2 py-1 text-xs rounded-md font-semibold dark:bg-amber-600/20">
             Pendiente
           </span>
         );
@@ -97,12 +97,12 @@ export const AdmPayments = () => {
       <div className="flex justify-between items-center mb-5 ">
         <div className="relative ">
           <div className="absolute inset-y-0 left-0 rtl:inset-r-0 rtl:right-0 flex items-center ps-3 pointer-events-none">
-            <IoSearchOutline className="inline-block text-md text-zinc-500" />
+            <IoSearchOutline className="inline-block text-md text-zinc-500 dark:text-white" />
           </div>
           <input
             type="text"
             id="table-search"
-            className="block p-2 ps-10 text-sm  text-gray-900 shadow-sm border rounded-lg w-80 bg-white focus:ring-secondary focus:border-primary-blring-secondary   dark:placeholder-gray-400  dark:focus:ring-secondary dark:focus:border-primary-blring-secondary"
+            className="block p-2 ps-10 text-sm  text-gray-900 shadow-sm border rounded-lg w-80 bg-white focus:ring-secondary focus:border-primary-blring-secondary   dark:placeholder-gray-400  dark:focus:ring-secondary dark:focus:border-primary-blring-secondary dark:text-white dark:bg-slate-800/60 dark:border-slate-600 dark:focus:outline-slate-500"
             placeholder="Buscar..."
           />
         </div>
@@ -123,9 +123,9 @@ export const AdmPayments = () => {
           <BiPlus className="text-xl inline-block" /> Añadir
         </button>
       </div>
-      <div className="border rounded-xl shadow-sm">
-        <table className="w-full text-sm text-left rtl:text-right text-gray-600 ">
-          <thead className="text-xs text-gray-700 uppercase bg-zinc-50 sticky top-0 w-full">
+      <div className="border rounded-xl shadow-sm bg-white/5 dark:border-none">
+        <table className="w-full text-sm text-left rtl:text-right text-gray-600 border-collapse">
+          <thead className="text-xs text-gray-700 uppercase bg-zinc-50 dark:bg-transparent sticky top-0 w-full dark:text-white">
             <tr>
               <th scope="col" className="p-4 "></th>
               <th scope="col" className="px-6 py-3">
@@ -155,12 +155,12 @@ export const AdmPayments = () => {
           <tbody className="">
             {payments &&
               payments.results.map((payment, index) => (
-                <tr className="bg-[#FEFEFE] border-b hover:bg-blue-50">
+                <tr className="bg-[#FEFEFE] dark:bg-slate-800/5 border-b dark:border-white/5 hover:bg-blue-50 hover:dark:bg-slate-800/20 dark:text-white/70 ">
                   <td className="w-4 p-4"></td>
 
                   <th
                     scope="row"
-                    className="px-6 py-4 font-semibold text-gray-700  whitespace-nowrap "
+                    className="px-6 py-4 font-semibold text-gray-700 dark:text-white  whitespace-nowrap "
                   >
                     {index + 1}
                   </th>
@@ -191,7 +191,7 @@ export const AdmPayments = () => {
                         })
                       }
                     />
-                    <FcCancel className="text-xl inline-block text-slate-500 cursor-pointer ml-2" />
+                    <FcCancel className="text-xl inline-block text-slate-500 cursor-pointer ml-2 " />
                     <FcApproval className="text-xl inline-block text-red-500 cursor-pointer ml-2" />
                   </td>
                 </tr>
@@ -199,8 +199,8 @@ export const AdmPayments = () => {
           </tbody>
         </table>
         {
-          <div className=" p-3 text-primary/60 text-sm bg-white sticky bottom-0  inline-flex w-full">
-            <span className="text-primary/60 hover:text-primary/80  rounded-l-md  ">
+          <div className=" p-3 text-primary/60 text-sm bg-white sticky bottom-0  inline-flex w-full dark:text-white/50 dark:bg-transparent ">
+            <span className="   rounded-l-md  ">
               Mostrando{" "}
               {payments.current &&
                 `${

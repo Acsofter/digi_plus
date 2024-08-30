@@ -5,6 +5,11 @@ import { Loading } from "../components/Loading";
 
 export const PrivateRouteWrapper = ({ children }: { children: ReactNode }) => {
   const { state, dispatch } = React.useContext(Contexts);
+  if (localStorage.getItem("darkMode") === "true") {
+    document.documentElement.classList.add("dark");
+  } else {
+    document.documentElement.classList.remove("dark");
+  }
 
   useEffect(() => {
     const check = async () => {

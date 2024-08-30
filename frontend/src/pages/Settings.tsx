@@ -6,6 +6,7 @@ import { Modal } from "../components/Modal";
 import { General } from "../layouts/General";
 import { Contexts } from "../services/Contexts";
 import { useUserServices } from "../services/user.services";
+import { useNavigate } from "react-router-dom";
 const dark_theme = require("../assets/image/dark-theme.png");
 const light_theme = require("../assets/image/light-theme.png");
 const default_theme = require("../assets/image/default-theme.png");
@@ -13,11 +14,12 @@ const default_theme = require("../assets/image/default-theme.png");
 export const Settings = () => {
   const { get_company_details, update_company } = useUserServices();
   const { state, dispatch } = useContext(Contexts);
+  const navigate = useNavigate();
 
   const [form, setForm] = React.useState<UpdateCompany>({
     name: "",
     logo: "",
-    theme: localStorage.getItem("theme") || "default",
+    darkMode: localStorage.getItem("darkMode") || "default",
     address: "",
     phone: "",
     email: "",
@@ -31,9 +33,12 @@ export const Settings = () => {
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
 
-    localStorage.setItem("theme", form.theme);
+    form.darkMode === "default"
+      ? localStorage.removeItem("darkMode")
+      : localStorage.setItem("darkMode", form.darkMode);
     localStorage.setItem("color", form.color);
     localStorage.setItem("transparent", form.transparent.toString());
+    navigate(0);
 
     const response = await update_company(form);
     if (response) {
@@ -53,13 +58,13 @@ export const Settings = () => {
 
   return (
     <>
-      <div className="relative w-full h-full ">
+      <div className="relative w-full h-screen overflow-scroll no-scrollbar p-5">
         <Modal />
-        <div className="p-5">
+        <div className="text-slate-400 dark:text-white">
           <h2 className="font-semibold text-xl">Ajustes</h2>
-          <hr className="my-4" />
-          <div className="bg-[#fefefe] text-sm p-4 rounded-md h-full">
-            <div className="w-full grid grid-cols-3 ">
+          <hr className="my-4 dark:border-white/20" />
+          <div className="bg-[#fefefe]/50 dark:bg-white/5  text-sm p-4 rounded-md h-full w-full">
+            <div className="w-full grid grid-cols-3 gap-2">
               <div className=" inline-block">
                 <span className="font-semibold w-full block">Company Logo</span>
                 <span> Actualiza el logo de la compañia</span>
@@ -69,7 +74,7 @@ export const Settings = () => {
                 {form.logo ? (
                   <img src={form.logo} alt="logo de la empresa.jpg" />
                 ) : (
-                  <div className="w-32 h-32 bg-[url('./assets/image/placeholder.svg')] bg-no-repeat bg-center  inline-block" />
+                  <div className="w-32 h-32 bg-[url('./assets/image/placeholder.svg')] bg-no-repeat bg-center inline-block rounded-full" />
                 )}
                 {form.logo ? (
                   <FcRemoveImage
@@ -97,7 +102,7 @@ export const Settings = () => {
               <div className="w-1/3 inline-block"></div>
             </div>
 
-            <hr className="my-2 border-slate-200/40" />
+            <hr className="my-2 border-slate-200/5" />
             <div className="w-full grid grid-cols-3 ">
               <div>
                 <span className="font-semibold w-full block">Detalles</span>
@@ -105,7 +110,7 @@ export const Settings = () => {
               </div>
 
               <motion.div
-                className="bg-white  grid grid-cols-1 md:grid-cols-2 gap-2 lg:grid-cols-3 w-full mx-auto col-span-2"
+                className="grid grid-cols-1 md:grid-cols-2 gap-2 lg:grid-cols-3 w-full mx-auto col-span-2"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 // onSubmit={handleSubmit}
@@ -117,7 +122,7 @@ export const Settings = () => {
                     name="name"
                     value={form.name}
                     onChange={(e) => setForm({ ...form, name: e.target.value })}
-                    className="w-full  py-0.5 rounded-sm outline-none ring-none border-b border-slate-100 focus:border-b-2 focus:border-slate-300 duration-300"
+                    className="w-full dark:bg-white/5 py-0.5 bg-transparent rounded-sm outline-none ring-none border-b border-slate-200 dark:border-white/10 focus:border-b-2 focus:border-slate-300 duration-300"
                   />
                 </div>
 
@@ -132,7 +137,7 @@ export const Settings = () => {
                     onChange={(e) =>
                       setForm({ ...form, address: e.target.value })
                     }
-                    className="w-full  py-0.5 rounded-sm outline-none ring-none border-b border-slate-100 focus:border-b-2 focus:border-slate-300 duration-300"
+                    className="w-full dark:bg-white/5 py-0.5 bg-transparent rounded-sm outline-none ring-none border-b border-slate-200 dark:border-white/10 focus:border-b-2 focus:border-slate-300 duration-300"
                   />
                 </div>
 
@@ -147,7 +152,7 @@ export const Settings = () => {
                     onChange={(e) =>
                       setForm({ ...form, phone: e.target.value })
                     }
-                    className="w-full  py-0.5 rounded-sm outline-none ring-none border-b border-slate-100 focus:border-b-2 focus:border-slate-300 duration-300"
+                    className="w-full dark:bg-white/5 py-0.5 bg-transparent rounded-sm outline-none ring-none border-b border-slate-200 dark:border-white/10 focus:border-b-2 focus:border-slate-300 duration-300"
                   />
                 </div>
 
@@ -165,12 +170,12 @@ export const Settings = () => {
                         collaborator_percentage: e.target.value,
                       })
                     }
-                    className="w-full  py-0.5 rounded-sm outline-none ring-none border-b border-slate-100 focus:border-b-2 focus:border-slate-300 duration-300"
+                    className="w-full dark:bg-white/5 py-0.5 bg-transparent rounded-sm outline-none ring-none border-b border-slate-200 dark:border-white/10 focus:border-b-2 focus:border-slate-300 duration-300"
                   />
                 </div>
               </motion.div>
             </div>
-            <hr className="my-2 border-slate-200/40" />
+            <hr className="my-2 border-slate-200/5" />
             <div className="w-full  grid grid-cols-3 col-span-2">
               <div>
                 <span className="font-semibold  block">
@@ -195,11 +200,14 @@ export const Settings = () => {
                       type="text"
                       className="w-20 shadow-sm border border-slate-100 rounded-md px-2 font-bold"
                       value={form.color}
+                      onChange={(e) =>
+                        setForm({ ...form, color: e.target.value })
+                      }
                     />
                   </span>
                   <label htmlFor="color" className="font-semibold rounded-md">
                     <div
-                      className="w-7 h-7 rounded-full cursor-pointer outline outline-slate-300  "
+                      className="w-7 h-7 rounded-full cursor-pointer outline-none   "
                       style={{ backgroundColor: form.color }}
                     ></div>
                   </label>
@@ -216,7 +224,7 @@ export const Settings = () => {
               </div>
             </div>
 
-            <hr className="my-2 border-slate-200/40" />
+            <hr className="my-2 border-slate-200/5" />
             <div className="w-full grid grid-cols-3 ">
               <div className="inline-block">
                 <span className="font-semibold w-full block">
@@ -227,11 +235,11 @@ export const Settings = () => {
               <div className=" flex flex-wrap col-span-2 gap-2">
                 <div
                   className={`py-4 px-7 border ${
-                    form.theme === "default"
-                      ? "border-secondary"
-                      : "border-slate-200"
-                  } rounded-md max-w-60 cursor-pointer hover:border-secondary duration-300 text-slate-400 `}
-                  onClick={() => setForm({ ...form, theme: "default" })}
+                    form.darkMode === "default"
+                      ? "border-secondary dark:border-white/50"
+                      : "border-slate-200 dark:border-white/10"
+                  } rounded-md max-w-60 cursor-pointer hover:border-secondary dark:hover:border-white/50 duration-300 `}
+                  onClick={() => setForm({ ...form, darkMode: "default" })}
                 >
                   <img src={default_theme} alt="" className="h-32" />
                   <p className="font-semibold py-1">Tema por defecto</p>
@@ -243,11 +251,11 @@ export const Settings = () => {
 
                 <div
                   className={`py-4 px-7 border ${
-                    form.theme === "light"
-                      ? "border-secondary"
-                      : "border-slate-200"
-                  } rounded-md max-w-60 cursor-pointer hover:border-secondary duration-300 text-slate-400`}
-                  onClick={() => setForm({ ...form, theme: "light" })}
+                    form.darkMode === "false"
+                      ? "border-secondary dark:border-white/50"
+                      : "border-slate-200 dark:border-white/10"
+                  } rounded-md max-w-60 cursor-pointer hover:border-secondary dark:hover:border-white/50 duration-300 text-slate-400`}
+                  onClick={() => setForm({ ...form, darkMode: "false" })}
                 >
                   <img src={light_theme} alt="" className="h-32" />
                   <p className="font-semibold py-1">Tema claro</p>
@@ -256,11 +264,11 @@ export const Settings = () => {
 
                 <div
                   className={`py-4 px-7 border ${
-                    form.theme === "dark"
-                      ? "border-secondary"
-                      : "border-slate-200"
-                  } rounded-md max-w-60 cursor-pointer hover:border-secondary duration-300 text-slate-400`}
-                  onClick={() => setForm({ ...form, theme: "dark" })}
+                    form.darkMode === "true"
+                      ? "border-secondary dark:border-white/50"
+                      : "border-slate-200 dark:border-white/10"
+                  } rounded-md max-w-60 cursor-pointer hover:border-secondary dark:hover:border-white/50 duration-300 text-slate-400`}
+                  onClick={() => setForm({ ...form, darkMode: "true" })}
                 >
                   <img src={dark_theme} alt="" className="h-32" />
                   <p className="font-semibold py-1">Tema oscuro</p>
@@ -272,7 +280,7 @@ export const Settings = () => {
               </div>
             </div>
 
-            <hr className="my-2 border-slate-200/40" />
+            <hr className="my-2 border-slate-200/5" />
             <div className="w-full grid grid-cols-3   ">
               <div>
                 <span className="font-semibold w-full block">
@@ -280,8 +288,8 @@ export const Settings = () => {
                 </span>
                 <span>Cambia la barra de navegacion transparente</span>
               </div>
-              <div className="w-1/3 inline-flex">
-                <label className="flex cursor-pointer select-none items-center">
+              <div className="col-span-2">
+                <label className="flex cursor-pointer select-none place-items-center md:place-content-start place-content-center h-full">
                   <div className="relative">
                     <input
                       type="checkbox"

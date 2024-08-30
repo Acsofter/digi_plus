@@ -16,9 +16,9 @@ export const Profile = () => {
 
   return (
     <>
-      <div className="flex flex-col md:flex-row h-screen bg-gray-100 overflow-scroll">
+      <div className="flex flex-col md:flex-row h-screen bg-gray-100 dark:bg-transparent ">
         {/* sidebar */}
-        <div className="w-full bg-white p-4 flex flex-col md:w-1/6">
+        <div className="w-full bg-white dark:bg-slate-800/60 dark:text-white p-4 flex flex-col md:w-1/6 shadow-md">
           <div className="mb-8">
             <img
               src={noprofile}
@@ -27,9 +27,12 @@ export const Profile = () => {
             />
             <h2 className="text-xl font-bold text-center">{`${state.auth.user?.first_name} ${state.auth.user.last_name}`}</h2>
             <div className="text-center">
-              {state.auth.user.roles.map((role) => {
+              {state.auth.user.roles.map((role, index) => {
                 return (
-                  <span className="inline-block bg-gray-200 rounded-full px-3 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                  <span
+                    key={index}
+                    className="inline-block bg-gray-200 rounded-full px-3 text-sm font-semibold text-gray-700 mr-2 mb-2"
+                  >
                     {role}
                   </span>
                 );
@@ -73,7 +76,7 @@ export const Profile = () => {
         </div>
 
         {/* content */}
-        <div className="flex-1 p-8 w-full h-screen">
+        <div className="flex-1 p-8 w-full h-screen dark:bg-slate-800/40 dark:text-white">
           <div className="flex justify-between items-center mb-8">
             <div className="flex items-center space-x-4">
               <Info size={30} />
@@ -86,14 +89,14 @@ export const Profile = () => {
             </div>
           </div>
 
-          <div className="bg-white rounded-lg shadow p-6 ">
+          <div className="bg-white dark:bg-slate-800/40 rounded-lg shadow p-6 ">
             <div className="flex justify-between items-center mb-6 ">
-              <div className="space-x-4 w-full">
+              <div className="space-x-4 w-full text-gray-500 dark:text-white">
                 <button className="text-blue-600 font-semibold border-b-2 border-blue-600 pb-1">
                   Detalles
                 </button>
-                <button className="text-gray-500">Documentos</button>
-                <button className="text-gray-500">Acciones</button>
+                <button className=" ">Documentos</button>
+                <button className="">Acciones</button>
               </div>
               <button className="bg-blue-600 text-white px-4 py-2 rounded-md">
                 <UserRoundPen />
@@ -105,7 +108,7 @@ export const Profile = () => {
                 <h3 className="font-semibold mb-4">Logros</h3>
                 <div className="space-y-4">
                   <div className="grid grid-cols-2">
-                    <div className="w-8 h-8 bg-amber-100 rounded-full flex items-center justify-center mr-3">
+                    <div className="w-8 h-8 bg-amber-100 rounded-full flex items-center justify-center mr-3 ">
                       <Award size={18} className="text-amber-600" />
                     </div>
                     <div>
@@ -135,7 +138,7 @@ export const Profile = () => {
               </div>
               <div>
                 <h3 className="font-semibold mb-4"> Actividad</h3>
-                <div className="relative bg-zinc-100 rounded-md h-full">
+                <div className="relative bg-zinc-100 dark:bg-slate-800/30 rounded-md h-72">
                   <div className="absolute top-1/4 left-1/4 w-3 h-3 bg-blue-600 rounded-full"></div>
                   <div className="absolute top-1/2 left-1/2 w-3 h-3 bg-blue-600 rounded-full"></div>
                   <div className="absolute bottom-1/4 right-1/4 w-3 h-3 bg-blue-600 rounded-full"></div>
@@ -174,7 +177,7 @@ export const Profile = () => {
               </div>
               <div>
                 <h3 className="font-semibold mb-4">Estadisticas</h3>
-                <div className="h-32 bg-gray-100 rounded-lg"></div>
+                <div className="h-20 bg-gray-100 dark:bg-slate-800 rounded-lg"></div>
               </div>
             </div>
           </div>

@@ -9,7 +9,7 @@ export const Home = () => {
       <>
         <div className="relative flex h-full w-full  ">
           <Modal />
-          <div className="content w-full flex flex-col gap-3 rounded-2xl overflow-hidden bg-[#fefefe] p-2 m-3">
+          <div className="content w-full gap-3 rounded-2xl overflow-hidden bg-[#fefefe] dark:bg-transparent p-2 m-3 h-screen">
             <MetricsHome />
             <Table />
           </div>

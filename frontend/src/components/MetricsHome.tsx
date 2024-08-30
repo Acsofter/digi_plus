@@ -1,4 +1,10 @@
-import { ClockArrowDown, DollarSign, Percent, Ticket, TicketX } from "lucide-react";
+import {
+  ClockArrowDown,
+  DollarSign,
+  Percent,
+  Ticket,
+  TicketX,
+} from "lucide-react";
 import React, { useCallback, useEffect } from "react";
 import { Contexts } from "../services/Contexts";
 import { useUserServices } from "../services/user.services";
@@ -136,15 +142,12 @@ export const MetricsHome = () => {
   }, [state.ws.lastMessage]);
 
   return (
-    <div className="inline-flex gap-3 lg:h-1/4">
-      <div className="w-full md:w-1/3 bg-light shadow-md shadow-slate-200 border border-slate-100 rounded-lg p-3 text-zinc-500">
+    <div className="inline-flex gap-3 lg:h-1/4 w-full">
+      <div className="w-full md:w-1/3  bg-light dark:bg-white/5 dark:text-slate-50 dark:shadow-slate-800/30 dark:border-white/5 backdrop-blur-lg shadow-md shadow-slate-200 border border-slate-100 rounded-lg p-3 text-zinc-500">
         <h2 className="text-lg font-bold my-2">Tickets del dia</h2>
         <div className="grid grid-cols-2 gap-1">
           <div className="flex gap-1 items-center">
-          <DollarSign 
-              className={`inline ${cards[1].color}`}
-              size={20}
-            />{" "}
+            <DollarSign className={`inline ${cards[1].color}`} size={20} />{" "}
             <span>Bruto</span>
           </div>
           <span className="text-end font-bold">
@@ -152,7 +155,7 @@ export const MetricsHome = () => {
           </span>
 
           <div className="flex gap-1 items-center">
-          <Percent className={`inline ${cards[2].color}`} size={20} />{" "}
+            <Percent className={`inline ${cards[2].color}`} size={20} />{" "}
             <span>Porc.</span>
           </div>
           <span className="text-end font-bold">
@@ -160,7 +163,7 @@ export const MetricsHome = () => {
           </span>
           {/* ---- */}
           <div className="flex gap-1 items-center">
-            <Ticket  className={`inline ${cards[0].color}`} size={20} />{" "}
+            <Ticket className={`inline ${cards[0].color}`} size={20} />{" "}
             <span>Tickets</span>
           </div>
           <span className="text-end font-bold">
@@ -168,7 +171,7 @@ export const MetricsHome = () => {
           </span>
 
           <div className="flex gap-1 items-center">
-            <ClockArrowDown 
+            <ClockArrowDown
               className={`inline ${"text-orange-500"}`}
               size={20}
             />
@@ -178,7 +181,7 @@ export const MetricsHome = () => {
             <AnimatedCounter to={data.today.pending.total} />
           </span>
           <div className="flex gap-1 items-center">
-            <TicketX  className={`inline ${"text-red-400"}`} size={20} />{" "}
+            <TicketX className={`inline ${"text-red-400"}`} size={20} />{" "}
             <span>Cancel.</span>
           </div>
           <span className="text-end font-bold">
@@ -187,11 +190,11 @@ export const MetricsHome = () => {
         </div>
       </div>
 
-      <div className="grid md:grid-cols-3 w-full md:w-2/3 gap-1 h-full">
+      <div className="grid md:grid-cols-3 w-full gap-1 h-full">
         {cards.map((card, index) => (
-          <div className={` rounded-lg`} key={index}>
+          <div className={` rounded-lg h-full`} key={index}>
             <div
-              className={`flex flex-row gap-1 items-center justify-between p-3 rounded-lg bg-gradient-to-tr from-base to-slate-800  shadow-lg text-white font-bold h-full`}
+              className={`flex flex-row gap-1 items-center justify-between p-3 rounded-lg bg-gradient-to-tr from-base dark:from-base/50 to-slate-800 dark:to-slate-800/20 dark:border-slate-800 dark:border shadow-lg text-white font-bold h-full`}
             >
               <div className="flex flex-col items-center content-center justify-center gap-1 w-1/2">
                 <span className=" w-1/2">{card.icon}</span>
@@ -211,7 +214,7 @@ export const MetricsHome = () => {
                     r="16"
                     fill="none"
                     className="stroke-current text-white hidden md:block"
-                    stroke-width="2"
+                    strokeWidth={2}
                   ></circle>
                   <circle
                     cx="18"
@@ -219,10 +222,10 @@ export const MetricsHome = () => {
                     r="16"
                     fill="none"
                     className={`stroke-current ${card.color} hidden md:block`}
-                    stroke-width="3"
-                    stroke-dasharray="100"
-                    stroke-dashoffset="16"
-                    stroke-linecap="round"
+                    strokeWidth={3}
+                    strokeDasharray="100"
+                    strokeDashoffset="16"
+                    strokeLinecap="round"
                   ></circle>
                 </svg>
 

@@ -19,7 +19,7 @@ export const Administration = () => {
   return (
     <>
       <Modal />
-      <div className="relative h-full  bg-[#f9f9f9] flex flex-col">
+      <div className="relative h-full  dark:text-white flex flex-col">
         <div className="flex flex-col w-full h-full p-5">
           <h2 className="font-semibold text-xl">Administracion</h2>
           <hr className="my-4" />
@@ -34,8 +34,10 @@ export const Administration = () => {
               <div
                 key={index}
                 onClick={() => setActiveTab(index)}
-                className={` inline text-center text-sm px-5 py-1 hover:bg-primary hover:text-white rounded-xl cursor-pointer duration-200 border border-primary${
-                  index === activeTab ? " bg-primary text-white" : ""
+                className={` inline text-center text-sm px-5 py-1 hover:bg-primary dark:hover:bg-slate-800 hover:text-white rounded-xl cursor-pointer duration-200 border border-primary dark:border-slate-700 ${
+                  index === activeTab
+                    ? " bg-primary text-white dark:bg-slate-800"
+                    : ""
                 }`}
               >
                 {tab.name}
@@ -44,7 +46,7 @@ export const Administration = () => {
           </div>
 
           {/* <!--Tabs content--> */}
-          <div className=" bg-[#FEFEFE] rounded-xl h-full p-4 ">
+          <div className=" bg-[#FEFEFE]/60 dark:bg-slate-800/30 rounded-xl h-full p-4 ">
             {tabs[activeTab].content}
           </div>
         </div>
