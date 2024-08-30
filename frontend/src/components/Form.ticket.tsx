@@ -1,7 +1,12 @@
 import React, { useEffect } from "react";
 import { Contexts } from "../services/Contexts";
 import { useUserServices } from "../services/user.services";
-import { CircleAlert, CircleCheckBig, CircleDot, CircleHelp } from "lucide-react";
+import {
+  CircleAlert,
+  CircleCheckBig,
+  CircleDot,
+  CircleHelp,
+} from "lucide-react";
 
 export const FormTicket = ({ ticket_id }: { ticket_id?: number }) => {
   const { create_ticket, get_ticket, update_ticket, get_categories } =
@@ -80,7 +85,7 @@ export const FormTicket = ({ ticket_id }: { ticket_id?: number }) => {
       >
         <div>
           {form.payment.status && form.payment.status === "1" ? (
-            <CircleDot 
+            <CircleDot
               className={`peer-focus:cursor-pointer w-4 inline-block mr-2 `}
             />
           ) : form.payment.status === "2" ? (
@@ -150,7 +155,7 @@ export const FormTicket = ({ ticket_id }: { ticket_id?: number }) => {
         <label className="text-sm text-base pb-1">Total $</label>
         <input
           autoFocus={true}
-          value={form.payment.amount ? form.payment.amount : NaN}
+          value={form.payment.amount ?? 0}
           onChange={(e) =>
             e.target.value &&
             setForm({
@@ -169,8 +174,7 @@ export const FormTicket = ({ ticket_id }: { ticket_id?: number }) => {
 
         <label className="text-sm text-base pb-1">Categoria</label>
         <select
-          defaultValue={"default"}
-          value={form.category.id ? form.category.id : "default"}
+          value={form.category.id ?? "default"}
           onChange={(e) =>
             e.target.value !== "default" &&
             setForm({

@@ -148,7 +148,6 @@ const App: React.FC = () => {
         default:
           break;
       }
-      console.log(messageData);
       dispatch({
         type: "SET_WS",
         payload: { lastMessage: messageData },
@@ -176,7 +175,7 @@ const App: React.FC = () => {
     <Contexts.Provider
       value={{ state, dispatch, sendMessage: handleSendMessage }}
     >
-      <div className="flex place-items-center w-screen h-screen relative overflow-hidden">
+      <div className={`${localStorage.getItem("theme")} flex place-items-center w-screen h-screen relative overflow-hidden`}>
         <General>
           <Modal />
           <ToastContainer />
@@ -247,7 +246,7 @@ const App: React.FC = () => {
               <h2>Las funcionalidades de este sitio requieren interactuar</h2>
             </div>
           )}
-          {!state.company.id && (
+          {/* {!state.company.id && (
             <div className="absolute top-0 right-0 bg-red-700 text-white py-2 px-3 rounded-bl-2xl duration-1000">
               {state.auth.user.roles &&
               state.auth.user.roles.includes("staff") ? (
@@ -262,7 +261,7 @@ const App: React.FC = () => {
                 </p>
               )}
             </div>
-          )}
+          )} */}
         </General>
       </div>
     </Contexts.Provider>

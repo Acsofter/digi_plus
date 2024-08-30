@@ -5,6 +5,8 @@ import { ReactChart } from "chartjs-react";
 import { useUserServices } from "../services/user.services";
 import { Contexts } from "../services/Contexts";
 import React from "react";
+import { color } from "framer-motion";
+import { text } from "stream/consumers";
 
 Chart.register(...registerables);
 
@@ -12,11 +14,7 @@ const chartOption = {
   responsive: true,
   maintainAspectRatio: true,
 
-  plugins: {
-    legend: {
-      // display: false,
-    },
-  },
+  plugins: {},
 };
 
 export const Line = () => {

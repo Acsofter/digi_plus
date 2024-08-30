@@ -11,8 +11,15 @@ export const PrivateRouteWrapper = ({ children }: { children: ReactNode }) => {
     document.documentElement.classList.remove("dark");
   }
 
+  if (localStorage.getItem("darkMode") === "true") {
+    document.documentElement.classList.add("dark");
+  } else {
+    document.documentElement.classList.remove("dark");
+  }
+
   useEffect(() => {
     const check = async () => {
+      
       const verified = await check_token();
 
       if (!verified) {
