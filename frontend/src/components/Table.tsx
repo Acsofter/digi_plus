@@ -87,7 +87,7 @@ export const Table = () => {
         : "approved";
     return (
       <>
-        <tr className="text-left text-zinc-400 text-xs ">
+        <tr className="text-left text-zinc-400 dark:text-slate-200 text-xs ">
           {response.current && (
             <>
               <td className="font-bold">

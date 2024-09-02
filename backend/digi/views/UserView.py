@@ -13,10 +13,10 @@ class UserViewSet(mixins.UpdateModelMixin, mixins.ListModelMixin, mixins.Retriev
 
 
     def get_queryset(self):
-        if self.request.GET.get("includeAdmins"):
+        if self.request.GET.get("includeAdmins") == "true":
             queryset = User.objects.all()
         else:
-            queryset = User.objects.filter(is_staff=False)
+            queryset = User.objects.filter(is_staff=False, is_superuser=False)
         return queryset
 
     def list(self, request):

@@ -8,12 +8,12 @@ export const Loading = () => {
     exit={{ opacity: 0 }}
     transition={{ duration: 0.2 }}
     
-    className="inline-flex w-screen h-screen p-5 place-content-center place-items-center bg-gradient-to-tr from-slate-100 to-light-50 ">
-      <div className="text-center ">
+    className="inline-flex w-screen h-screen p-5 place-content-center place-items-center bg-gradient-to-tr from-slate-100 to-light dark:from-slate-700 dark:to-slate-800 ">
+      <div className="text-center text-base dark:text-slate-400 ">
         <div role="status" className="my-3">
           <svg
             aria-hidden="true"
-            className="inline w-8 h-8 text-gray-200 animate-spin dark:text-white fill-blue-600"
+            className="inline w-8 h-8 text-gray-200  animate-spin fill-blue-600"
             viewBox="0 0 100 101"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"

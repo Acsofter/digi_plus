@@ -1,16 +1,17 @@
 import axios from "axios";
+import { Ban, Eye, Trash2, UserRoundPlus } from "lucide-react";
 import React, { useContext, useEffect, useState } from "react";
 import { BiPlus } from "react-icons/bi";
-import { FcApproval, FcCancel, FcGenericSortingDesc } from "react-icons/fc";
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 import { IoSearchOutline } from "react-icons/io5";
 import { AuthHeader } from "../services/auth.header";
 import { Contexts } from "../services/Contexts";
 import { useUserServices } from "../services/user.services";
 import { FormPayment } from "./Form.payment";
+import { DatePicker } from "./DatePicker";
 
 export const AdmPayments = () => {
-  const { get_payments } = useUserServices();
+  const { get_payments, get_users } = useUserServices();
   const { state, dispatch } = useContext(Contexts);
   const [filter, setFilter] = useState<{
     user: User;
@@ -21,6 +22,7 @@ export const AdmPayments = () => {
     users: [],
     week: 0,
   });
+
   const [payments, setPayments] = useState<ResponsePayments>({
     count: 0,
     pages: 0,
@@ -30,26 +32,26 @@ export const AdmPayments = () => {
     results: [],
   });
 
+  const printPayment = () => {
+    console.log(payments.results);
+    return payments.results;
+  };
+
   const get_badge = (status: string) => {
     switch (status) {
-      case "0":
+      case "3":
         return (
           <span className=" bg-red-100 text-red-500  px-2 py-1 text-xs rounded-md font-semibold dark:bg-red-600/20">
             Rechazado
           </span>
         );
-      case "1":
+      case "2":
         return (
           <span className=" bg-green-100 text-green-500  px-2 py-1 text-xs rounded-md font-semibold dark:bg-green-600/20">
             Aceptado
           </span>
         );
-      case "2":
-        return (
-          <span className=" bg-blue-100 text-blue-500  px-2 py-1 text-xs rounded-md font-semibold dark:bg-blue-600/20">
-            En proceso
-          </span>
-        );
+
       default:
         return (
           <span className=" bg-amber-100 text-amber-500  px-2 py-1 text-xs rounded-md font-semibold dark:bg-amber-600/20">
@@ -77,7 +79,14 @@ export const AdmPayments = () => {
       if (response) setPayments(response);
     };
 
+    const fetchUsers = async () => {
+      const response = await get_users({ includeAdmins: false });
+      if (response) setFilter({ ...filter, users: response });
+    };
+
     if (payments.count === 0) fetchPayments();
+
+    if (filter.users.length === 0) fetchUsers();
 
     const lastMessage = state.ws.lastMessage;
     if (!lastMessage) return;
@@ -92,36 +101,65 @@ export const AdmPayments = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.ws.lastMessage]);
 
+  const handleDateChange = (startDate: Date, endDate: Date) => {
+    console.log("Semana seleccionada:", startDate, "-", endDate);
+  };
+
   return (
     <div className="w-full">
       <div className="flex justify-between items-center mb-5 ">
-        <div className="relative ">
-          <div className="absolute inset-y-0 left-0 rtl:inset-r-0 rtl:right-0 flex items-center ps-3 pointer-events-none">
-            <IoSearchOutline className="inline-block text-md text-zinc-500 dark:text-white" />
+        <div className="inline-flex gap-3">
+          <div className="relative ">
+            <div className="absolute inset-y-0 left-0 rtl:inset-r-0 rtl:right-0 flex items-center ps-3 pointer-events-none">
+              <IoSearchOutline className="inline-block text-md text-zinc-500 dark:text-white" />
+            </div>
+            <input
+              type="text"
+              id="table-search"
+              className="block p-2 ps-10 h-full text-sm  text-gray-800 shadow-sm border rounded-lg w-80 bg-white focus:ring-secondary focus:border-primary-blring-secondary   dark:placeholder-gray-400  dark:focus:ring-secondary dark:focus:border-primary-blring-secondary dark:text-white dark:bg-slate-800 dark:border-slate-700 dark:focus:outline-slate-500"
+              placeholder="Buscar..."
+            />
           </div>
-          <input
-            type="text"
-            id="table-search"
-            className="block p-2 ps-10 text-sm  text-gray-900 shadow-sm border rounded-lg w-80 bg-white focus:ring-secondary focus:border-primary-blring-secondary   dark:placeholder-gray-400  dark:focus:ring-secondary dark:focus:border-primary-blring-secondary dark:text-white dark:bg-slate-800/60 dark:border-slate-600 dark:focus:outline-slate-500"
-            placeholder="Buscar..."
-          />
+          <div className="dark:bg-slate-800 p-2 rounded-lg border dark:border-slate-700 border-slate-400 text-sm">
+            <label htmlFor="toggleUsers" className="p-1">
+              <UserRoundPlus className="inline" size={20} />
+            </label>
+            <select
+              className="bg-slate-800 h-full outline-none"
+              name="users"
+              id="toggleUsers"
+            >
+              <option value="all">Todos</option>
+              {filter.users.length > 0 &&
+                filter.users.map((user) => (
+                  <option value={user.id || "all"} className="capitalize">
+                    {user.username}
+                  </option>
+                ))}
+            </select>
+          </div>
+
+          <DatePicker onChange={handleDateChange} />
+
+          <button className="bg-blue-600 border border-blue-500 text-sm hover:inset-1 text-white px-5  rounded-md ">
+            Buscar
+          </button>
         </div>
-        <button
-          className="bg-secondary hover:bg-secondary/80 text-white px-5 p-2 rounded-md "
-          onClick={() =>
-            dispatch({
-              type: "SET_POPUP",
-              payload: {
-                isOpen: true,
-                title: "Usuarios",
-                subtitle: "Añadir",
-                content: <FormPayment />,
-              },
-            })
-          }
-        >
-          <BiPlus className="text-xl inline-block" /> Añadir
-        </button>
+
+        <div className="inline-flex gap-3">
+          <button
+            className="bg-gradient-to-tr from-blue-500/70 to-blue-700/90 border border-blue-600 shadow-sm shadow-blue-700 hover:inset-1 text-white px-5 p-2 rounded-xl "
+            onClick={printPayment}
+          >
+            Exportar
+          </button>
+          <button
+            className="bg-gradient-to-tr from-violet-500/70 to-violet-700/90 border border-violet-600 shadow-sm shadow-violet-700 text-white px-3 rounded-xl"
+            onClick={printPayment}
+          >
+            Generar pagos
+          </button>
+        </div>
       </div>
       <div className="border rounded-xl shadow-sm bg-white/5 dark:border-none">
         <table className="w-full text-sm text-left rtl:text-right text-gray-600 border-collapse">
@@ -177,22 +215,21 @@ export const AdmPayments = () => {
                   </td>
 
                   <td className="px-6 py-4">
-                    <FcGenericSortingDesc
-                      className="text-xl inline-block text-secondary cursor-pointer "
+                    <Eye
+                      className="text-xl inline-block text-secondary cursor-pointer w-4"
                       onClick={() =>
                         dispatch({
                           type: "SET_POPUP",
                           payload: {
                             isOpen: true,
-                            title: "Usuarios",
+                            title: "Pagos",
                             subtitle: "Editar",
                             content: <FormPayment payment_id={payment.id} />,
                           },
                         })
                       }
                     />
-                    <FcCancel className="text-xl inline-block text-slate-500 cursor-pointer ml-2 " />
-                    <FcApproval className="text-xl inline-block text-red-500 cursor-pointer ml-2" />
+                    <Ban className="text-xl inline-block text- cursor-pointer ml-2 w-4" />
                   </td>
                 </tr>
               ))}

@@ -4,8 +4,7 @@ import { Contexts } from "../services/Contexts";
 import { FormUser } from "./Form.user";
 import { useUserServices } from "../services/user.services";
 import { Pencil, Search, Shield, Trash2, UserRoundX } from "lucide-react";
-
-
+import { DatePicker } from "./DatePicker";
 export const AdmUsers = () => {
   const { get_users } = useUserServices();
   const { state, dispatch } = useContext(Contexts);
@@ -72,6 +71,7 @@ export const AdmUsers = () => {
           <BiPlus className="text-xl inline-block" /> Añadir
         </button>
       </div>
+
       <div className="border rounded-xl shadow-sm bg-white/5 dark:border-none">
         <table className="w-full text-sm text-left rtl:text-right text-gray-600 border-collapse">
           <thead className="text-xs text-gray-700 uppercase bg-zinc-50 dark:bg-transparent sticky top-0 w-full dark:text-white">
@@ -176,7 +176,6 @@ export const AdmUsers = () => {
           </tbody>
         </table>
         <div className=" p-4 text-primary/60 dark:text-white/50 text-sm ">
-        
           Mostrando 1 - 10 de 100
         </div>
       </div>

@@ -37,12 +37,14 @@ export const Modal = () => {
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.1 }}
-        className="modal bg-white p-7 h-auto w-auto rounded-3xl shadow-md"
+        className="modal bg-white dark:bg-slate-900 dark:border dark:border-white/10 dark:text-white p-7 h-auto w-auto rounded-3xl shadow-md"
       >
         <div className="flex justify-between gap-3 items-center">
-          <CirclePlus  className="text-3xl" />
+          <CirclePlus className="text-3xl" />
           <span className="  w-full">
-            <p className="text-lg font-bold space-y-0 capitalize">{state.popup.title}</p>
+            <p className="text-lg font-bold space-y-0 capitalize">
+              {state.popup.title}
+            </p>
             {state.popup.subtitle && (
               <span className="text-sm  text-zinc-400">
                 {state.popup.subtitle}
@@ -50,7 +52,7 @@ export const Modal = () => {
             )}
           </span>
           <button
-            className="text-slate-500 text-lg py-1 px-3 rounded-md  hover:text-red-500"
+            className="text-slate-500 dark:text-white text-lg py-1 px-3 rounded-md  hover:text-red-500"
             onClick={() =>
               dispatch({
                 type: "SET_POPUP",

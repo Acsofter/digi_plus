@@ -3,6 +3,7 @@ import { AdmPayments } from "../components/Adm.payments";
 import { AdmUsers } from "../components/Adm.users";
 import { General } from "../layouts/General";
 import { Modal } from "../components/Modal";
+import { AdmCategories } from "../components/Adm.categories";
 export const Administration = () => {
   const [activeTab, setActiveTab] = React.useState(0);
   const tabs = [
@@ -13,6 +14,10 @@ export const Administration = () => {
     {
       name: "Pagos",
       content: <AdmPayments />,
+    },
+    {
+      name: "Categorias",
+      content: <AdmCategories />,
     },
   ];
 

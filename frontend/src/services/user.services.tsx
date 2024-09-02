@@ -176,11 +176,14 @@ export const useUserServices = () => {
     }
   };
 
-  const get_categories = async (): Promise<Category[] | false> => {
+  const get_categories = async (): Promise<ResponseCategories | false> => {
     try {
-      const response = await axios.get<Category[]>(`${base_url}/categories/`, {
-        headers: AuthHeader(),
-      });
+      const response = await axios.get<ResponseCategories>(
+        `${base_url}/categories/`,
+        {
+          headers: AuthHeader(),
+        }
+      );
       if (response.status !== 200) {
         return false;
       }
@@ -191,14 +194,17 @@ export const useUserServices = () => {
     }
   };
 
-  const get_category = async ({
+  const update_category = async ({
     id,
+    data,
   }: {
     id: number;
+    data: Category;
   }): Promise<Category | false> => {
     try {
-      const response = await axios.get<Category>(
+      const response = await axios.patch<Category>(
         `${base_url}/categories/${id}/`,
+        data,
         {
           headers: AuthHeader(),
         }
@@ -206,6 +212,27 @@ export const useUserServices = () => {
       if (response.status !== 200) {
         return false;
       }
+      return response.data;
+    } catch (error) {
+      console.error(`Error updating category: ${error}`);
+      return false;
+    }
+  };
+
+  const get_category_by_id = async ({
+    id,
+  }: {
+    id: number;
+  }): Promise<Category | false> => {
+    try {
+      const response = await axios.get<Category>(
+        `${base_url}/categories/${id}/`
+      );
+
+      if (response.status !== 200) {
+        return false;
+      }
+
       return response.data;
     } catch (error) {
       console.error(`Error fetching category: ${error}`);
@@ -258,6 +285,22 @@ export const useUserServices = () => {
       console.error(`Error fetching companies: ${error}`);
       return false;
     }
+  };
+
+  const create_category = async (data: Category) => {
+    try {
+      const response = await axios.post<Category>(
+        `${base_url}/categories/`,
+        data,
+        {
+          headers: AuthHeader(),
+        }
+      );
+      if (response.status !== 201) {
+        return false;
+      }
+      return response.data;
+    } catch (error) {}
   };
 
   const update_company = async (details: UpdateCompany | Company) => {
@@ -341,7 +384,7 @@ export const useUserServices = () => {
     }
   };
 
-  const get_metrics_for_id = async (id: number) => {
+  const get_metrics_by_id = async (id: number) => {
     try {
       const response = await axios.get(`${base_url}/metrics/${id}/`, {
         headers: AuthHeader(),
@@ -406,7 +449,7 @@ export const useUserServices = () => {
     }
   };
 
-  const get_payments_for_id = async (id: number) => {
+  const get_payments_by_id = async (id: number) => {
     try {
       const response = await axios.get(`${base_url}/payments/${id}/`, {
         headers: AuthHeader(),
@@ -457,20 +500,22 @@ export const useUserServices = () => {
     update_user,
     update_company,
     update_ticket,
+    update_category,
     create_ticket,
+    create_category,
     get_metrics,
-    get_metrics_for_id,
+    get_metrics_by_id,
     get_graph,
     get_payments,
-    get_payments_for_id,
+    get_payments_by_id,
     get_random_color,
     get_companies,
     get_user,
     get_categories,
+    get_category_by_id,
     get_tickets,
     get_ticket,
     get_company,
-    get_category,
     get_percentages,
     get_tickets_percentages,
   };

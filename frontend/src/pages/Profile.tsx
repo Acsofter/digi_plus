@@ -106,8 +106,8 @@ export const Profile = () => {
             <div className="grid grid-cols-2 gap-5">
               <div>
                 <h3 className="font-semibold mb-4">Logros</h3>
-                <div className="space-y-4">
-                  <div className="grid grid-cols-2">
+                <div className="grid grid-cols-1 gap-2">
+                  <div className="inline-flex">
                     <div className="w-8 h-8 bg-amber-100 rounded-full flex items-center justify-center mr-3 ">
                       <Award size={18} className="text-amber-600" />
                     </div>
@@ -116,7 +116,7 @@ export const Profile = () => {
                       <p className="text-sm text-gray-500">5 meses antes</p>
                     </div>
                   </div>
-                  <div className="grid grid-cols-2">
+                  <div className="inline-flex">
                     <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mr-3">
                       <Award size={18} className="text-green-600" />
                     </div>
@@ -125,7 +125,7 @@ export const Profile = () => {
                       <p className="text-sm text-gray-500">1 mes antes</p>
                     </div>
                   </div>
-                  <div className="grid grid-cols-2">
+                  <div className="inline-flex">
                     <div className="w-8 h-8 bg-violet-100 rounded-full flex items-center justify-center mr-3">
                       <Award size={18} className="text-violet-600" />
                     </div>

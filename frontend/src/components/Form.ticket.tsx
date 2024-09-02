@@ -70,13 +70,16 @@ export const FormTicket = ({ ticket_id }: { ticket_id?: number }) => {
     let color = "";
     let text = "";
     if (status === "1") {
-      color = "from-amber-500 to-amber-300 border-amber-300 text-white";
+      color =
+        "from-amber-500 to-amber-300 border-amber-300 text-white dark:from-amber-300/20 dark:to-amber-300/20 dark:border-amber-300 dark:text-amber-300";
       text = "Pendiente";
     } else if (status === "2") {
-      color = "from-[#43C6AC] to-green-400 border-[#43C6AC] text-white";
+      color =
+        "from-[#43C6AC] to-green-400 border-[#43C6AC] text-white dark:from-[#43C6AC]/20 dark:to-green-400/20 dark:border-[#43C6AC] dark:text-[#43C6AC]";
       text = "Aprobado";
     } else if (status === "3") {
-      color = "from-[#FF7E5F] to-red-400 border-[#FF7E5F] text-white";
+      color =
+        "from-[#FF7E5F] to-red-400 border-[#FF7E5F] text-white dark:from-[#FF7E5F]/20 dark:to-red-400/20 dark:border-[#FF7E5F] dark:text-[#FF7E5F]";
       text = "Rechazado";
     }
     return (
@@ -107,7 +110,7 @@ export const FormTicket = ({ ticket_id }: { ticket_id?: number }) => {
   useEffect(() => {
     const fetchCategories = async () => {
       const response = await get_categories();
-      if (response) setCategories(response);
+      if (response) setCategories(response.results);
     };
 
     const fetchTicket = async () => {
@@ -131,7 +134,7 @@ export const FormTicket = ({ ticket_id }: { ticket_id?: number }) => {
       <div role="status" className="my-3">
         <svg
           aria-hidden="true"
-          className="inline w-8 h-8 text-gray-100 animate-spin dark:text-white fill-blue-600"
+          className="inline w-8 h-8 text-gray-100  animate-spin dark:text-white fill-blue-600"
           viewBox="0 0 100 101"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
@@ -150,9 +153,12 @@ export const FormTicket = ({ ticket_id }: { ticket_id?: number }) => {
       </div>
     </div>
   ) : (
-    <form className="w-[700px] flex flex-col gap-5" onSubmit={handleSubmit}>
+    <form
+      className="w-[700px] flex flex-col gap-5 text-base dark:text-white"
+      onSubmit={handleSubmit}
+    >
       <div className="grid grid-cols-4 gap-3">
-        <label className="text-sm text-base pb-1">Total $</label>
+        <label className="text-sm  pb-1">Total $</label>
         <input
           autoFocus={true}
           value={form.payment.amount ?? 0}
@@ -166,13 +172,13 @@ export const FormTicket = ({ ticket_id }: { ticket_id?: number }) => {
               },
             })
           }
-          className="w-full px-2 text-sm py-5 h-5 border rounded-3xl focus:outline-none focus:ring-1 focus:ring-slate-200 peer transition-all duration-200 col-span-3"
+          className="w-full px-2 border outline-none dark:bg-slate-800 dark:border-slate-700 text-sm py-5 h-5 rounded-3xl focus:ring-1 ring-blue-500 peer transition-all duration-200 col-span-3"
           type="number"
           name="quantity"
           id="quantity"
         />
 
-        <label className="text-sm text-base pb-1">Categoria</label>
+        <label className="text-sm pb-1">Categoria</label>
         <select
           value={form.category.id ?? "default"}
           onChange={(e) =>
@@ -187,7 +193,7 @@ export const FormTicket = ({ ticket_id }: { ticket_id?: number }) => {
                 ],
             })
           }
-          className="w-1/4 p-2  text-sm text-base h-full rounded-3xl outline-none ring-1 ring-slate-200 peer transition-all duration-200 col-span-3"
+          className="w-1/4 p-2 border dark:bg-slate-800 dark:border-slate-700 text-sm h-full rounded-3xl focus:ring-1 focus:ring-blue-500 peer transition-all duration-200 col-span-3"
           name="category"
           id=""
         >
@@ -199,30 +205,30 @@ export const FormTicket = ({ ticket_id }: { ticket_id?: number }) => {
           ))}
         </select>
 
-        <label className="text-sm text-base pb-1">Comentario</label>
+        <label className="text-sm pb-1">Comentario</label>
         <textarea
           value={form.description}
           onChange={(e) => setForm({ ...form, description: e.target.value })}
-          className="no-scrollbar w-full px-2 text-sm py-3 min-h-20 border rounded-3xl focus:outline-none focus:ring-1 focus:ring-slate-200 peer  duration-50 max-h-72 col-span-3"
+          className="no-scrollbar w-full dark:bg-gray-800 px-2 text-sm py-3 min-h-20 border dark:border-slate-700 rounded-3xl outline-none focus:ring-1 focus:ring-blue-500 peer duration-200 max-h-72 col-span-3"
           name="comment"
           id="comment"
         />
 
-        {ticket_id && <label className="text-sm text-base pb-1">Estado</label>}
+        {ticket_id && <label className="text-sm pb-1">Estado</label>}
         {ticket_id && get_badge(form.payment.status)}
 
         {ticket_id && (
           <>
             <div className="flex flex-col text-sm col-span-2 ">
-              <label className="text-sm text-base ">Creador por</label>
-              <div className="w-full text-gray-500">
+              <label className="text-sm ">Creador por</label>
+              <div className="w-full text-gray-500 dark:text-blue-200">
                 <span>{form.collaborator.username}</span> ({" "}
                 <span className="font-bold">{form.collaborator.email}</span> )
               </div>
             </div>
             <div className="flex flex-col text-sm place-items-end col-span-2">
               <label className=" text-base pb-1 ">Fecha</label>
-              <span className="text-gray-500">
+              <span className="text-gray-500 dark:text-blue-200">
                 {`${new Date(form.updated_at).toLocaleDateString()}, ${new Date(
                   form.updated_at
                 ).toLocaleTimeString()}`}

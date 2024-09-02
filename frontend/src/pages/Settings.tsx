@@ -254,7 +254,7 @@ export const Settings = () => {
                     form.darkMode === "false"
                       ? "border-secondary dark:border-white/50"
                       : "border-slate-200 dark:border-white/10"
-                  } rounded-md max-w-60 cursor-pointer hover:border-secondary dark:hover:border-white/50 duration-300 text-slate-400`}
+                  } rounded-md max-w-60 cursor-pointer hover:border-secondary dark:hover:border-white/50 duration-300 text-slate-400 dark:text-white`}
                   onClick={() => setForm({ ...form, darkMode: "false" })}
                 >
                   <img src={light_theme} alt="" className="h-32" />
@@ -267,7 +267,7 @@ export const Settings = () => {
                     form.darkMode === "true"
                       ? "border-secondary dark:border-white/50"
                       : "border-slate-200 dark:border-white/10"
-                  } rounded-md max-w-60 cursor-pointer hover:border-secondary dark:hover:border-white/50 duration-300 text-slate-400`}
+                  } rounded-md max-w-60 cursor-pointer hover:border-secondary dark:hover:border-white/50 duration-300 text-slate-400 dark:text-white`}
                   onClick={() => setForm({ ...form, darkMode: "true" })}
                 >
                   <img src={dark_theme} alt="" className="h-32" />

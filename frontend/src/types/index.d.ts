@@ -104,6 +104,15 @@ interface ResponsePayments {
   results: Payment[];
 }
 
+interface ResponseCategories {
+  count: number;
+  pages: number;
+  current: number | null;
+  next: string | null;
+  previous: string | null;
+  results: Category[];
+}
+
 interface Category {
   id: number;
   name: string;
@@ -119,10 +128,9 @@ interface Payment {
   period: string;
   ticket: Ticket;
   created_at: string;
+  updated_at: string;
   collaborator: number;
 }
-
-
 
 interface UpdateTicket {
   id: number;

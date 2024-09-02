@@ -30,8 +30,6 @@ class TicketViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         if status:
             queryset = queryset.filter(payment__status=status)
         
-        print("self.request.user.is_superuser", self.request.user.is_superuser)
-
         if not self.request.user.is_superuser:
             queryset = queryset.filter(collaborator=self.request.user)
 

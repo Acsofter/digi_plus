@@ -325,7 +325,7 @@ export function Dashboard() {
                 Distribucion de usuarios
               </h2>
               <div className="h-full w-full max-w-lg">
-                {Object.keys(data.doughnutChartData).length && (
+                {Object.keys(data.doughnutChartData).length > 0 && (
                   <Doughnut
                     data={data.doughnutChartData}
                     options={{

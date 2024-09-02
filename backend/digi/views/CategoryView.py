@@ -1,4 +1,6 @@
 from rest_framework import permissions, mixins, status, viewsets
+
+from digi.pagination import TicketPagination
 from ..models import Company, Category
 from ..serializers import CategorySerializer
 from rest_framework.decorators import action
@@ -6,16 +8,21 @@ from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 
 
-class CategoryViewSet(viewsets.GenericViewSet):
-    serializer_class = CategorySerializer
+class CategoryViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     permission_classes = [permissions.IsAuthenticated]
+    serializer_class = CategorySerializer
+    pagination_class = TicketPagination
 
-    def list(self, request):
-        serializer = self.serializer_class(Category.objects.all(), many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def get_queryset(self):
+        return Category.objects.all()
+
+
+
+  
         
     def create(self, request):
-        request.data['company'] = self.Company.objects.first().id
+        request.data['company'] = Company.objects.first().id
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()

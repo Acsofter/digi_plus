@@ -175,10 +175,26 @@ const App: React.FC = () => {
     <Contexts.Provider
       value={{ state, dispatch, sendMessage: handleSendMessage }}
     >
-      <div className={`${localStorage.getItem("theme")} flex place-items-center w-screen h-screen relative overflow-hidden`}>
+      <div
+        className={`${localStorage.getItem(
+          "theme"
+        )} flex place-items-center w-screen h-screen relative overflow-hidden dark:bg-[#2b2e58]`}
+      >
+        <div>
+          <div className="w-2/5 h-1/5  blur-3xl bg-amber-300/5 z-0 absolute top-1/2 left-1/2 animate-pulse" />
+          <div className="size-96 blur-3xl bg-violet-400/20 z-0 rounded-full absolute top-1/3 animate-pulse" />
+          <div className="size-96 blur-3xl bg-blue-400/20 z-0 rounded-full absolute top-1/5 " />
+          <div className="size-96 blur-3xl bg-green-400/10 z-0 rounded-full absolute top-2/4 right-20 animate-pulse" />
+          <div className="w-1/2 h-2/5 blur-3xl bg-red-400/5 z-0  absolute top-1/5 right-20 animate-pulse" />
+          <div className="size-96 blur-3xl bg-pink-500/10 z-0 rounded-full absolute top-1/3 right-20 animate-pulse" />
+        </div>
         <General>
           <Modal />
-          <ToastContainer />
+          <ToastContainer
+            theme={
+              localStorage.getItem("darkMode") === "true" ? "dark" : "light"
+            }
+          />
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route
