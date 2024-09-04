@@ -42,7 +42,7 @@ class TicketViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         payment_data['type'] = payment_data.get('type', 'Efectivo')
         payment_data['status'] =  payment_data.get('status', '1')
         payment_data['collaborator'] = request.user
-            
+        payment_data['period'] = today.isocalendar().week
         payment = Payment.objects.create(**payment_data)
 
         request.data['payment']     = payment.id

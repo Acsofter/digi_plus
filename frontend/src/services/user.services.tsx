@@ -64,6 +64,24 @@ const base_url = "http://localhost:8000/digi";
 export const useUserServices = () => {
   const { sendMessage } = useContext(Contexts);
 
+  const get_week_number = (date: Date) => {
+    const firstDayOfYear = new Date(date.getFullYear(), 0, 1);
+    const firstDayOfWeek = new Date(firstDayOfYear);
+    firstDayOfWeek.setDate(
+      firstDayOfWeek.getDate() - firstDayOfWeek.getDay() + 1
+    );
+
+    if (isNaN(firstDayOfWeek.getTime())) {
+      throw new Error("Could not calculate week number");
+    }
+
+    const weekNumber =
+      Math.floor(
+        (date.getTime() - firstDayOfWeek.getTime()) / (7 * 24 * 60 * 60 * 1000)
+      ) + 1;
+    return weekNumber;
+  };
+
   const get_users = async ({
     includeAdmins = false,
   }: {
@@ -212,6 +230,10 @@ export const useUserServices = () => {
       if (response.status !== 200) {
         return false;
       }
+      sendMessage({
+        type: "category_updated",
+        message: "Categoría actualizada",
+      });
       return response.data;
     } catch (error) {
       console.error(`Error updating category: ${error}`);
@@ -299,6 +321,11 @@ export const useUserServices = () => {
       if (response.status !== 201) {
         return false;
       }
+      sendMessage({
+        type: "category_added",
+        message: "Categoría creada",
+        payload: { user: response },
+      });
       return response.data;
     } catch (error) {}
   };
@@ -315,6 +342,11 @@ export const useUserServices = () => {
       if (response.status !== 200) {
         return false;
       }
+      sendMessage({
+        type: "company_updated",
+        message: "Compañía actualizada",
+        payload: { user: response },
+      });
       return response.data;
     } catch (error) {
       console.error(`Error fetching company: ${error}`);
@@ -433,10 +465,18 @@ export const useUserServices = () => {
     }
   };
 
-  const get_payments = async () => {
+  const get_payments = async ({
+    filters,
+  }: {
+    filters: {
+      user: number | null;
+      week: number;
+    };
+  }) => {
     try {
       const response = await axios.get(`${base_url}/payments/`, {
         headers: AuthHeader(),
+        params: filters,
       });
 
       if (response.status !== 200) {
@@ -494,9 +534,27 @@ export const useUserServices = () => {
     }
   };
 
+  const get_report = async ({ user }: { user?: number | null }) => {
+    try {
+      const response = await axios.get(`${base_url}/report/`, {
+        headers: AuthHeader(),
+        params: { user },
+      });
+      if (response.status !== 200) {
+        return false;
+      }
+      return response.data;
+    } catch (error) {
+      console.error(`Error fetching report: ${error}`);
+      return false;
+    }
+  };
+
   return {
     get_company_details,
+    get_report,
     get_users,
+    get_week_number,
     update_user,
     update_company,
     update_ticket,

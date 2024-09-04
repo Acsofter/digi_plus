@@ -4,7 +4,7 @@ import { Sidebar } from "../components/Sidebar";
 
 export const General = ({ children }: { children: ReactNode }) => {
   return (
-    <div className="w-screen h-screen flex z-10 ">
+    <div className="w-screen h-screen md:flex z-10 overflow-scroll no-scrollbar md:overflow-hidden">
      
       {["/login", "/register"].includes(window.location.pathname) ? (
         <>{children}</>

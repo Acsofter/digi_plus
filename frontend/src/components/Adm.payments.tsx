@@ -11,16 +11,16 @@ import { FormPayment } from "./Form.payment";
 import { DatePicker } from "./DatePicker";
 
 export const AdmPayments = () => {
-  const { get_payments, get_users } = useUserServices();
+  const { get_payments, get_users, get_week_number, get_report } =
+    useUserServices();
   const { state, dispatch } = useContext(Contexts);
-  const [filter, setFilter] = useState<{
-    user: User;
-    users: User[];
+  const [users, setUsers] = useState<User[]>([]);
+  const [filters, setFilters] = useState<{
+    user: number | null;
     week: number;
   }>({
-    user: {} as User,
-    users: [],
-    week: 0,
+    user: null,
+    week: get_week_number(new Date()),
   });
 
   const [payments, setPayments] = useState<ResponsePayments>({
@@ -32,10 +32,7 @@ export const AdmPayments = () => {
     results: [],
   });
 
-  const printPayment = () => {
-    console.log(payments.results);
-    return payments.results;
-  };
+  const generate_payments_for_week = () => {};
 
   const get_badge = (status: string) => {
     switch (status) {
@@ -73,24 +70,45 @@ export const AdmPayments = () => {
     }
   }, []);
 
+  const fetchPayments = async () => {
+    const response = await get_payments({ filters });
+    if (response) setPayments(response);
+  };
+
+  const fetchUsers = async () => {
+    const response = await get_users({ includeAdmins: false });
+    if (response) setUsers(response);
+  };
+
+  const export_payments = async () => {
+    console.log("Exporting payments...");
+    const response = await get_report({ user: filters.user });
+    
+
+    if (response) {
+      // open pdf on browser window
+      const blob = new Blob([response], { type: "application/pdf" });
+      const url = URL.createObjectURL(blob);
+      window.open(url);
+    }
+  };
+
   useEffect(() => {
-    const fetchPayments = async () => {
-      const response = await get_payments();
-      if (response) setPayments(response);
-    };
+    fetchPayments();
+    fetchUsers();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filters]);
 
-    const fetchUsers = async () => {
-      const response = await get_users({ includeAdmins: false });
-      if (response) setFilter({ ...filter, users: response });
-    };
-
-    if (payments.count === 0) fetchPayments();
-
-    if (filter.users.length === 0) fetchUsers();
-
+  useEffect(() => {
     const lastMessage = state.ws.lastMessage;
     if (!lastMessage) return;
     switch (lastMessage.type) {
+      case "user_added":
+      case "user_updated":
+        fetchUsers();
+        break;
+      case "payment_added":
+      case "payment_updated":
       case "ticket_added":
       case "ticket_updated":
         fetchPayments();
@@ -98,11 +116,13 @@ export const AdmPayments = () => {
       default:
         break;
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.ws.lastMessage]);
 
-  const handleDateChange = (startDate: Date, endDate: Date) => {
-    console.log("Semana seleccionada:", startDate, "-", endDate);
+  const handle_date_change = (startDate: Date, endDate: Date) => {
+    const week = get_week_number(startDate);
+    setFilters({ ...filters, week });
   };
 
   return (
@@ -128,40 +148,46 @@ export const AdmPayments = () => {
               className="bg-slate-800 h-full outline-none"
               name="users"
               id="toggleUsers"
+              onChange={(e) => {
+                setFilters({
+                  ...filters,
+                  user:
+                    e.target.value === "all"
+                      ? null
+                      : users[parseInt(e.target.value)].id,
+                });
+              }}
             >
               <option value="all">Todos</option>
-              {filter.users.length > 0 &&
-                filter.users.map((user) => (
-                  <option value={user.id || "all"} className="capitalize">
+              {users.length > 0 &&
+                users.map((user, index) => (
+                  <option key={index} value={index} className="capitalize">
                     {user.username}
                   </option>
                 ))}
             </select>
           </div>
 
-          <DatePicker onChange={handleDateChange} />
-
-          <button className="bg-blue-600 border border-blue-500 text-sm hover:inset-1 text-white px-5  rounded-md ">
-            Buscar
-          </button>
+          <DatePicker onChange={handle_date_change} />
         </div>
 
         <div className="inline-flex gap-3">
           <button
-            className="bg-gradient-to-tr from-blue-500/70 to-blue-700/90 border border-blue-600 shadow-sm shadow-blue-700 hover:inset-1 text-white px-5 p-2 rounded-xl "
-            onClick={printPayment}
+            className="bg-blue-600 border border-blue-600 shadow-sm hover:inset-1 text-white px-5 p-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled={!filters.user ? true : false}
+            onClick={export_payments}
           >
             Exportar
           </button>
           <button
-            className="bg-gradient-to-tr from-violet-500/70 to-violet-700/90 border border-violet-600 shadow-sm shadow-violet-700 text-white px-3 rounded-xl"
-            onClick={printPayment}
+            className="bg-violet-500 shadow-sm shadow-violet-700 text-white px-3 rounded-md"
+            onClick={generate_payments_for_week}
           >
             Generar pagos
           </button>
         </div>
       </div>
-      <div className="border rounded-xl shadow-sm bg-white/5 dark:border-none">
+      <div className="border rounded-xl shadow-sm bg-white/5 dark:border-none overflow-scroll no-scrollbar">
         <table className="w-full text-sm text-left rtl:text-right text-gray-600 border-collapse">
           <thead className="text-xs text-gray-700 uppercase bg-zinc-50 dark:bg-transparent sticky top-0 w-full dark:text-white">
             <tr>

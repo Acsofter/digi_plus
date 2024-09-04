@@ -5,5 +5,6 @@ from .TicketView import TicketViewSet
 from .CategoryView import CategoryViewSet
 from .PaymentView import PaymentViewSet
 from .MetricsView import MetricsViewSet
+from .ReportView import ReportViewSet
 
-__all__ = ["AuthViewSet", "CompanyViewSet", "UserViewSet", "TicketViewSet", "CategoryViewSet", "PaymentViewSet", "MetricsViewSet"]
+__all__ = ["AuthViewSet", "CompanyViewSet", "UserViewSet", "TicketViewSet", "CategoryViewSet", "PaymentViewSet", "MetricsViewSet", "ReportViewSet"]

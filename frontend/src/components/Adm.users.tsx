@@ -41,7 +41,7 @@ export const AdmUsers = () => {
   }, [state.ws.lastMessage]);
 
   return (
-    <div className="w-full">
+    <div className="w-full ">
       <div className="flex justify-between items-center mb-5 ">
         <div className="relative ">
           <div className="absolute inset-y-0 left-0 rtl:inset-r-0 rtl:right-0 flex items-center ps-3 pointer-events-none">
@@ -72,7 +72,7 @@ export const AdmUsers = () => {
         </button>
       </div>
 
-      <div className="border rounded-xl shadow-sm bg-white/5 dark:border-none">
+      <div className="border rounded-xl shadow-sm bg-white/5 dark:border-none overflow-scroll no-scrollbar">
         <table className="w-full text-sm text-left rtl:text-right text-gray-600 border-collapse">
           <thead className="text-xs text-gray-700 uppercase bg-zinc-50 dark:bg-transparent sticky top-0 w-full dark:text-white">
             <tr>

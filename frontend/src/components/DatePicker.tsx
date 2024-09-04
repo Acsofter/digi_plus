@@ -82,8 +82,8 @@ export const DatePicker: React.FC<DatePickerProps> = ({ onChange }) => {
         days.push(
           <td
             key={day.toISOString()}
-            className={`p-2 text-center cursor-pointer hover:bg-white/60 hover:text-white text-slate-300 duration-100 ${
-              isSelected ? "bg-white/30 text-white" : ""
+            className={`p-2 text-center cursor-pointer group-hover:bg-slate-900/50 hover:text-white text-slate-300 duration-100 ${
+              isSelected ? "bg-slate-900/60 text-white" : ""
             } ${
               day.getMonth() !== currentDate.getMonth() ? "text-gray-400" : ""
             }`}
@@ -94,7 +94,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({ onChange }) => {
         );
         day.setDate(day.getDate() + 1);
       }
-      rows.push(<tr key={day.toISOString()}>{days}</tr>);
+      rows.push(<tr key={day.toISOString()} className="group">{days}</tr>);
       days = [];
     }
 
@@ -129,7 +129,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({ onChange }) => {
         </div>
         <table className="w-full">
           <thead>
-            <tr className="bg-blue-300/10  text-white">
+            <tr className="bg-white/10  text-white">
               {["Lu", "Ma", "Mi", "Ju", "Vi", "Sa", "Do"].map((day) => (
                 <th key={day} className="p-2">
                   {day}

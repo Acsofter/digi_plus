@@ -235,7 +235,7 @@ const App: React.FC = () => {
             <Route
               path="/admin"
               element={
-                <PrivateRouteWrapper>
+                <PrivateRouteWrapper onlyStaff>
                   <Administration />
                 </PrivateRouteWrapper>
               }

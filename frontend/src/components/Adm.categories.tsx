@@ -96,7 +96,7 @@ export const AdmCategories = () => {
           <BiPlus className="text-xl inline-block" /> Añadir
         </button>
       </div>
-      <div className="border rounded-xl shadow-sm bg-white/5 dark:border-none">
+      <div className="border rounded-xl shadow-sm bg-white/5 dark:border-none overflow-scroll no-scrollbar ">
         <table className="w-full text-sm text-left rtl:text-right text-gray-600 border-collapse">
           <thead className="text-xs text-gray-700 uppercase bg-zinc-50 dark:bg-transparent sticky top-0 w-full dark:text-white">
             <tr>
