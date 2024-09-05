@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta, date
 from rest_framework import permissions, mixins, status, viewsets
-from ..models import Company, Payment, Ticket
+from ..models import Company, Payment, Ticket, Week
 from ..serializers import TicketSerializer
 from rest_framework.decorators import action
 from django.shortcuts import get_object_or_404
@@ -37,12 +37,13 @@ class TicketViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         
 
     def create(self, request):
+        week = Week.objects.get_or_create(week_number=today.isocalendar().week, collaborator=request.user, )[0]
 
         payment_data = request.data.pop('payment', {})
         payment_data['type'] = payment_data.get('type', 'Efectivo')
         payment_data['status'] =  payment_data.get('status', '1')
         payment_data['collaborator'] = request.user
-        payment_data['period'] = today.isocalendar().week
+        payment_data['week'] = week
         payment = Payment.objects.create(**payment_data)
 
         request.data['payment']     = payment.id

@@ -1,5 +1,13 @@
 import axios from "axios";
-import { Ban, Eye, Trash2, UserRoundPlus } from "lucide-react";
+import {
+  Ban,
+  CircleCheck,
+  CircleX,
+  Eye,
+  Filter,
+  Trash2,
+  UserRoundPlus,
+} from "lucide-react";
 import React, { useContext, useEffect, useState } from "react";
 import { BiPlus } from "react-icons/bi";
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
@@ -11,15 +19,22 @@ import { FormPayment } from "./Form.payment";
 import { DatePicker } from "./DatePicker";
 
 export const AdmPayments = () => {
-  const { get_payments, get_users, get_week_number, get_report } =
-    useUserServices();
+  const {
+    get_payments,
+    get_users,
+    get_week_number,
+    get_report,
+    generate_payment_forUser,
+    get_week,
+  } = useUserServices();
   const { state, dispatch } = useContext(Contexts);
   const [users, setUsers] = useState<User[]>([]);
+  const [currentWeek, setCurrentWeek] = useState({ is_paid: false});
   const [filters, setFilters] = useState<{
-    user: number | null;
+    collaborator: number | null;
     week: number;
   }>({
-    user: null,
+    collaborator: null,
     week: get_week_number(new Date()),
   });
 
@@ -31,8 +46,6 @@ export const AdmPayments = () => {
     previous: null,
     results: [],
   });
-
-  const generate_payments_for_week = () => {};
 
   const get_badge = (status: string) => {
     switch (status) {
@@ -81,9 +94,7 @@ export const AdmPayments = () => {
   };
 
   const export_payments = async () => {
-    console.log("Exporting payments...");
-    const response = await get_report({ user: filters.user });
-    
+    const response = await get_report({ user: filters.collaborator });
 
     if (response) {
       // open pdf on browser window
@@ -93,9 +104,19 @@ export const AdmPayments = () => {
     }
   };
 
+  const get_current_week = async () => {
+    const response = await get_week({ week: filters.week });
+    if (response) setCurrentWeek(response);
+  }
+
   useEffect(() => {
     fetchPayments();
     fetchUsers();
+    get_current_week();
+   
+    setCurrentWeek(currentWeek);
+  
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters]);
 
@@ -151,7 +172,7 @@ export const AdmPayments = () => {
               onChange={(e) => {
                 setFilters({
                   ...filters,
-                  user:
+                  collaborator:
                     e.target.value === "all"
                       ? null
                       : users[parseInt(e.target.value)].id,
@@ -169,19 +190,42 @@ export const AdmPayments = () => {
           </div>
 
           <DatePicker onChange={handle_date_change} />
+
+          <span
+            className={` place-content-center items-center text-white rounded-md px-2 py-1 text-sm ${
+              currentWeek.is_paid ? "bg-green-500" : "bg-red-500"
+            }`}
+          >
+            {currentWeek.is_paid ? (
+              <>
+                <CircleCheck className="inline" size={16} />
+                <span> Pagada!</span>
+              </>
+            ) : (
+              <>
+                <CircleX className="inline" size={16} /> <span> No pagada</span>
+              </>
+            )}
+          </span>
         </div>
 
         <div className="inline-flex gap-3">
           <button
             className="bg-blue-600 border border-blue-600 shadow-sm hover:inset-1 text-white px-5 p-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
-            disabled={!filters.user ? true : false}
+            disabled={!filters.collaborator ? true : false}
             onClick={export_payments}
           >
             Exportar
           </button>
           <button
             className="bg-violet-500 shadow-sm shadow-violet-700 text-white px-3 rounded-md"
-            onClick={generate_payments_for_week}
+            onClick={(e) => {
+              filters.collaborator &&
+                generate_payment_forUser({
+                  collaborator: filters.collaborator,
+                  week: filters.week,
+                });
+            }}
           >
             Generar pagos
           </button>

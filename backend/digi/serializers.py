@@ -1,6 +1,6 @@
 
 from rest_framework import serializers
-from .models import Category, Company, Payment, Ticket, User
+from .models import Category, Company, Payment, Ticket, User, Week
 from django.shortcuts import get_object_or_404
 from django.db import models
 
@@ -103,13 +103,7 @@ class CompanySerializer(serializers.ModelSerializer):
         model = Company
         fields = "__all__"
 
-    
-    def retrieve(self, pk, request):
-        return {}
-        
-    
-    
-
+            
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -265,3 +259,7 @@ class MetricsSerializer(serializers.Serializer):
 
 
   
+class WeekSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Week
+        fields = "__all__"

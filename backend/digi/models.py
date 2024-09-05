@@ -80,54 +80,67 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 class Company(models.Model):
-    id                     = models.AutoField(primary_key=True)
-    name                   = models.CharField(max_length=100)
-    logo                   = models.ImageField(upload_to='companies/', blank=True, null=True)
-    address                = models.CharField(max_length=255, blank=True, null=True)
-    email                  = models.EmailField(blank=True, null=True)
-    phone                  = models.CharField(max_length=20, blank=True, null=True)
+    id                      = models.AutoField(primary_key=True)
+    name                    = models.CharField(max_length=100)
+    logo                    = models.ImageField(upload_to='companies/', blank=True, null=True)
+    address                 = models.CharField(max_length=255, blank=True, null=True)
+    email                   = models.EmailField(blank=True, null=True)
+    phone                   = models.CharField(max_length=20, blank=True, null=True)
     collaborator_percentage = models.DecimalField(max_digits=5, decimal_places=2)
-    created_at             = models.DateTimeField(auto_now_add=True)
-    updated_at             = models.DateTimeField(auto_now=True)
+    created_at              = models.DateTimeField(auto_now_add=True)
+    updated_at              = models.DateTimeField(auto_now=True)
 
 class Ticket(models.Model):
-    id          = models.AutoField(primary_key=True)
-    collaborator = models.ForeignKey('User', on_delete=models.CASCADE)
-    category    = models.ForeignKey('Category', on_delete=models.CASCADE)
-    company     = models.ForeignKey('Company', on_delete=models.CASCADE)
-    payment     = models.ForeignKey('Payment', on_delete=models.CASCADE, blank=True, null=True)
-    description = models.TextField(blank=True, null=True)
-    created_at  = models.DateTimeField(auto_now_add=True) 
-    updated_at  = models.DateTimeField(auto_now=True)
+    id              = models.AutoField(primary_key=True)
+    collaborator    = models.ForeignKey('User', on_delete=models.CASCADE)
+    category        = models.ForeignKey('Category', on_delete=models.CASCADE)
+    company         = models.ForeignKey('Company', on_delete=models.CASCADE)
+    payment         = models.ForeignKey('Payment', on_delete=models.CASCADE, blank=True, null=True)
+    description     = models.TextField(blank=True, null=True)
+    created_at      = models.DateTimeField(auto_now_add=True) 
+    updated_at      = models.DateTimeField(auto_now=True)
 
 class Category(models.Model):
-    id          = models.AutoField(primary_key=True)
-    name        = models.CharField(max_length=50)
-    description = models.TextField(blank=True, null=True)
-    created_at  = models.DateTimeField(auto_now_add=True)
-    updated_at  = models.DateTimeField(auto_now=True)
+    id              = models.AutoField(primary_key=True)
+    name            = models.CharField(max_length=50)
+    description     = models.TextField(blank=True, null=True)
+    created_at      = models.DateTimeField(auto_now_add=True)
+    updated_at      = models.DateTimeField(auto_now=True)
 
 class Payment(models.Model):
-    id          = models.AutoField(primary_key=True)
-    status      = models.CharField(max_length=1,
-        choices =   (
+    id              = models.AutoField(primary_key=True)
+    status          = models.CharField(max_length=1,
+        choices     =   (
                      ("1", 'Pending'), 
                      ("2", 'Approved'), 
                      ("3", 'Rejected')
                      ),
-        default =   "pending")
-    type        = models.CharField(max_length=50)
-    amount      = models.DecimalField(max_digits=10, decimal_places=2)
-    period      = models.DecimalField(max_digits=2, decimal_places=0)
-    collaborator = models.ForeignKey('User', on_delete=models.CASCADE)
-    created_at  = models.DateTimeField(auto_now_add=True) # change to created_at
+        default     =   "pending")
+    type            = models.CharField(max_length=50)
+    amount          = models.DecimalField(max_digits=10, decimal_places=2)
+    week            = models.ForeignKey('Week', on_delete=models.CASCADE)
+    collaborator    = models.ForeignKey('User', on_delete=models.CASCADE)
+    created_at      = models.DateTimeField(auto_now_add=True) # change to created_at
 
 class History(models.Model):
-    id          = models.AutoField(primary_key=True)
-    user        = models.ForeignKey('User', on_delete=models.CASCADE)
-    description = models.CharField(max_length=50)
-    created_at  = models.DateTimeField(auto_now_add=True)
+    id              = models.AutoField(primary_key=True)
+    user            = models.ForeignKey('User', on_delete=models.CASCADE)
+    description     = models.CharField(max_length=50)
+    created_at      = models.DateTimeField(auto_now_add=True)
 
 
+class Week(models.Model):
+    id              = models.AutoField(primary_key=True)
+    collaborator    = models.ForeignKey('User', on_delete=models.CASCADE)
+    week_number     = models.DecimalField(max_digits=2, decimal_places=0)
+    is_paid         = models.BooleanField(default=False)
+    payment_date    = models.DateTimeField(null=True)
+    created_at      = models.DateTimeField(auto_now_add=True)
 
+    def generate_payments(self):
+        self.is_paid = True
+        self.payment_date = datetime.now()
+        self.save()
+        return self.is_paid
 
+   

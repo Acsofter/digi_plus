@@ -9,7 +9,7 @@ export const FormPayment = ({ payment_id }: { payment_id?: number }) => {
     status: "",
     type: "",
     amount: "0",
-    period: "",
+    week: 0,
     ticket: {} as Ticket,
     created_at: "",
     updated_at: "",

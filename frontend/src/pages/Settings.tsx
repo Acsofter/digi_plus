@@ -38,7 +38,7 @@ export const Settings = () => {
       : localStorage.setItem("darkMode", form.darkMode);
     localStorage.setItem("color", form.color);
     localStorage.setItem("transparent", form.transparent.toString());
-    navigate(0);
+    // navigate(0);
 
     const response = await update_company(form);
     if (response) {

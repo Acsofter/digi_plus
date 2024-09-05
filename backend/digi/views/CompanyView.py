@@ -10,11 +10,13 @@ class CompanyViewSet(viewsets.GenericViewSet, CustomAPIView):
     permission_classes = {'get': [permissions.IsAuthenticated], 'post': [permissions.IsAdminUser], 'put': [permissions.IsAdminUser], 'delete': [permissions.IsAdminUser]}
 
     def get_queryset(self):
+       
         return Company.objects.first()
     
 
     def put(self, request):
         company =  self.get_queryset()
+        print("self: ", request.POST)
        
         if company:
             for key, value in request.data.items():
@@ -27,18 +29,10 @@ class CompanyViewSet(viewsets.GenericViewSet, CustomAPIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
 
-    
-    
-
     def list(self, request):
         serializer = self.serializer_class(self.get_queryset())
         return Response(serializer.data, status=status.HTTP_200_OK)
     
-    # def destroy(self, request):
-    #     self.company_object.delete()
-    #     return Response(status=status.HTTP_204_NO_CONTENT)
-
-
 
     
   

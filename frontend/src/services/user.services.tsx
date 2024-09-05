@@ -469,7 +469,7 @@ export const useUserServices = () => {
     filters,
   }: {
     filters: {
-      user: number | null;
+      collaborator: number | null;
       week: number;
     };
   }) => {
@@ -550,11 +550,73 @@ export const useUserServices = () => {
     }
   };
 
+  const generate_payment_forUser = async ({
+    collaborator,
+    week,
+  }: {
+    collaborator: number;
+    week: number;
+  }) => {
+    try {
+      const response = await axios.post(
+        `${base_url}/payments/generate_payment/`,
+        { collaborator, week },
+        {
+          headers: AuthHeader(),
+        }
+      );
+
+      if (response.status !== 200) {
+        return false;
+      }
+      return response.data;
+    } catch (error) {
+      console.error(`Error generating payment: ${error}`);
+      return false;
+    }
+  };
+
+  const generate_payment_forAll = async ({ week }: { week: number }) => {
+    try {
+      const response = await axios.post(
+        `${base_url}/payments/generate_payment_for_all/`,
+        { week },
+        {
+          headers: AuthHeader(),
+        }
+      );
+
+      if (response.status !== 200) {
+        return false;
+      }
+      return response.data;
+    } catch (error) {
+      console.error(`Error generating payment: ${error}`);
+      return false;
+    }
+  };
+
+  const get_week = async ({ week }: { week: number }) => {
+    try {
+      const response = await axios.get(`${base_url}/week/${week}/`, {
+        headers: AuthHeader(),
+      });
+      if (response.status !== 200) {
+        return false;
+      }
+      return response.data;
+    } catch (error) {
+      console.error(`Error fetching week: ${error}`);
+      return false;
+    }
+  };
+
   return {
     get_company_details,
     get_report,
     get_users,
     get_week_number,
+    get_week,
     update_user,
     update_company,
     update_ticket,
@@ -576,5 +638,7 @@ export const useUserServices = () => {
     get_company,
     get_percentages,
     get_tickets_percentages,
+    generate_payment_forUser,
+    generate_payment_forAll,
   };
 };

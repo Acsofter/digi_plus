@@ -125,7 +125,7 @@ interface Payment {
   status: string;
   type: string;
   amount: string;
-  period: string;
+  week: number | null;
   ticket: Ticket;
   created_at: string;
   updated_at: string;

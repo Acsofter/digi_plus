@@ -94,7 +94,11 @@ export const DatePicker: React.FC<DatePickerProps> = ({ onChange }) => {
         );
         day.setDate(day.getDate() + 1);
       }
-      rows.push(<tr key={day.toISOString()} className="group">{days}</tr>);
+      rows.push(
+        <tr key={day.toISOString()} className="group">
+          {days}
+        </tr>
+      );
       days = [];
     }
 

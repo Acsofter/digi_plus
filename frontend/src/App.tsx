@@ -115,8 +115,12 @@ const App: React.FC = () => {
     const fetchCompany = async () => {
       const response = await get_company_details();
       if (response) dispatch({ type: "SET_COMPANY", payload: response });
+      console.log("response ", response );
     };
-    !state.company.id && fetchCompany();
+    console.log("state.company ", state.company);
+    console.log("lastMessage ", lastMessage);
+
+    state.company.id === undefined && fetchCompany();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.company]);
 
