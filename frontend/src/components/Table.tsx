@@ -2,7 +2,7 @@ import axios from "axios";
 import { format } from "date-fns";
 
 import { motion } from "framer-motion";
-import React, { useEffect } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import {
   FcCancel,
   FcDeleteRow,
@@ -27,24 +27,24 @@ import {
   ListCollapse,
   UserRound,
 } from "lucide-react";
+import { DatePicker } from "./DatePicker";
 
 export const Table = () => {
-  const { get_tickets, update_ticket } = useUserServices();
-  const { state, dispatch } = React.useContext(Contexts);
-  const [responseTicketsApproved, setResponseTicketsApproved] =
-    React.useState<ResponseTickets>();
-  const [responseTicketsPending, setResponseTicketsPending] =
-    React.useState<ResponseTickets>();
-  const [responseTicketsRejected, setResponseTicketsRejected] =
-    React.useState<ResponseTickets>();
-
-  // const [search, setSearch] = React.useState("");
-  const [rangeDate, setRangeDate] = React.useState({
-    start: "",
-    end: "",
+  const { get_tickets, update_ticket, get_week, get_week_number } =
+    useUserServices();
+  const { state, dispatch } = useContext(Contexts);
+  const [currentWeek, setCurrentWeek] = useState({
+    week_number: get_week_number(new Date()),
+    is_paid: false,
   });
+  const [responseTicketsApproved, setResponseTicketsApproved] =
+    useState<ResponseTickets>();
+  const [responseTicketsPending, setResponseTicketsPending] =
+    useState<ResponseTickets>();
+  const [responseTicketsRejected, setResponseTicketsRejected] =
+    useState<ResponseTickets>();
 
-  const handlerPagination = React.useCallback(
+  const handlerPagination = useCallback(
     async (url: string | null, type: "approved" | "pending" | "rejected") => {
       if (!url) return;
       try {
@@ -71,6 +71,22 @@ export const Table = () => {
     },
     []
   );
+
+  const get_current_week = async () => {
+    const response = await get_week({ week: currentWeek.week_number });
+    if (response) {
+      setCurrentWeek(response);
+      return true;
+    } else {
+      setCurrentWeek({ ...currentWeek, is_paid: false });
+      return false;
+    }
+  };
+
+  const handle_date_change = (startDate: Date, endDate: Date) => {
+    const week_number = get_week_number(startDate);
+    setCurrentWeek({ ...currentWeek, week_number });
+  };
 
   const format_tickets = ({
     title,
@@ -316,22 +332,14 @@ export const Table = () => {
   };
 
   const fetchTickets = async () => {
-    const rangeDateFormatted = [
-      format(rangeDate.end ? rangeDate.start : new Date(), "yyyy-MM-dd"),
-      format(rangeDate.start ? rangeDate.end : new Date(), "yyyy-MM-dd"),
-    ];
-
     const ticketsApprovedResponse = await get_tickets({
       status: "2",
-      range: rangeDateFormatted,
     });
     const ticketsPendingResponse = await get_tickets({
       status: "1",
-      range: rangeDateFormatted,
     });
     const ticketsRejectedResponse = await get_tickets({
       status: "3",
-      range: rangeDateFormatted,
     });
 
     ticketsApprovedResponse &&
@@ -342,9 +350,14 @@ export const Table = () => {
   };
 
   useEffect(() => {
-    fetchTickets();
+    get_current_week().then((week_exist) => {
+      if (week_exist) {
+        fetchTickets();
+      }
+    });
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [currentWeek.week_number]);
 
   useEffect(() => {
     const msg = state.ws.lastMessage;
@@ -371,43 +384,14 @@ export const Table = () => {
   return (
     <div className="w-full flex flex-col justify-between my-2 h-2/3 ">
       <div className="flex flex-wrap justify-end items-center w-full py-2 gap-1">
-        <div className="relative max-w-sm">
-          <input
-            id="default-datepicker"
-            type="date"
-            className=" text-gray-600 dark:text-gray-300 text-sm rounded-lg focus:ring-blue-500  focus:bordern-white/500 block w-full ps-10 p-2.5 bg-zinc-100 dark:bg-white/5 dark:border-white/5 border border-zinc-200   "
-            placeholder="desde"
-            value={rangeDate.start}
-            onChange={(e) => {
-              setRangeDate({ ...rangeDate, start: e.target.value });
-            }}
-          />
-        </div>
-        <div className="relative max-w-sm">
-          <input
-            id="default-datepicker"
-            type="date"
-            className=" text-gray-600 dark:text-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 bg-zinc-100 dark:bg-white/5 dark:border-white/5 border border-zinc-200 placeholder-gray-400 "
-            placeholder="hasta"
-            value={rangeDate.end}
-            onChange={(e) => {
-              setRangeDate({ ...rangeDate, end: e.target.value });
-            }}
-          />
-        </div>
-
+        <DatePicker onChange={handle_date_change} />
         <button
           className="px-5 py-2 rounded-lg text-sm border border-green-500 text-green-500 dark:border-white/10 shadow-sm dark:bg-white/15 dark:text-white "
           onClick={fetchTickets}
         >
           Buscar
         </button>
-        <button
-          className="px-5 py-2 rounded-lg text-sm border border-blue-500 text-blue-500 dark:border-white/10 shadow-sm dark:bg-white/15 dark:text-white"
-          onClick={() => {}}
-        >
-          Imprimir
-        </button>
+       
         {state.auth.user.roles.includes("user") && (
           <button
             className="px-5 py-2 rounded-lg text-sm bg-gradient-to-tr border border-blue-500 from-blue-600 to-blue-400 text-white dark:border-slate-800/15 shadow-sm dark:to-slate-800/20 dark:from-slate-800 dark:text-white"

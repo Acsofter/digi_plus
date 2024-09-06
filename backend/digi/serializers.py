@@ -124,6 +124,7 @@ class PaymentSerializer(serializers.ModelSerializer):
 
 class PaymentSerializerWithTicketDetails(serializers.ModelSerializer):
     ticket = serializers.SerializerMethodField(read_only=True)
+    week = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Payment
@@ -142,8 +143,15 @@ class PaymentSerializerWithTicketDetails(serializers.ModelSerializer):
             'collaborator': UserSerializer(ticket_found.collaborator).data,
             'category': CategorySerializer(ticket_found.category).data,
             'created_at': ticket_found.created_at
-
         }
+    
+    def get_week(self, obj):
+        try:
+            week_found = Week.objects.get(payment=obj.id)
+        except models.ObjectDoesNotExist:
+            return {}
+
+        return WeekSerializer(week_found).data
 
         
 
@@ -263,3 +271,9 @@ class WeekSerializer(serializers.ModelSerializer):
     class Meta:
         model = Week
         fields = "__all__"
+
+
+    def retrieve(self, request, pk=None):
+        print("#####################retrieving: ", request, pk)
+        week = get_object_or_404(Week, week_number=pk)
+        return week

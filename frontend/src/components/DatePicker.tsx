@@ -22,11 +22,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({ onChange }) => {
   };
 
   const formatDate = (date: Date): string => {
-    return date.toLocaleDateString("es-ES", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
+    return date.toLocaleDateString("en-US");
   };
 
   const handlePrevMonth = () => {
@@ -108,10 +104,11 @@ export const DatePicker: React.FC<DatePickerProps> = ({ onChange }) => {
   return (
     <div className="relative ">
       <button
-        className="bg-slate-800 text-white border border-slate-700 px-3 py-2 rounded-lg text-sm"
+        className="bg-slate-800 text-white border border-slate-700 px-3 py-2 h-full rounded-lg text-sm min-w-28"
         onClick={() => setIsDropdownOpen(!isDropdownOpen)}
       >
-        <Calendar className="inline-block text-white" size={19} /> Semana
+        <Calendar className="inline-block text-white" size={19} />{" "}
+        {selectedWeek ? formatDate(selectedWeek[0]) + " - " + formatDate(selectedWeek[1]) : "Semana"}
       </button>
       <motion.div
         initial={{ opacity: 0, y: -10 }}

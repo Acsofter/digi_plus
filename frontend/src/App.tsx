@@ -114,11 +114,13 @@ const App: React.FC = () => {
   useEffect(() => {
     const fetchCompany = async () => {
       const response = await get_company_details();
-      if (response) dispatch({ type: "SET_COMPANY", payload: response });
-      console.log("response ", response );
+      if (response && response.id) {
+      } else {
+        toast.error(
+          `Error al cargar la información de la empresa. Ve a ajustes y actualiza la información de la empresa.`
+        );
+      }
     };
-    console.log("state.company ", state.company);
-    console.log("lastMessage ", lastMessage);
 
     state.company.id === undefined && fetchCompany();
     // eslint-disable-next-line react-hooks/exhaustive-deps

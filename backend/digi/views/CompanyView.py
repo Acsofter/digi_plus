@@ -10,24 +10,29 @@ class CompanyViewSet(viewsets.GenericViewSet, CustomAPIView):
     permission_classes = {'get': [permissions.IsAuthenticated], 'post': [permissions.IsAdminUser], 'put': [permissions.IsAdminUser], 'delete': [permissions.IsAdminUser]}
 
     def get_queryset(self):
-       
         return Company.objects.first()
     
 
     def put(self, request):
-        company =  self.get_queryset()
-        print("self: ", request.POST)
-       
-        if company:
-            for key, value in request.data.items():
-                setattr(company, key, value)
-            company.save()
-            return Response(CompanySerializer(company).data, status=status.HTTP_200_OK)
-        else:
-            serializer = self.serializer_class(data=request.data)
-            serializer.is_valid(raise_exception=True)
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
+        try:
+            company =  self.get_queryset()
+        
+            if company:
+                for key, value in request.data.items():
+                    setattr(company, key, value)
+                company.save()
+                return Response(CompanySerializer(company).data, status=status.HTTP_200_OK)
+            else:
+                
+                serializer = self.serializer_class(data=request.data)
+
+                serializer.is_valid(raise_exception=True)
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            print(e)
+            return Response({'detail': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
     def list(self, request):
         serializer = self.serializer_class(self.get_queryset())

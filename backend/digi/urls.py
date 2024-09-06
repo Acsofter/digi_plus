@@ -4,7 +4,7 @@ from django.conf import settings
 from rest_framework.routers import DefaultRouter
 
 
-from .views import AuthViewSet, CompanyViewSet, UserViewSet, TicketViewSet, CategoryViewSet, PaymentViewSet, MetricsViewSet, ReportViewSet
+from .views import AuthViewSet, CompanyViewSet, UserViewSet, TicketViewSet, CategoryViewSet, PaymentViewSet, MetricsViewSet, ReportViewSet, WeekViewSet
 
 router = DefaultRouter()
 router.register(r'auth', AuthViewSet, basename='auth')
@@ -15,6 +15,7 @@ router.register(r'categories', CategoryViewSet, basename='category')
 router.register(r'payments', PaymentViewSet, basename='payment')
 router.register(r'metrics', MetricsViewSet, basename='metric')
 router.register(r'report', ReportViewSet, basename='report')
+router.register(r'week', WeekViewSet, basename='week')
 
 urlpatterns = [
     path('', include(router.urls)),

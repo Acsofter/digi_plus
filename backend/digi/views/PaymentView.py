@@ -46,8 +46,8 @@ class PaymentViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
 
 
     @action(detail=False, methods=['post'], permission_classes=[permissions.IsAdminUser])
-    def generate_payments_forAll(self, request):
-        week_number = request.data.get('week_number', None)
+    def generate_payment_for_all(self, request):
+        week_number = request.data.get('week', None)
         if not week_number:
             raise serializers.ValidationError('week number are required')
         week = Week.objects.filter(week_number=week_number)
@@ -56,7 +56,7 @@ class PaymentViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         
         try:
             for w in week:
-                w.generate_payment()
+                w.generate_payments()
         except Exception as e:
             raise serializers.ValidationError(str(e))
         

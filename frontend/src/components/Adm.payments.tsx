@@ -1,22 +1,12 @@
 import axios from "axios";
-import {
-  Ban,
-  CircleCheck,
-  CircleX,
-  Eye,
-  Filter,
-  Trash2,
-  UserRoundPlus,
-} from "lucide-react";
+import { Ban, CircleCheck, CircleX, Eye, UserRoundPlus } from "lucide-react";
 import React, { useContext, useEffect, useState } from "react";
-import { BiPlus } from "react-icons/bi";
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
-import { IoSearchOutline } from "react-icons/io5";
 import { AuthHeader } from "../services/auth.header";
 import { Contexts } from "../services/Contexts";
 import { useUserServices } from "../services/user.services";
-import { FormPayment } from "./Form.payment";
 import { DatePicker } from "./DatePicker";
+import { FormPayment } from "./Form.payment";
 
 export const AdmPayments = () => {
   const {
@@ -25,11 +15,12 @@ export const AdmPayments = () => {
     get_week_number,
     get_report,
     generate_payment_forUser,
+    generate_payment_forAll,
     get_week,
   } = useUserServices();
   const { state, dispatch } = useContext(Contexts);
   const [users, setUsers] = useState<User[]>([]);
-  const [currentWeek, setCurrentWeek] = useState({ is_paid: false});
+  const [currentWeek, setCurrentWeek] = useState({ is_paid: false });
   const [filters, setFilters] = useState<{
     collaborator: number | null;
     week: number;
@@ -94,28 +85,34 @@ export const AdmPayments = () => {
   };
 
   const export_payments = async () => {
-    const response = await get_report({ user: filters.collaborator });
+    const collaborators_for_get_report = filters.collaborator
+      ? [{ id: filters.collaborator }]
+      : users;
 
-    if (response) {
-      // open pdf on browser window
-      const blob = new Blob([response], { type: "application/pdf" });
-      const url = URL.createObjectURL(blob);
-      window.open(url);
-    }
+    collaborators_for_get_report.forEach(async (user) => {
+      const response = await get_report({ user: user.id });
+
+      if (response) {
+        const blob = new Blob([response], { type: "application/pdf" });
+        const url = URL.createObjectURL(blob);
+        window.open(url);
+      }
+    });
   };
 
   const get_current_week = async () => {
     const response = await get_week({ week: filters.week });
-    if (response) setCurrentWeek(response);
-  }
+    if (response) {
+      setCurrentWeek(response);
+    } else {
+      setCurrentWeek({ ...currentWeek, is_paid: false });
+    }
+  };
 
   useEffect(() => {
     fetchPayments();
     fetchUsers();
     get_current_week();
-   
-    setCurrentWeek(currentWeek);
-  
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters]);
@@ -130,9 +127,12 @@ export const AdmPayments = () => {
         break;
       case "payment_added":
       case "payment_updated":
+      case "payment_for_all":
+      case "payment_for_user":
       case "ticket_added":
       case "ticket_updated":
         fetchPayments();
+        get_current_week();
         break;
       default:
         break;
@@ -148,25 +148,14 @@ export const AdmPayments = () => {
 
   return (
     <div className="w-full">
-      <div className="flex justify-between items-center mb-5 ">
-        <div className="inline-flex gap-3">
-          <div className="relative ">
-            <div className="absolute inset-y-0 left-0 rtl:inset-r-0 rtl:right-0 flex items-center ps-3 pointer-events-none">
-              <IoSearchOutline className="inline-block text-md text-zinc-500 dark:text-white" />
-            </div>
-            <input
-              type="text"
-              id="table-search"
-              className="block p-2 ps-10 h-full text-sm  text-gray-800 shadow-sm border rounded-lg w-80 bg-white focus:ring-secondary focus:border-primary-blring-secondary   dark:placeholder-gray-400  dark:focus:ring-secondary dark:focus:border-primary-blring-secondary dark:text-white dark:bg-slate-800 dark:border-slate-700 dark:focus:outline-slate-500"
-              placeholder="Buscar..."
-            />
-          </div>
-          <div className="dark:bg-slate-800 p-2 rounded-lg border dark:border-slate-700 border-slate-400 text-sm">
+      <div className="flex justify-between items-center mb-5 max-h-28">
+        <div className="flex flex-wrap gap-3 min-h-1/2">
+          <div className="dark:bg-slate-800  rounded-lg border dark:border-slate-700 border-slate-400 text-sm inline-flex place-content-center justify-center">
             <label htmlFor="toggleUsers" className="p-1">
               <UserRoundPlus className="inline" size={20} />
             </label>
             <select
-              className="bg-slate-800 h-full outline-none"
+              className="bg-slate-800 h-full min-h-9 min-w-24 outline-none rounded-lg"
               name="users"
               id="toggleUsers"
               onChange={(e) => {
@@ -192,39 +181,40 @@ export const AdmPayments = () => {
           <DatePicker onChange={handle_date_change} />
 
           <span
-            className={` place-content-center items-center text-white rounded-md px-2 py-1 text-sm ${
+            className={` h-full py-1 px-5 text-white rounded-full  text-sm ${
               currentWeek.is_paid ? "bg-green-500" : "bg-red-500"
             }`}
           >
             {currentWeek.is_paid ? (
               <>
-                <CircleCheck className="inline" size={16} />
-                <span> Pagada!</span>
+                <CircleCheck className="inline" size={16} /> <span> Paid</span>
               </>
             ) : (
               <>
-                <CircleX className="inline" size={16} /> <span> No pagada</span>
+                <CircleX className="inline" size={16} /> <span> Not paid</span>
               </>
             )}
           </span>
         </div>
 
-        <div className="inline-flex gap-3">
+        <div className="flex flex-wrap gap-3 min-h-1/2">
           <button
-            className="bg-blue-600 border border-blue-600 shadow-sm hover:inset-1 text-white px-5 p-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
-            disabled={!filters.collaborator ? true : false}
+            className=" bg-blue-600 border border-blue-600 shadow-sm hover:inset-1 text-white px-5 p-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled={!currentWeek.is_paid}
             onClick={export_payments}
           >
             Exportar
           </button>
           <button
-            className="bg-violet-500 shadow-sm shadow-violet-700 text-white px-3 rounded-md"
+            disabled={currentWeek.is_paid || payments.count === 0}
+            className="bg-violet-500 min-h-11 shadow-sm shadow-violet-700 text-white px-3 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
             onClick={(e) => {
-              filters.collaborator &&
-                generate_payment_forUser({
-                  collaborator: filters.collaborator,
-                  week: filters.week,
-                });
+              filters.collaborator
+                ? generate_payment_forUser({
+                    collaborator: filters.collaborator,
+                    week: filters.week,
+                  })
+                : generate_payment_forAll({ week: filters.week });
             }}
           >
             Generar pagos

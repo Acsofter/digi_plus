@@ -569,6 +569,12 @@ export const useUserServices = () => {
       if (response.status !== 200) {
         return false;
       }
+      console.log(response.data);
+      sendMessage({
+        type: "payment_for_user",
+        message: "Se ha generado el pago para el colaborador",
+        payload: { collaborator, week },
+      });
       return response.data;
     } catch (error) {
       console.error(`Error generating payment: ${error}`);
@@ -589,6 +595,11 @@ export const useUserServices = () => {
       if (response.status !== 200) {
         return false;
       }
+      sendMessage({
+        type: "payment_for_all",
+        message: "Se ha generado el pago para todos los colaboradores",
+        payload: {  week },
+      });
       return response.data;
     } catch (error) {
       console.error(`Error generating payment: ${error}`);

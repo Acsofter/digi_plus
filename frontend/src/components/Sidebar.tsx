@@ -36,7 +36,7 @@ export const Sidebar = () => {
       {
         name: "Ajustes",
         icon: <MonitorCog size={24} />,
-        notificaciones: 2,
+        notificaciones: 0,
         path: "/settings",
       },
       {
@@ -91,13 +91,13 @@ export const Sidebar = () => {
               onClick={() => navigate(menuitem.path)}
               className={`group relative duration-300 ${
                 window.location.pathname === menuitem.path
-                  ? "bg-secondary"
+                  ? `bg-secondary  ${transparent ? "text-white" : "text-primary"} `
                   : "bg-transparent"
               } transition-all max-w-20 min-w-12 text-center text-xs md:text-sm w-full hover:bg-gradient-to-br hover:from-secondary hover:to-primary shadow-sm shadow-slate-950/10 py-3 md:p-4 rounded-xl my-3 `}
             >
               {cloneElement(menuitem.icon, {
                 className:
-                  "text-light text-center group-hover:text-primary-blue duration-300 w-full ",
+                  `${transparent ? "text-primary group-hover:text-white " : "text-white "} text-center  duration-300 w-full `,
               })}
               {menuitem.notificaciones > 0 && (
                 <span className="absolute top-[-.5em] right-[-.2em] text-xs text-white bg-primary px-2 py-.5 rounded-md  duration-300 hidden md:inline-block ">

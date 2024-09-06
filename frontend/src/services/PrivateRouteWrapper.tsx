@@ -11,6 +11,7 @@ export const PrivateRouteWrapper = ({
   onlyStaff?: boolean;
 }) => {
   const { state, dispatch } = React.useContext(Contexts);
+  const [loading, setLoading] = useState(true);
   if (localStorage.getItem("darkMode") === "true") {
     document.documentElement.classList.add("dark");
   } else {
@@ -46,8 +47,9 @@ export const PrivateRouteWrapper = ({
     };
 
     check();
+    loading && setLoading(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return <>{state.auth.isAuthenticated ? children : <Loading />}</>;
+  return <> {loading && <Loading />}{state.auth.isAuthenticated && children }</>;
 };

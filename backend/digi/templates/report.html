@@ -138,7 +138,7 @@
         {% for item in items %}
         <tr>
           <td>{{ forloop.counter }}</td>
-          <td>{{ item.period }}</td>
+          <td>{{ item.week.week_number }}</td>
           <td>{{ item.type }}</td>
           <td>{{ "N/A" }}</td>
           <td>{{ item.ticket.category.name }}</td>

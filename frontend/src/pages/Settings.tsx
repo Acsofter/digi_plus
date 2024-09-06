@@ -38,7 +38,7 @@ export const Settings = () => {
       : localStorage.setItem("darkMode", form.darkMode);
     localStorage.setItem("color", form.color);
     localStorage.setItem("transparent", form.transparent.toString());
-    // navigate(0);
+    navigate(0);
 
     const response = await update_company(form);
     if (response) {
@@ -60,7 +60,7 @@ export const Settings = () => {
     <>
       <div className="relative w-full h-screen overflow-scroll no-scrollbar p-5">
         <Modal />
-        <div className="text-slate-400 dark:text-white">
+        <div className=" dark:text-white">
           <h2 className="font-semibold text-xl">Ajustes</h2>
           <hr className="my-4 dark:border-white/20" />
           <div className="bg-[#fefefe]/50 dark:bg-white/5  text-sm p-4 rounded-md h-full w-full">
@@ -254,7 +254,7 @@ export const Settings = () => {
                     form.darkMode === "false"
                       ? "border-secondary dark:border-white/50"
                       : "border-slate-200 dark:border-white/10"
-                  } rounded-md max-w-60 cursor-pointer hover:border-secondary dark:hover:border-white/50 duration-300 text-slate-400 dark:text-white`}
+                  } rounded-md max-w-60 cursor-pointer hover:border-secondary dark:hover:border-white/50 duration-300  dark:text-white`}
                   onClick={() => setForm({ ...form, darkMode: "false" })}
                 >
                   <img src={light_theme} alt="" className="h-32" />
@@ -267,7 +267,7 @@ export const Settings = () => {
                     form.darkMode === "true"
                       ? "border-secondary dark:border-white/50"
                       : "border-slate-200 dark:border-white/10"
-                  } rounded-md max-w-60 cursor-pointer hover:border-secondary dark:hover:border-white/50 duration-300 text-slate-400 dark:text-white`}
+                  } rounded-md max-w-60 cursor-pointer hover:border-secondary dark:hover:border-white/50 duration-300  dark:text-white`}
                   onClick={() => setForm({ ...form, darkMode: "true" })}
                 >
                   <img src={dark_theme} alt="" className="h-32" />

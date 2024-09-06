@@ -82,6 +82,11 @@ class CompanyConsumer(AsyncWebsocketConsumer):
             
         
 
+    async def payment_for_user(self, event):
+        await self.send(text_data=json.dumps(event))
+
+    async def payment_for_all(self, event):
+        await self.send(text_data=json.dumps(event))
 
     async def ticket_added(self, event):
         await self.send(text_data=json.dumps(event))
