@@ -12,10 +12,10 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from datetime import timedelta
 from pathlib import Path
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 import os 
 
-load_dotenv()
+# load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -29,7 +29,7 @@ SECRET_KEY = 'django-insecure-9=ero=cy%ak6$#*vmw(o1tf%l616+dcwe!%)ojxh_8n!tj$m3y
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ["34.135.122.73"]
 
 
 # Application definition
@@ -97,13 +97,13 @@ MIDDLEWARE = [
 
 ]
 
-CSRF_TRUSTED_ORIGINS = ['http://localhost:3000', 'http://127.0.0.1:3000']
-CORS_ORIGIN_WHITELIST  = ['http://localhost:3000', 'http://127.0.0.1:3000']
-CORS_ALLOWED_ORIGINS = ['http://localhost:3000', 'http://127.0.0.1:3000']
-CORS_ALLOW_ALL_ORIGINS = True
-CORS_ALLOW_CREDENTIALS = True
-SESSION_COOKIE_SECURE = True
-SESSION_COOKIE_SAMESITE = None
+# CSRF_TRUSTED_ORIGINS    = ALLOWED_HOSTS
+# CORS_ORIGIN_WHITELIST   = ALLOWED_HOSTS
+# CORS_ALLOWED_ORIGINS    = ALLOWED_HOSTS
+# CORS_ALLOW_ALL_ORIGINS  = True
+# CORS_ALLOW_CREDENTIALS  = True
+# SESSION_COOKIE_SECURE   = True
+# SESSION_COOKIE_SAMESITE = None
 
 ROOT_URLCONF = 'core.urls'
 
@@ -131,10 +131,10 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 DATABASES = {
     'default': 
-    # {
-    #     'ENGINE': 'django.db.backends.sqlite3',
-    #     'NAME': BASE_DIR / 'db.sqlite3',
-    # } if DEBUG else
+    {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    } if DEBUG else
      {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.getenv('DB_NAME'),
