@@ -17,6 +17,7 @@ import { Help } from "./pages/Help";
 import { General } from "./layouts/General";
 const audio_notification = require("./assets/sound/pop.mp3");
 
+
 const initialState: State = {
   ws: {
     readyState: 0,
