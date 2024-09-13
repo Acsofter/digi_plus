@@ -2,7 +2,7 @@
 import axios from "axios";
 import { AuthHeader } from "./auth.header";
 
-let base_url = "http://127.0.0.1:8000/digi/auth";
+let base_url = "http://localhost:8080/digi/auth";
 
 export const register = async ({
   data,

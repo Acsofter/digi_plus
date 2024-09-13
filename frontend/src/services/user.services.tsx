@@ -3,7 +3,7 @@ import { useContext } from "react";
 import { AuthHeader } from "./auth.header";
 import { Contexts } from "./Contexts";
 
-const base_url = "http://localhost:8000/digi";
+const base_url = "http://localhost:8080/digi";
 
 // const timeAgo = (dateString: string): string => {
 //   const now = new Date();
