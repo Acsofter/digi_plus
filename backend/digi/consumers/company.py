@@ -11,6 +11,8 @@ class CompanyConsumer(AsyncWebsocketConsumer):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         self.user = self.scope['user']
 
+       print("CONEECTED",self.room)
+
         if self.user.is_anonymous:
             await self.close()
 
