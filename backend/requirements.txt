@@ -64,3 +64,4 @@ zope.interface==6.4.post2
 zopfli==0.2.3
 
 gunicorn
+psycopg
