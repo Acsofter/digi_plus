@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'digi.apps.DigiConfig',
     'daphne',
+    'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
