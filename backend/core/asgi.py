@@ -7,7 +7,7 @@ from channels.security.websocket import AllowedHostsOriginValidator
 from digi.middleware import JWTAuthMiddlewareStack
 from decouple import config
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", f'{config("PROJECT_NAME")}.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.settings')
 
 application = ProtocolTypeRouter({
     "http": get_asgi_application(),
