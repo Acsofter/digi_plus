@@ -25,6 +25,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 from pathlib import Path
 from decouple import config
 
+SECRET_KEY = config('SECRET_KEY')
+
 DEBUG = config('DEBUG', default=False, cast=bool)
 
 ALLOWED_HOSTS = ["143.198.7.10",]
@@ -83,7 +85,7 @@ SIMPLE_JWT = {
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': True,
     'ALGORITHM': 'HS256',
-    'SIGNING_KEY': "django-insecure-9=ero=cy%%ak6$#*vmw(o1tf%%l616+dcwe!%%)ojxh_8n!tj$m3y",
+    'SIGNING_KEY': SECRET_KEY,
     'VERIFYING_KEY': None,
     'AUTH_HEADER_TYPES': ('Bearer',),
     'USER_ID_FIELD': 'id',
