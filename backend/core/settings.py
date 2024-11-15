@@ -29,7 +29,7 @@ SECRET_KEY = config('SECRET_KEY')
 
 DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = ["143.198.7.10",]
+ALLOWED_HOSTS = ["*",]
 
 ROOT_URLCONF = f'{config("PROJECT_NAME")}.urls'
 
