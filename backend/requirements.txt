@@ -64,3 +64,6 @@ xhtml2pdf==0.2.16
 zope.interface==6.4.post2
 zopfli==0.2.3
 gunicorn
+django-storages
+boto3
+python-decouple
