@@ -3,7 +3,6 @@ import jwt
 from django.conf import settings
 from channels.middleware import BaseMiddleware
 from channels.db import database_sync_to_async
-from django.contrib.auth.models import AnonymousUser
 from .models import User
 from channels.sessions import CookieMiddleware, SessionMiddleware
 from channels.auth import AuthMiddlewareStack, AuthMiddleware
