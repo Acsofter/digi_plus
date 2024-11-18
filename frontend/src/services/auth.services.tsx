@@ -60,7 +60,7 @@ export const login = async ({
   try {
     const response = await axios.post<{
       user: { token: string; username: string; is_superuser: boolean };
-    }>(`${base_url}/login/`, { username, password });
+    }>(`${base_url}/login`, { username, password });
 
     if (response.status !== 200) {
       console.log("credenciales incorrectas");

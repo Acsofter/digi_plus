@@ -17,7 +17,6 @@ import { General } from "./layouts/General";
 import { Modal } from "./components/Modal";
 const audio_notification = require("./assets/sound/pop.mp3");
 
-
 const initialState: State = {
   ws: {
     readyState: 0,
@@ -82,7 +81,7 @@ const App: React.FC = () => {
 
   const { get_company_details } = useUserServices();
 
-  const socketUrl: string = `ws:/34.135.122.73:8080/ws/company/ashfd1i2e397t3xbe63129x6739/?token=${localStorage.getItem(
+  const socketUrl: string = `ws://143.198.7.10:8001/ws/company/?token=${localStorage.getItem(
     "user"
   )}`;
 
