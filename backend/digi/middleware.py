@@ -9,8 +9,8 @@ from channels.auth import AuthMiddlewareStack, AuthMiddleware
 
 @database_sync_to_async
 def get_user_from_id(data: dict):
-    from .models import User
     if data and 'username' in data and 'id' in data:
+        from .models import User
         try:
             return User.objects.get(username=data['username'], id=data['id'])
         except User.DoesNotExist:
@@ -29,7 +29,7 @@ class JWTAuthMiddleware(BaseMiddleware):
             if not query_string:
                 raise ValueError("No query string in scope")
 
-            # Asegúrate de que el token esté presente
+            # Verificar si el token esté presente
             try:
                 _, token = (query_string.decode()).split('=')
                 if not token:

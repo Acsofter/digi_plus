@@ -8,9 +8,8 @@ import jwt
 class CompanyConsumer(AsyncWebsocketConsumer):
 
     async def connect(self):
-        self.room_name = self.scope['url_route']['kwargs']['room_name']
+        self.room_name = "zaO9mXST0Rwd06CQ4cDqZ1Z3LcjO4SRsrfamRl5ocXANKYtJK9"
         self.user = self.scope['user']
-
 
         if self.user.is_anonymous:
             await self.close()
@@ -26,7 +25,6 @@ class CompanyConsumer(AsyncWebsocketConsumer):
             self.room_group_name, { 
                   'type': 'user_joined',
                   'user': self.user,
-
             }
         )
 
