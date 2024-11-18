@@ -3,13 +3,13 @@ import jwt
 from django.conf import settings
 from channels.middleware import BaseMiddleware
 from channels.db import database_sync_to_async
-from .models import User
 from channels.sessions import CookieMiddleware, SessionMiddleware
 from channels.auth import AuthMiddlewareStack, AuthMiddleware
 
 
 @database_sync_to_async
 def get_user_from_id(data: dict):
+    from .models import User
     if data and 'username' in data and 'id' in data:
         try:
             return User.objects.get(username=data['username'], id=data['id'])
