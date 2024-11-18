@@ -5,20 +5,17 @@ from channels.middleware import BaseMiddleware
 from channels.db import database_sync_to_async
 from channels.sessions import CookieMiddleware, SessionMiddleware
 from channels.auth import AuthMiddlewareStack, AuthMiddleware
-
+from django.contrib.auth.models import AnonymousUser
 
 @database_sync_to_async
 def get_user_from_id(data: dict):
     if data and 'username' in data and 'id' in data:
         from .models import User
-        from .serializers import UserSerializer
         try:
-            user = User.objects.get(id=data['id'])
-            if user.username == data['username']:
-                return UserSerializer(user).data            
+            return User.objects.get(username=data['username'], id=data['id'])
         except User.DoesNotExist:
-            pass
-    return False
+            return AnonymousUser
+    return AnonymousUser
 
 class JWTAuthMiddleware(BaseMiddleware):
     def __init__(self, inner):
