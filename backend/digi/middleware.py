@@ -5,7 +5,6 @@ from channels.middleware import BaseMiddleware
 from channels.db import database_sync_to_async
 from channels.sessions import CookieMiddleware, SessionMiddleware
 from channels.auth import AuthMiddlewareStack, AuthMiddleware
-from django.contrib.auth.models import AnonymousUser
 
 @database_sync_to_async
 def get_user_from_id(data: dict):
@@ -14,6 +13,7 @@ def get_user_from_id(data: dict):
         try:
             return User.objects.get(username=data['username'], id=data['id'])
         except User.DoesNotExist:
+            from django.contrib.auth.models import AnonymousUser
             return AnonymousUser
     return AnonymousUser
 
