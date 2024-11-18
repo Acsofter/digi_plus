@@ -13,7 +13,7 @@ class CompanyConsumer(AsyncWebsocketConsumer):
         self.room_name = "zaO9mXST0Rwd06CQ4cDqZ1Z3LcjO4SRsrfamRl5ocXANKYtJK9"
         self.user = self.scope['user']
 
-        if self.user.is_anonymous:
+        if not self.user:
             await self.close()
 
         self.room_group_name = f'group_{self.room_name}'
@@ -65,12 +65,7 @@ class CompanyConsumer(AsyncWebsocketConsumer):
             {
                 'type': message_type,
                 'message': message,
-                'user': {
-                    'id': self.user.id,
-                    'username': self.user.username,
-                    'email': self.user.email,
-                    'roles': self.user.get_roles()  
-                },
+                'user': self.user,
                 'payload': text_data_json.get('payload', {})
             }
         )
@@ -97,16 +92,11 @@ class CompanyConsumer(AsyncWebsocketConsumer):
 
     async def user_joined(self, event):
 
-        current_user = event['user']
 
         await self.send(text_data=json.dumps({
             "type": "user_joined",
-            "user": {
-                'id': current_user['id'],
-                'username': current_user['username'],
-                'roles': current_user['roles']
-            },
-            "message": f"{current_user['username']} se ha unido al chat",
+            "user":self.user,
+            "message": f"{self.user['username']} se ha unido al chat",
         }))
 
     async def user_disabled(self, event):
@@ -133,14 +123,9 @@ class CompanyConsumer(AsyncWebsocketConsumer):
 
 
     async def user_disconnect(self, event):
-        current_user = event['user']
 
         await self.send(text_data=json.dumps({
             "type": "user_disconnect",
-            "user": {
-                'id': current_user['id'],
-                'username': current_user['username'],
-                'roles': current_user['roles']
-            },
-            "message": f"{current_user['username']} se ha desconectado al chat",
+            "user": self.user,
+            "message": f"{self.user['username']} se ha desconectado al chat",
         }))

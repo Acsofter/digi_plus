@@ -11,11 +11,15 @@ def get_user_from_id(data: dict):
     if data and 'username' in data and 'id' in data:
         from .models import User
         try:
-            return User.objects.get(username=data['username'], id=data['id'])
+            user_found = User.objects.get(username=data['username'], id=data['id'])
+            from .serializers import UserSerializer
+
+            if user_found:
+                return UserSerializer(user_found).data
+            return  False
         except User.DoesNotExist:
-            from django.contrib.auth.models import AnonymousUser
-            return AnonymousUser
-    return AnonymousUser
+            return False
+    return False
 
 class JWTAuthMiddleware(BaseMiddleware):
     def __init__(self, inner):
