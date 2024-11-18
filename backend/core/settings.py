@@ -31,11 +31,11 @@ DEBUG = config('DEBUG', default=False, cast=bool)
 
 ALLOWED_HOSTS = ["*",]
 
-ROOT_URLCONF = f'{config("PROJECT_NAME")}.urls'
+ROOT_URLCONF = f'core.urls'
 
-WSGI_APPLICATION = f'{config("PROJECT_NAME")}.wsgi.application'
+WSGI_APPLICATION = f'core.wsgi.application'
 
-ASGI_APPLICATION = f'{config("PROJECT_NAME")}.asgi.application'
+ASGI_APPLICATION = f'core.asgi.application'
 
 
 
@@ -65,9 +65,6 @@ REST_FRAMEWORK = {
 }
 
 AUTH_USER_MODEL = 'digi.User'
-
-
-ASGI_APPLICATION = 'core.asgi.application'
 
 CHANNEL_LAYERS = {
     'default': {
