@@ -11,8 +11,11 @@ from channels.auth import AuthMiddlewareStack, AuthMiddleware
 def get_user_from_id(data: dict):
     if data and 'username' in data and 'id' in data:
         from .models import User
+        from .serializers import UserSerializer
         try:
-            return User.objects.get(username=data['username'], id=data['id'])
+            user = User.objects.get(id=data['id'])
+            if user.username == data['username']:
+                return UserSerializer(user).data            
         except User.DoesNotExist:
             pass
     return False
@@ -27,7 +30,7 @@ class JWTAuthMiddleware(BaseMiddleware):
                 raise ValueError("Invalid scope")
             query_string = scope.get('query_string')
             if not query_string:
-                raise ValueError("No query string in scope")
+                raise ValueError("No query string in scope", scope)
 
             # Verificar si el token esté presente
             try:
@@ -57,6 +60,7 @@ class JWTAuthMiddleware(BaseMiddleware):
             tb_details = tb_error.split(',')
 
             print("Error in JWTAuthMiddleware: ", e, tb_details)
+
             # Enviar un error de respuesta si es necesario
             await send({
                 'type': 'http.response',
