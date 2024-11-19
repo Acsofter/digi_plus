@@ -29,7 +29,7 @@ SECRET_KEY = config('SECRET_KEY')
 
 DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = ["*", "seahorse-app-av2pk.ondigitalocean.app", "localhost", "127.0.0.1"]
+ALLOWED_HOSTS = ["*", "localhost", "127.0.0.1"]
 
 ROOT_URLCONF = f'core.urls'
 
@@ -106,7 +106,7 @@ MIDDLEWARE = [
 
 ]
 
-CSRF_TRUSTED_ORIGINS    = ALLOWED_HOSTS
+CSRF_TRUSTED_ORIGINS    = ["http://*"]
 CORS_ORIGIN_WHITELIST   = ALLOWED_HOSTS
 CORS_ALLOWED_ORIGINS    = ALLOWED_HOSTS
 CORS_ALLOW_ALL_ORIGINS  = True
