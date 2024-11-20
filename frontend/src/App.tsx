@@ -81,7 +81,7 @@ const App: React.FC = () => {
 
   const { get_company_details } = useUserServices();
 
-  const socketUrl: string = `ws://143.198.7.10:8001/ws/company/?token=${localStorage.getItem(
+  const socketUrl: string = `ws://147.93.131.225:8001/ws/company/?token=${localStorage.getItem(
     "user"
   )}`;
 
