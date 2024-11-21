@@ -86,7 +86,7 @@ const App: React.FC = () => {
   )}`;
 
   const { sendMessage, lastMessage, readyState } = useWebSocket(socketUrl, {
-    reconnectInterval: 3000,
+    reconnectInterval: 5000,
     shouldReconnect: () => true,
   });
 
