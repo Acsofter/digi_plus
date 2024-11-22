@@ -144,3 +144,7 @@ class Week(models.Model):
         return self.is_paid
 
    
+
+
+
+

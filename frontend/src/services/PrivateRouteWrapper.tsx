@@ -12,27 +12,18 @@ export const PrivateRouteWrapper = ({
 }) => {
   const { state, dispatch } = React.useContext(Contexts);
   const [loading, setLoading] = useState(true);
-  if (localStorage.getItem("darkMode") === "true") {
-    document.documentElement.classList.add("dark");
-  } else {
-    document.documentElement.classList.remove("dark");
-  }
 
-  if (localStorage.getItem("darkMode") === "true") {
-    document.documentElement.classList.add("dark");
-  } else {
-    document.documentElement.classList.remove("dark");
-  }
+  // Manejo del modo oscuro
+  const darkMode = localStorage.getItem("darkMode") === "true";
+  document.documentElement.classList.toggle("dark", darkMode);
 
   useEffect(() => {
     const check = async () => {
       const verified = await check_token();
 
-      if (onlyStaff) {
-        if (!verified?.is_staff) {
-          window.location.replace("/home");
-          return;
-        }
+      if (onlyStaff && !verified?.is_staff) {
+        window.location.replace("/home");
+        return;
       }
 
       if (!verified) {
@@ -44,10 +35,10 @@ export const PrivateRouteWrapper = ({
         type: "SET_AUTH",
         payload: { user: verified, isAuthenticated: true },
       });
+      setLoading(false); // Mover aquí para asegurarse de que se actualiza después de la verificación
     };
 
     check();
-    loading && setLoading(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

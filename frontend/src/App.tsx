@@ -26,9 +26,6 @@ const initialState: State = {
   popup: {
     isOpen: false,
     loading: true,
-    title: undefined,
-    subtitle: undefined,
-    content: undefined,
   },
   auth: {
     isAuthenticated: false,
@@ -94,8 +91,6 @@ const App: React.FC = () => {
     if (!userInteracted) return;
     const audio = new Audio(audio_notification);
     audio.volume = 0.5;
-    audio.loop = false;
-
     audio.play();
   };
 
@@ -114,43 +109,37 @@ const App: React.FC = () => {
   useEffect(() => {
     const fetchCompany = async () => {
       const response = await get_company_details();
-      if (response && response.id) {
-      } else {
+      if (!response) {
         toast.error(
           `Error al cargar la información de la empresa. Ve a ajustes y actualiza la información de la empresa.`
         );
       }
     };
 
-    state.company.id === undefined && fetchCompany();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.company]);
+    if (state.company.id === undefined) fetchCompany();
+  }, [state.company, get_company_details]);
 
   useEffect(() => {
-    if (lastMessage !== null) {
+    if (lastMessage) {
       const messageData = JSON.parse(lastMessage.data);
+      const user = state.auth.user;
 
       switch (messageData.type) {
         case "user_joined":
-          const user = state.auth.user;
-          user.roles &&
-            user.roles.includes("staff") &&
-            !user.username === messageData.user.username &&
+          if (user.roles?.includes("staff") && user.username !== messageData.user.username) {
             toast.info(`${messageData.user.username} se ha conectado.`);
+          }
           break;
 
         case "ticket_added":
-          if (state.auth.user.roles.includes("staff")) {
+          if (user.roles.includes("staff")) {
             toast.info(`${messageData.user.username} ha añadido un ticket.`);
-          } else if (state.auth.user.id === messageData.user.id) {
+          } else if (user.id === messageData.user.id) {
             toast.info(`ticket añadido correctamente.`);
           }
           notification_sound();
           break;
 
-        case "ticket_updated":
-        case "ticket_deleted":
-          break;
         default:
           break;
       }
@@ -160,8 +149,7 @@ const App: React.FC = () => {
       });
     }
     dispatch({ type: "SET_WS", payload: { readyState } });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [lastMessage, readyState]);
+  }, [lastMessage, readyState, state.auth.user]);
 
   const handleSendMessage = useCallback(
     ({
@@ -268,22 +256,6 @@ const App: React.FC = () => {
               <h2>Las funcionalidades de este sitio requieren interactuar</h2>
             </div>
           )}
-          {/* {!state.company.id && (
-            <div className="absolute top-0 right-0 bg-red-700 text-white py-2 px-3 rounded-bl-2xl duration-1000">
-              {state.auth.user.roles &&
-              state.auth.user.roles.includes("staff") ? (
-                <p>
-                  Debes ir a los <b>Ajustes</b> y especificar los detalles de la
-                  compañia para poder utilizar las funciones.
-                </p>
-              ) : (
-                <p>
-                  Contacta con el administrador para poder utilizar las
-                  funciones.
-                </p>
-              )}
-            </div>
-          )} */}
         </General>
       </div>
     </Contexts.Provider>

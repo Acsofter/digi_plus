@@ -37,7 +37,7 @@ type DashboardProps = {
 
 export function Dashboard() {
   const { state } = React.useContext(Contexts);
-  const darkMode = localStorage.getItem("darkMode") === "true" ?? false;
+  const darkMode = localStorage.getItem("darkMode") === "true";
   const labels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
   const [data, setData] = useState({
     lineChartData: {} as any,
@@ -48,128 +48,55 @@ export function Dashboard() {
     totalTickets: 0,
   });
   const { get_graph } = useUserServices();
-  const [users, setUsers] = useState<UserData[]>([
-    // {
-    //   label: "User 1",
-    //   data: [5, 20, 0, 0, 0, 0, 0],
-    //   borderColor: "hsl(0, 100%, 50%)",
-    //   backgroundColor: "hsla(0, 100%, 50%, 0.5)",
-    //   fill: false,
-    //   tension: 0.1,
-    // },
-    // {
-    //   label: "User 2",
-    //   data: [0, 0, 40, 50, 0, 0, 0],
-    //   borderColor: "hsl(120, 100%, 50%)",
-    //   backgroundColor: "hsla(120, 100%, 50%, 0.5)",
-    //   fill: false,
-    //   tension: 0.1,
-    // },
-    // {
-    //   label: "User 3",
-    //   data: [0, 0, 0, 0, 0, 0, 0],
-    //   borderColor: "hsl(240, 100%, 50%)",
-    //   backgroundColor: "hsla(240, 100%, 50%, 0.5)",
-    //   fill: false,
-    //   tension: 0.1,
-    // },
-  ]);
+  const [users, setUsers] = useState<UserData[]>([]);
 
-  const DashboardCard = ({
-    title,
-    value,
-    change,
-    isPositive,
-  }: {
-    title: string;
-    value: number;
-    change: number;
-    isPositive: boolean;
-  }) => (
+  const DashboardCard = ({ title, value, change, isPositive }: { title: string; value: number; change: number; isPositive: boolean; }) => (
     <div className="bg-white p-4 rounded-lg shadow dark:bg-slate-900/70 dark:border-slate-900 border">
       <div className="flex justify-between items-center mb-2">
-        <h3 className="text-sm font-medium text-gray-500 dark:text-white">
-          {title}
-        </h3>
+        <h3 className="text-sm font-medium text-gray-500 dark:text-white">{title}</h3>
         <MoreHorizontal className="w-5 h-5 text-gray-400 dark:text-white" />
       </div>
-      <p className="text-2xl font-bold dark:text-white">
-        $ <AnimatedCounter to={value} />
-      </p>
-      <p
-        className={`text-sm ${
-          isPositive
-            ? "text-blue-500 dark:text-blue-300"
-            : "text-red-50 dark:text-red-300"
-        }`}
-      >
-        {isPositive ? "↑ +" : "↓ -"}
-        {<AnimatedCounter to={change} />}% de la semana anterior
+      <p className="text-2xl font-bold dark:text-white">$ <AnimatedCounter to={value} /></p>
+      <p className={`text-sm ${isPositive ? "text-blue-500 dark:text-blue-300" : "text-red-50 dark:text-red-300"}`}>
+        {isPositive ? "↑ +" : "↓ -"}<AnimatedCounter to={change} />% de la semana anterior
       </p>
     </div>
   );
 
   const fetchData = async () => {
-    await get_graph({ graphname: "line" }).then((metrics) => {
-      if (metrics) {
-        setUsers(metrics);
-        const lineChartData = {
-          labels,
-          datasets: metrics,
-        };
+    const metrics = await get_graph({ graphname: "line" });
+    if (metrics) {
+      setUsers(metrics);
+      const totalTickets = metrics.reduce((total, user) => total + user.data.reduce((a, b) => a + b, 0), 0);
+      const averageTicketsPerDay = metrics.length > 0 ? totalTickets / (metrics[0].data.length * metrics.length) : 0;
 
-        const barChartData = {
+      const mostProductiveUser = metrics.reduce((max, user) => {
+        const userTotal = user.data.reduce((a, b) => a + b, 0);
+        return userTotal > max.total ? { name: user.label, total: userTotal } : max;
+      }, { name: "", total: 0 });
+
+      setData({
+        lineChartData: { labels, datasets: metrics },
+        barChartData: {
           labels,
-          datasets: metrics.map((user) => ({
+          datasets: metrics.map(user => ({
             ...user,
-            backgroundColor: user.backgroundColor
-              .replace(")", ", 0.6)")
-              .replace("hsl", "hsla"),
+            backgroundColor: user.backgroundColor.replace(")", ", 0.6)").replace("hsl", "hsla"),
           })),
-        };
-
-        const doughnutChartData = {
-          labels: metrics.map((user) => user.label),
-          datasets: [
-            {
-              data: metrics.map((user) => user.data.reduce((a, b) => a + b, 0)),
-              backgroundColor: metrics.map((user) => user.backgroundColor),
-              borderColor: metrics.map((user) => user.borderColor+"20"),
-            },
-          ],
-        };
-
-        const totalTickets = metrics.reduce(
-          (total, user) => total + user.data.reduce((a, b) => a + b, 0),
-          0
-        );
-
-        const averageTicketsPerDay =
-          metrics.length > 1
-            ? totalTickets / (metrics[0].data.length * metrics.length)
-            : 0;
-
-        const mostProductiveUser = metrics.reduce(
-          (max, user) => {
-            const userTotal = user.data.reduce((a, b) => a + b, 0);
-            return userTotal > max.total
-              ? { name: user.label, total: userTotal }
-              : max;
-          },
-          { name: "", total: 0 }
-        );
-
-        setData({
-          ...data,
-          lineChartData,
-          barChartData,
-          doughnutChartData,
-          mostProductiveUser,
-          averageTicketsPerDay,
-          totalTickets,
-        });
-      }
-    });
+        },
+        doughnutChartData: {
+          labels: metrics.map(user => user.label),
+          datasets: [{
+            data: metrics.map(user => user.data.reduce((a, b) => a + b, 0)),
+            backgroundColor: metrics.map(user => user.backgroundColor),
+            borderColor: metrics.map(user => user.borderColor + "20"),
+          }],
+        },
+        mostProductiveUser,
+        averageTicketsPerDay,
+        totalTickets,
+      });
+    }
   };
 
   useEffect(() => {
@@ -178,54 +105,28 @@ export function Dashboard() {
 
   useEffect(() => {
     const msg = state.ws.lastMessage;
-    switch (msg?.type) {
-      case "ticket_added":
-      case "ticket_deleted":
-      case "ticket_updated":
-      case "user_added":
-      case "user_deleted":
-      case "user_updated":
-        fetchData();
-        break;
-      default:
-        break;
+    if (["ticket_added", "ticket_deleted", "ticket_updated", "user_added", "user_deleted", "user_updated"].includes(msg?.type)) {
+      fetchData();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.ws.lastMessage]);
 
   return (
     <>
-      {users ? (
-        <div className=" px-4 py-4 no-scrollbar overflow-scroll h-screen flex flex-col gap-3 ">
+      {users.length > 0 ? (
+        <div className="px-4 py-4 no-scrollbar overflow-scroll h-screen flex flex-col gap-3">
           <h1 className="text-xl font-bold dark:text-white">Dashboard</h1>
-
-          <div className="w-full  grid-cols-1 lg:grid-cols-3 gap-2 sm:gap-4 grid">
+          <div className="w-full grid grid-cols-1 lg:grid-cols-3 gap-2 sm:gap-4">
             <div className="bg-blue-600/80 p-4 rounded-lg text-white">
               <p className="font-medium mb-2">Actualizacion</p>
-              <h3 className="text-xl font-bold mb-2">
-                Esta semana ha aumentado un 40% el rendimiento en los tickets
-              </h3>
+              <h3 className="text-xl font-bold mb-2">Esta semana ha aumentado un 40% el rendimiento en los tickets</h3>
               <p className="text-sm">Estadisticas →</p>
             </div>
-            <DashboardCard
-              title="Total Bruto"
-              value={data.totalTickets}
-              change={33}
-              isPositive={true}
-            />
-            <DashboardCard
-              title="Total Neto"
-              value={
-                data.totalTickets *
-                (parseInt(state.company.collaborator_percentage) * 0.01)
-              }
-              change={24}
-              isPositive={false}
-            />
+            <DashboardCard title="Total Bruto" value={data.totalTickets} change={33} isPositive={true} />
+            <DashboardCard title="Total Neto" value={data.totalTickets * (parseInt(state.company.collaborator_percentage) * 0.01)} change={24} isPositive={false} />
           </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 ">
-            <div className="bg-white dark:bg-white/10 px-6  py-2 rounded-lg shadow-md flex flex-col items-center dark:text-white dark:border-white/10 dark:border">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+            <div className="bg-white dark:bg-white/10 px-6 py-2 rounded-lg shadow-md flex flex-col items-center dark:text-white dark:border-white/10 dark:border">
               <h2 className="text-md font-semibold">Actividad semanal</h2>
               <div className="h-72 w-full">
                 {Object.keys(data.lineChartData).length ? (
@@ -318,8 +219,7 @@ export function Dashboard() {
               </div>
             </div>
           </div>
-
-          <div className="flex flex-col lg:flex-row gap-8 justify-between ">
+          <div className="flex flex-col lg:flex-row gap-8 justify-between">
             <div className="bg-white dark:bg-white/10 p-3 rounded-lg shadow-md flex flex-col items-center w-full">
               <h2 className="dark:text-white text-xl font-semibold mb-4 ">
                 Distribucion de usuarios
@@ -357,7 +257,6 @@ export function Dashboard() {
                 )}
               </div>
             </div>
-
             <div className="bg-white dark:bg-white/10 dark:text-white p-3 rounded-lg shadow-md w-full">
               <h2 className="text-xl font-semibold mb-4">Metricas</h2>
               <div className="space-y-4">
@@ -382,7 +281,6 @@ export function Dashboard() {
                 </div>
               </div>
             </div>
-
             <div className="bg-white dark:bg-white/10 dark:text-white p-3 rounded-lg shadow-md w-full">
               <h2 className="text-xl font-semibold mb-4">
                 Porcentages por usuario

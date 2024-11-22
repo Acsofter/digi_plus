@@ -155,7 +155,7 @@ export const AdmPayments = () => {
               <UserRoundPlus className="inline" size={20} />
             </label>
             <select
-              className="bg-slate-800 h-full min-h-9 min-w-24 outline-none rounded-lg"
+              className="dark:bg-slate-800 h-full min-h-9 min-w-24 outline-none rounded-lg"
               name="users"
               id="toggleUsers"
               onChange={(e) => {

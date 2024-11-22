@@ -61,6 +61,16 @@ const base_url = "http://147.93.131.225/digi";
 //   }
 // };
 
+const getResponseData = async (request: Promise<any>): Promise<any | false> => {
+  try {
+    const response = await request;
+    return response.status === 200 ? response.data : false;
+  } catch (error) {
+    console.error(`Error: ${error}`);
+    return false;
+  }
+};
+
 export const useUserServices = () => {
   const { sendMessage } = useContext(Contexts);
 
@@ -87,34 +97,11 @@ export const useUserServices = () => {
   }: {
     includeAdmins?: boolean;
   }): Promise<User[] | false> => {
-    try {
-      const response = await axios.get(`${base_url}/users/`, {
-        headers: AuthHeader(),
-        params: { includeAdmins },
-      });
-      if (response.status !== 200) {
-        return false;
-      }
-      return response.data;
-    } catch (error) {
-      console.error(`Error fetching users: ${error}`);
-      return false;
-    }
+    return getResponseData(axios.get(`${base_url}/users/`, { headers: AuthHeader(), params: { includeAdmins } }));
   };
 
   const get_user = async ({ id }: { id: number }): Promise<User | false> => {
-    try {
-      const response = await axios.get<User>(`${base_url}/users/${id}/`, {
-        headers: AuthHeader(),
-      });
-      if (response.status !== 200) {
-        return false;
-      }
-      return response.data;
-    } catch (error) {
-      console.error(`Error fetching companies: ${error}`);
-      return false;
-    }
+    return getResponseData(axios.get<User>(`${base_url}/users/${id}/`, { headers: AuthHeader() }));
   };
 
   const get_companies = async (): Promise<Company[] | false> => {
@@ -262,36 +249,14 @@ export const useUserServices = () => {
     }
   };
 
-  const update_user = async ({ user_details }: { user_details: User }) => {
-    try {
-      const response = await axios.put<User>(
-        `${base_url}/users/${user_details.id}/`,
-        user_details,
-        {
-          headers: AuthHeader(),
-        }
-      );
-      if (response.status !== 200) {
-        return false;
-      }
-      if (!response.data.is_active) {
-        sendMessage({
-          type: "user_disabled",
-          message: "Desconectado del sistema",
-          payload: { user: response },
-        });
-      } else {
-        sendMessage({
-          type: "user_updated",
-          message: "Usuario actualizado",
-          payload: { user: response },
-        });
-      }
-      return response.data;
-    } catch (error) {
-      console.error(`Error fetching user: ${error}`);
-      return false;
+  const update_user = async ({ user_details }: { user_details: User }): Promise<User | false> => {
+    const response = await getResponseData(axios.put<User>(`${base_url}/users/${user_details.id}/`, user_details, { headers: AuthHeader() }));
+    if (response && !response.is_active) {
+      sendMessage({ type: "user_disabled", message: "Desconectado del sistema", payload: { user: response } });
+    } else if (response) {
+      sendMessage({ type: "user_updated", message: "Usuario actualizado", payload: { user: response } });
     }
+    return response;
   };
 
   const get_company_details = async (): Promise<Company | false> => {

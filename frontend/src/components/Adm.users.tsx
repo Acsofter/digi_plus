@@ -24,7 +24,6 @@ export const AdmUsers = () => {
   useEffect(() => {
     const msg = state.ws.lastMessage;
     if (msg == null) return;
-    console.log(msg);
 
     switch (msg.type) {
       case "user_created":

@@ -130,7 +130,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({ onChange }) => {
         </div>
         <table className="w-full">
           <thead>
-            <tr className="bg-white/10  text-white">
+            <tr className="bg-white/10  text-slate-500 dark:text-white">
               {["Lu", "Ma", "Mi", "Ju", "Vi", "Sa", "Do"].map((day) => (
                 <th key={day} className="p-2">
                   {day}
